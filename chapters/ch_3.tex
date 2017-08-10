@@ -124,7 +124,7 @@ Larsson和Sadakane\cite{qsufsort} 提出了 \emph{qsufsort} 算法对Manber的
 有 $O(n^2)$ 时间复杂度的方法-- \emph{bpr}. 与Manber算法
 和 \emph{qsufsort} 算法在每一轮中使用广度优先策略来对每一个桶进行排序不
 同, \emph{bpr} 使用了深度优先的排序策略: 对于每一个未排序的桶, 它将递归
-地对其中的后缀进行排序, 直到所有后缀都被完全排序.  Rajasekaran
+地对其中的后缀进行排序, 直到所有后缀都完全有序.  Rajasekaran
 \cite{RadixSA} 提出了被称为 \emph{RadixSA} 的新算法, 该算法具
 有 $O(nlog^n)$ 的时间复杂度. 与前面三个算法使用简单的从左到右的顺序来对
 桶进行排序不同, \emph{RadixSA} 使用了特殊的排序顺序: 假设第$i$个后
@@ -135,9 +135,9 @@ Larsson和Sadakane\cite{qsufsort} 提出了 \emph{qsufsort} 算法对Manber的
 Seward\cite{Copy_Cache} 提出了另外两个后缀排序算法:
 \emph{Copy} 和 \emph{Cache}. 它们首先将基于后缀的前两个字符对其进行排
 序, 然后按照由小到大的顺序(即根据桶中所包含后缀的多少，由少到多)对未排
-序的桶进行排序, 一旦一个桶被完全排好序, 排序的结果将被后续过程使用. 然
-而, \emph{Copy} 和 \emph{Cache} 使用相同的函数对所有后缀进行排序， 这对
-具有很长公共前缀的后缀(即具有较大$LCP$的后缀)效率不高. 为解决此问题,
+序的桶进行排序, 一旦一个桶完全有序, 排序的结果将被后续过程使用. 然而,
+\emph{Copy} 和 \emph{Cache} 使用相同的函数对所有后缀进行排序， 这对具有
+很长公共前缀的后缀(即具有较大$LCP$的后缀)效率不高. 为解决此问题,
 Manzini\cite{deep_shallow} 提出了被称为 \emph{deep-shallow} 的算法. 当
 对一个桶进行排序时, \emph{deep-shallow} 会使用\emph{shallow} 排序函数对
 具有较短公共前缀的后缀进行排序， 而使用 \emph{deep} 排序函数对具有较长
@@ -203,7 +203,7 @@ n$ 的整数, 使得对于任意 $0
 \\
 由于一个后缀可以唯一地由其起始位置确定, 只需要在SA中存储后缀的起始位置.\\
 \\
-为了简单起见, 术语"(后缀的)顺序"如果不做特殊说明, 将总是代表字典序. 基
+为了简单起见, 术语"(后缀的)次序"如果不做特殊说明, 将总是代表字典序. 基
 于字典序, 可以通过只比较后缀的前$h$个字符, 来进一步定义后缀
 的 \emph{h-序}: $S_i$ 被称为 \emph{h-小于} $S_j$ 当且仅当 $P_h(S_i)
 \prec P_h(S_j)$, 这种关系被表示为 $S_i \prec_h S_j$.  同理, 符号
@@ -258,14 +258,14 @@ Larsson和Sadakane所提出的 \emph{qsufsort} 算法使用了被称为''前缀�
 增''的技术来对后缀进行逐轮排序. 在第0轮中, 给定字符串的所有后缀将根据其
 首字符进行排序. 之后, 所有具有相同首字符的后缀都会被排列到一起形
 成$SA$上一个深度为1的桶, 而整个 $SA$ 将(在逻辑上)被划分为一系列的深度
-为1的桶: 第一个桶中所包含的后缀具有最小的字符, 第二个桶中所包含的后缀具
-有次小的字符, .... 依此类推.
+为1的桶: 第一个桶中所包含的后缀具有最小的首字符, 第二个桶中所包含的后缀
+具有次小的首字符, .... 依此类推.
 
 注意, 如果一个深度为1的桶只包含一个后缀, 该桶及其包含的单个后缀被称为
-是\emph{完全排序的}. 由于该后缀可以由其首字符从其它后缀中区分出来, 它已
-经处于SA的最终位置, 将来无需再对其进行排序. 然而, 如果一个深度为1的桶包
-含了超过一个后缀, 该桶及其所包含的后缀则被称为是\emph{未排序的}, 在未
-来, 将需要比较更多的字符来确定其后缀的顺序.
+是\emph{完全有序的}, 因为该后缀可以根据首字符将其从其它后缀中区分出来,
+它已经处于SA的最终位置, 将来无需再对其进行排序. 然而, 如果一个深度为1的
+桶包含了超过一个后缀, 该桶及其所包含的后缀则被称为是\emph{未排序的}, 后
+续将需要比较更多的字符来确定其后缀的顺序.
 
 在第0轮后, 所有后缀都处于\emph{1-有序}的状态. 并且不失一般性地, 任意两
 个后缀 $S_i$ 和 $S_j$ 的1-序可由其所在桶的序号确定:
@@ -276,322 +276,258 @@ $S_i \preceq_1 S_j \iff B[i] \leq B[j]$.
 换言之, 所有未排序的桶都有同样的深度 $2^{k-1}$, 且这些未排序的桶, 将在
 第$k$轮中被从左到右逐个进行排序.
 
-Now, assuming an unsorted bucket $B_p$ is being sorted in the $k$-th
-round. For any $S_i$ and $S_j$ in $B_p$, since $S_i =_{2^{k-1}} S_j$,
-the order of $S_i$ and $S_j$ will depend on the order of
-$S_{i+2^{k-1}}$ and $S_{j+2^{k-1}}$, that is $S_i \prec S_j \iff
-S_{i+2^{k-1}} \prec S_{j+2^{k-1}}$, without loss of generality. Here,
-$S_{i+2^{k-1}}$($S_{j+2^{k-1}}$) is called the \emph{anchor suffix} of
-$S_i$($S_j$). However, since only the $2^{k-1}$-order of
-$S_{i+2^{k-1}}$ and $S_{j+2^{k-1}}$ is known now, only the $2^k$-order
-of $S_i$ and $S_j$ can be determined: $S_i \preceq_{2^k} S_j \iff
-S_{i+2^{k-1}} \preceq_{2^{k-1}} S_{j+2^{k-1}} \iff B[i+2^{k-1}] \leq
-B[j+2^{k-1}]$.  This derivation gives a way to sort the suffixes of
-$B_p$ in $2^k$-order: for any $S_i$ in the $B_p$, the value
-$B[i+2^{k-1}]$, which is the bucket number of $S_i$'s anchor suffix,
-can be used as the \emph{key} of $S_i$ :$key(S_i) = B[i+2^{k-1}]$, and
-then all the keys of the suffixes are sorted first by a common integer
-sorting routine, after that the suffixes in the $B_p$ can be sorted in
-$2^k$-order by being simply rearranged according to the arithmetic
-order of their keys.
+现在, 假设未排序的桶 $B_p$ 即将在第 $k$ 轮被排序. 对 $B_p$ 中任意
+的 $S_j$ 和 $S_i$, 由于 $S_i =_{2^{k-1}} S_j$, $S_i$ 和 $S_j$ 之间的次
+序将依赖于 $S_{i+2^{k-1}}$ 和 $S_{j+2^{k-1}}$ 的次序， 即:
+$S_i \prec S_j \iff S_{i+2^{k-1}} \prec S_{j+2^{k-1}}$. 这里,
+$S_{i+2^{k-1}}$($S_{j+2^{k-1}}$) 被称作 $S_i$($S_j$) 的锚后缀. 然而，由
+于当前仅能够确定 $S_{i+2^{k-1}}$ 和 $S_{j+2^{k-1}}$ 的 $2^{k-1}$-序, 相
+应地，也仅能够确定 $S_i$ 和 $S_j$ 的 $2^k$-序:
+$S_i \preceq_{2^k} S_j \iff S_{i+2^{k-1}} \preceq S_{j+2^{k-1}} \iff
+B[i+2^{k-1}] \leq B[j+2^{k-1}]$.  这种等价关系说明了如何在第 $k$ 轮中，
+将 $B_p$ 中的后缀排成 $2^k$-有序的: 首先，对于 $B_p$ 中任一后缀 $S_i$，
+将其锚后缀所在的桶序号，即 $B[i+2^{k-1}]$ 作为 $S_i$ 的键值: $key(S_i)
+= B[i+2^{k-1}]$, 然后，使用普通的整数排序算法对所有的键值进行排序，接着
+将 $B_p$ 中的后缀，依据其键值的整数序进行重新排序，之后，$B_p$ 中的后缀
+将处于 $2^k$-有序。
 
-Once an unsorted bucket is sorted, new buckets are formed according to
-the following two cases: 1) If a suffix has a unique key, it will be
-in its final location in SA to form a singleton bucket which is
-completely sorted. 2) If some suffixes have the same key, they will be
-rearranged together and form a new unsorted bucket which will be
-sorted in future rounds. And the $B$ array needs to be updated
-according to these new buckets.
+一旦某个未被排序的桶被处理过, 将会根据以下两种情况产生新的桶： 1) 如果
+某个后缀具有唯一的键值, 那么它将处于SA的最终位置，并独自形成一个完全有
+序的(包含单个后缀的)桶. 2) 如果某些后缀具有相同的键值, 那么它们将被排列
+在一起形成一个新的未排序的桶，并将在后续过程中进一步对其排序。 另
+外，$B$ 数组也需要根据新产生的桶做出相应的更新。
 
-The \emph{qsufsort} algorithm runs round by round untill there is no
-unsorted bucket left. Note that, using the prefix doubling technique,
-the length of the checked prefix of each suffix is doubled after each
-round, so for any two suffixes of the input string, their order can
-be determined in at most $log^n$ rounds, where $n$ is the length of
-the input string. Therefore the \emph{qsufsort} algorithm performs up
-to $log^n$ rounds to completely sort all the suffixes.
+\emph{qsufsort} 算法逐轮地对未排序的桶进行排序，直到所有后缀都被完全有
+序。注意, 通过使用前缀倍增技术， 确定每个后缀次序所依据的前缀将会在每一
+轮后倍增，所以，对长为$n$的字符串，其任意两个后缀的次序都可以在最
+多 $log^n$ 轮后被确定。
 
-\subsection{The dsufsort algorithm: maintaining the depth for
-each unsorted bucket}
+\subsection{dsufsort 算法: 记录并维护每一个未排序桶的深度}
 \label{sec:dsufsort}
 
-As stated above, in the $k$-th round, the \emph{qsufsort} algorithm
-checks only the first $2^k$ characters of each suffix to determine
-their order, which means the order of the suffixes starting with the same
-$2^k$ characters can not be determined in the $k$-th round. Therefore
-for suffixes with a long common prefix, \emph{qsufsort} needs several
-rounds to determine their order, which will lead to a great
-computation cost.
+如前所述, 在第 $k$ 轮中, \emph{qsufsort} 算法将依据每个后缀前 $2^k$个字
+符对其进行排序, 这意味着， 对于那些前$2^k$个字符都相同的后缀， 该算法无
+法在第 $k$ 轮中确定其次序。 因此，对于具有很长公共前缀的后
+缀， \emph{qsufsort} 需要许多轮才能确定其次序，这会严重影响算法效率。
 
-It is necessary to reduce the computation cost by checking as many
-characters of each suffix as possible to determine their order in each
-round. To achieve this purpose, for each unsorted bucket, the
-\emph{dsufsort} algorithm maintains its \emph{bucket depth} (length of
-the common prefix of its suffixes that we have currently know), and
-updates the bucket depth once an unsorted bucket is sorted. In each
-round, when sorting the suffixes in an unsorted bucket, the
-\emph{dsufsort} uses the depth of the bucket to compute the keys of
-the suffixes and then sort them.  Using the keys which are computed
-from the bucket depth, the suffixes of some unsorted buckets can be
-sorted according to more than the most-left $2^k$ characters in the
-$k$-th round, as a result, some of the suffixes starting with the same
-$2^k$ characters can be completely sorted by \emph{dsufsort} in the
-$k$-round. Therefore the \emph{dsufsort} can sort more suffixes than
-the \emph{qsufsort} in each round, and it usually uses fewer sorting
-rounds.
+为了提升算法性能，在每一轮中，应依据尽可能多的(前缀)字符来对后缀进行排
+序。 为此, 对每一个未排序的桶, \emph{dsufsort} 算法将维护其桶的深度 (即
+当前已知的，桶中后缀的最长公共前缀的长度), 并在每一个桶被处理后，对其深
+度进行更新。 在每轮中, 当对某个桶中的后缀进行排序时， \emph{dsufsort}
+算法将使用桶的深度来计算其后缀的键值， 然后对其进行排序。 在第$k$轮中，
+通过使用基于桶深度计算得到的键值, 对于某些后缀，可以依据多于$2^k$个前缀
+字符来对其进行排序， 这样, 一些前 $2^k$ 字符都相同的后缀，便可以在
+第 $k$ 轮中确定其次序。 相比\emph{qsufsort}算法, \emph{dsufsort} 算法在
+每轮中可以确定更多后缀的次序， 因此，需要更少的轮数来完成排序任务。
 
-In order to store the depth information, an array $D$ is created.
-The depth of a bucket can be indexed by its bucket number: for a
-bucket $B_p$, its depth is recorded in $D[p]$. After round 0, we set
-$D[p] = 1$ for each unsorted bucket $B_p$.
+为了记录桶的深度, 使用一个数组 $D$，使得每个桶的深度可以由其编号索引得
+到: 对于桶 $B_p$, 它的深度为 $D[p]$. 在第0轮后, 对每一个新产生的
+桶 $B_p$，令 $D[p] = 1$。
 
-Similar to \emph{qsufsort}, the \emph{dsufsort} algorithm works round
-by round until there is no unsorted bucket left. In each round, the
-\emph{dsufsort} algorithm adopts a two phases \emph{sorting --
-updating} strategy to sort each unsorted bucket and update their
-depths. As an example, suppose an unsorted bucket $B_p$ is being
-sorted in the $k$-th round.
+类似于 \emph{qsufsort}, \emph{dsufsort} 算法逐轮地对后缀进行排序， 直到
+所有后缀都完全有序. 在每轮中, \emph{dsufsort} 算法采用了两阶段的“排序-更
+新” 策略来处理未排序的桶及更新其深度信息。 举例说明, 假设桶 $B_p$ 即将
+在第$k$轮中被处理：
 
 \begin{arabiclist}
-\item \textbf{Sorting:} for any $S_i$ and $S_j$ in $B_p$, since $S_i
-=_{D[p]} S_j$, the order of $S_i$ and $S_j$ is depend on the order of
-$S_{i+D[p]}$ and $S_{j+D[p]}$: $S_i \prec S_j \iff S_{i+D[p]} \prec
-S_{j+D[p]} \iff B[i+D[p]] < B[j+D[p]]$, without loss of
-generality. Here $S_{i+D[p]}$($S_{j+D[p]}$) is the \emph{anchor
-suffix} of $S_i$($S_j$). According to this relation, for any $S_i$ in
-$B_p$, the \emph{dsufsort} algorithm takes $B[i+D[p]]$ (rather than
-$B[i+2^{k-1}]$ which is used in \emph{qsufsort}) as its key, and then
-sort the keys of suffixes with a common integer sorting
-algorithm. After that, the suffixes in $B_p$ are rearranged according
-to their keys.
+\item \textbf{排序:} 不失一般性地, 对 $B_p$ 中的任意 $S_i$ 和 $S_j$, 由
+  于 $S_i =_{D[p]} S_j$, $S_i$ 和 $S_j$ 之间的次序将取决
+  于 $S_{i+D[p]}$ 和 $S_{j+D[p]}$ 之间的次序:
+  $S_i \prec S_j \iff S_{i+D[p]} \prec S_{j+D[p]} \iff B[i+D[p]] <
+  B[j+D[p]]$. 其中 $S_{i+D[p]}$($S_{j+D[p]}$) 是 $S_i$($S_j$) 的锚后
+  缀. 根据以上等价关系, 对任意 $B_p$ 中的 $S_i$ , \emph{dsufsort} 算法
+  将使用 $B[i+D[p]]$ (而非 \emph{qsufsort} 使用的 $B[i+2^{k-1}]$) 作为
+  它的键值, 并使用普通的整数排序算法, 对所有后缀的键值进行排序. 然后,
+  根据键值的(算术)顺序, 对 $B_p$ 中的后缀进行重新排序.
 
-After rearranging, for each suffix $S_i$ in $B_p$, it is sorted according to the first
-$D[p] + D[B[i+D[p]]$ rather than $2^k$ characters.  We will soon see
-that in the $k$-th round(after the (\emph{k-1})-th round), there must
-be $D[p] \geq 2^{k-1}$ and $D[B[i+D[p]] \geq 2^{k-1}$, which means the
-suffixes are sorted according to \emph{at least} the first $2^k$
-characters, thus the \emph{dsufsort} can perform at least as good as
-\emph{qsufsort}. And we will also see that in some case, there holds
-$D[p] > 2^{k-1}$, which means all the suffixes in $B_p$ are sorted
-according to more than $2^k$ characters, and in this case the
-\emph{dsufsort} algorithm performs better than \emph{qsufsort}.
+  现在, $B_p$中的每个 $S_i$, 都根据其前 $D[p] + D[B[i+D[p]]$ 个字符(而
+  非前 $2^k$ 个字符)被排序. 稍后将看到, 在第 $k$ 轮中 (即在 \emph{k-1}
+  轮之后), 一定有: $D[p] \geq 2^{k-1}$ 且 $D[B[i+D[p]] \geq 2^{k-1}$,
+  这意味着, 所有后缀将根据其前至少$2^k$个字符进行排
+  序, 这样 \emph{dsufsort} 的性能至少和 \emph{qsufsort} 持平. 同时也将
+  看到, 在某些时刻, 存在 $D[p] > 2^{k-1}$ 的情况, 这意味着 $B_p$ 中的所
+  有后缀将基于超过前 $2^k$ 个字符进行排序, 此时, \emph{dsufsort} 要优
+  于 \emph{qsufsort}.
 
-\item \textbf{Updating:} the $D$ and $B$ array will be updated immediately
-once $B_p$ is sorted. Suppose the suffixes are rearranged as $S_{i_1},
-S_{i_2},\dots,S_{i_s}$ according to their keys $key(S_{i_1}) \leq
-key(S_{i_2}) \leq \dots \leq key(S_{i_s})$. Depending on whether or
-not the key of a suffix is unique, there are two kinds of suffixes:
+\item \textbf{更新:} 当$B_p$ 被处理之后, 数组 $D$ 和 $B$ 将立刻被更新.
+  假设根据键值大小:
+  $key(S_{i_1}) \leq key(S_{i_2}) \leq \dots \leq key(S_{i_s})$, 后缀被
+  重排为 $S_{i_1}, S_{i_2},\dots,S_{i_s}$. 根据其键值是否唯一,可将后缀
+  分为两类:
 
 \begin{itemize}
 
-\item For any $S_{i_j}$ such that $key(S_{i_{j-1}}) \neq key(S_{i_j})$
-and $key(S_{i_j}) \neq key(S_{i_{j+1}})$, $S_{i_j}$ will be in its
-final location in SA and forms a completely sorted singleton bucket:
-$B_{p+j-1}$. The bucket of $S_{i_j}$ is updated accordingly: $B[i_j]$
-is updated to $p+j-1$. However, there is no need to update the depth
-(the $D$ array) for completely sorted buckets.
+\item 对任意 $S_{i_j}$ 满足 $key(S_{i_{j-1}}) \neq
+  key(S_{i_j})$ 且 $key(S_{i_j}) \neq key(S_{i_{j+1}})$, $S_{i_j}$ 将处
+  于其在SA中的最终位置, 同时构成一个完全有序的单元素桶:
+  $B_{p+j-1}$. $S_{i_j}$ 所在的桶, 将相应地被更新为: $B[i_j] = p+j-1$.
+  然而, 无需更新已经完全有序的桶的深度(即无需更新$D$数组).
 
-\item For each group of suffixes $\{S_{i_l},
-S_{i_{l+1}},\dots,S_{i_r}\}$ such that: $key(S_{i_l}) =
-key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$, $key(S_{i_{l-1}}) \neq
-m$ and $key(S_{i_{r+1}}) \neq m$, the group $\{S_{i_l},
-S_{i_{l+1}},\dots,S_{i_r}\}$ will form a new unsorted bucket :
-$B_{p+l-1}$. Since every suffix in $B_{p+l-1}$ has its anchor suffix
-in $B_m$, $B_m$ is called the \emph{anchor bucket} of $B_{p+l-1}$. The
-bucket of each suffix in the group is updated accordingly: all of
-$B[i_l], B[i_{l+1}], \dots, B[i_r]$ are updated to $p+l-1$.  Since we
-have already known that $S_{i_l} =_{D[p]} S_{i_{l+1}} =_{D[p]} \dots
-=_{D[p]} S_{i_r}$ and $S_{i_l+D[p]} =_{D[m]} S_{i_{l+1}+D[p]} =_{D[m]}
-\dots =_{D[m]} S_{r+D[p]}$, there holds $S_{i_l} =_{D[p]+D[m]}
-S_{i_{l+1}} =_{D[p]+D[m]} \dots =_{D[p]+D[m]} S_{i_r}$.  Therefore the
-depth of the newly created bucket $B_{p+l-1}$ is: $D[p+l-1] = D[p] +
-D[m]$, and we will use this formula to update the depth for each newly
-created unsorted bucket.
+\item 对每一组后缀 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 满足:
+  $key(S_{i_l}) = key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$,
+  $key(S_{i_{l-1}}) \neq m$ 且 $key(S_{i_{r+1}}) \neq m$, 该后缀
+  组 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 将构成一个新的未排序桶:
+  $B_{p+l-1}$. 由于 $B_{p+l-1}$ 中每个后缀的锚后缀都在桶 $B_m$ 中,
+  $B_m$ 被称为是 $B_{p+l-1}$ 的"锚桶". 该组中所有后缀所在的桶也将被相应
+  地更新: 每一个 $B[i_l], B[i_{l+1}], \dots, B[i_r]$ 都将被更新
+  为 $p+l-1$.  由于已经知道:
+  $S_{i_l} =_{D[p]} S_{i_{l+1}} =_{D[p]} \dots =_{D[p]}
+  S_{i_r}$ 及
+  $S_{i_l+D[p]} =_{D[m]} S_{i_{l+1}+D[p]} =_{D[m]} \dots =_{D[m]}
+  S_{r+D[p]}$, 所以有:
+  $S_{i_l} =_{D[p]+D[m]} S_{i_{l+1}} =_{D[p]+D[m]} \dots =_{D[p]+D[m]}
+  S_{i_r}$.  因此, 新产生桶 $B_{p+l-1}$ 的深度应为: $D[p+l-1] = D[p] +
+  D[m]$, 我们使用该等式来设置新的未排序桶的深度.
 \end{itemize}
 \end{arabiclist}
 
 
-Based on the two phases \emph{sorting -- updating} strategy, the
-framework of \emph{dsufsort} can be summarized bellow:
+基于两阶段的\emph{排序--更新}策略, \emph{dsufsort} 算法的框架可以总结如
+下:
 
 \begin{enumerate}[\hspace{0.3cm} \bfseries Step 1.]
 
-\item Initialization(round 0): sort all the suffixes of a given
-string according to their first characters. For each unsorted bucket
-$B_p$, set $D[p] = 1$, and for any $S_i$ in $B_p$, set $B[i] = p$.
+\item 初始化(第0轮): 根据首字符, 对输入字符串的所有后缀进行排序. 对每一
+  个新产生的未排序桶 $B_p$, 令 $D[p] = 1$, 且对 $B_p$ 中的任一 $S_i$,
+  令 $B[i] = p$.
 
-\item For each unsorted bucket (say $B_p$) left in
-SA, perform the following \emph{sorting -- updating} procedure:
+\item 对SA中每一个未排序的桶 (比如 $B_p$), 执行以下\emph{排序--更新}操
+  作:
 
 \begin{enumerate}[\bfseries i.]
-\item \emph{Sorting}: for each suffix $S_i$ in $B_p$, taking
-$B[i+D[p]]$ as its key, and sort the keys of suffixes by an integer
-sorting algorithm. Rearrange the suffixes in $B_p$ according to the
-arithmetic order of their keys.
-\item \emph{Updating}: suppose the suffixes in $B_p$ are rearranged
-as: $S_{i_1}, S_{i_2},\dots,S_{i_s}$. For any $S_{i_j}$ such that:
-$key(S_{i_{j-1}}) \neq key(S_{i_j})$ and $key(S_{i_j}) \neq
-key(S_{i_{j+1}})$, set $B[i_j]$ to $p+j-1$. For each group of suffixes
-$\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ such that $key(S_{i_l}) =
-key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$, $key(S_{i_{l-1}}) \neq
-m$ and $key(S_{i_{r+1}}) \neq m$, create a new unsorted bucket
-$B_{p+l-1}$for that group.  Set $D[p+l-1]$ to $D[p] + D[m]$, and set
-all of $B[i_l], B[i_{l+1}], \dots, B[i_r]$ to $p+l-1$.
+\item \emph{排序}: 对 $B_p$ 中的每个后缀 $S_i$, 令 $B[i+D[p]]$ 作为它的
+  键值, 并使用整数排序算法, 对所有后缀的键值进行排序, 再根据键值大小,
+  对 $B_p$ 中的后缀进行由小到大排序.
+\item \emph{更新}: 假设 $B_p$ 中的后缀被排序为: $S_{i_1},
+  S_{i_2},\dots,S_{i_s}$. 对任意 $S_{i_j}$ 满足:
+  $key(S_{i_{j-1}}) \neq key(S_{i_j})$
+  且$key(S_{i_j}) \neq key(S_{i_{j+1}})$, 将 $B[i_j]$ 设置
+  为 $p+j-1$. 对每一组后缀 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 满
+  足: $key(S_{i_l}) = key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$,
+  $key(S_{i_{l-1}}) \neq m$ 且 $key(S_{i_{r+1}}) \neq m$, 产生一个新的
+  未排序桶 $B_{p+l-1}$. 将 $D[p+l-1]$ 设置为 $D[p] + D[m]$, 同时将每一
+  个 $B[i_l], B[i_{l+1}], \dots, B[i_r]$ 设置为 $p+l-1$.
 \end{enumerate}
 
-\item If there are no unsorted buckets left in $SA$, stop and quit;
-otherwise, go to step 2 and start a new sorting round.
+\item 如果SA中没有未排序的桶, 则算法结束; 否则, 跳转到 step 2 并开始新
+  的一轮排序.
 
 \end{enumerate}
 
-As stated before, the \emph{dsufsort} algorithm has the following important feature:
+如前所述, \emph{dsufsort} 算法具有如下重要性质:
 
 \begin{lemma}
-  For any unsorted bucket $B_q$ created in the k-th round \emph{(}$k =
-0,1,2,\dots$ \emph{)}, there holds: $D[q] \geq 2^k$.
+  对第$k$ \emph{(}$k = 0,1,2,\dots$ \emph{)} 轮中产生的每一个未排序的
+  桶 $B_q$, 都有 $D[q] \geq 2^k$.
 \end{lemma}
 
-\begin{proof} This can be proved by induction. Basis: for any unsorted
-bucket $B_q$ created in round 0, there holds $D[q] = 1 \geq 2^0$.
-Induction: suppose $B_q$ is an unsorted bucket created from $B_p$ in
-the $k$-th round, and $B_m$ is the anchor bucket of $B_q$. Since $B_p$
-and $B_m$ are unsorted buckets created in the (\emph{k-1})-th round,
-by induction, there holds $D[p] \geq 2^{k-1}$ and $D[m] \geq 2^{k-1}$
-, therefore $D[q] = D[p] + D[m] \geq 2^{k-1} + 2^{k-1} = 2^k$.
+\begin{proof} 由归纳法可证. 首先, 对于任何第0轮中产生的未排序桶 $B_q$,
+  都有 $D[q] = 1 \geq 2^0$.  然后, 假设 $B_q$ 是第 $k$ 轮中产生
+  于 $B_p$ 的新的未排序桶, 且 $B_m$ 是 $B_q$ 的锚
+  桶. 由于 $B_p$ 和 $B_m$ 是产生于第$k-1$ 轮的未排序桶, 由归纳假设有:
+  $D[p] \geq 2^{k-1}$ 且 $D[m] \geq 2^{k-1}$, 因此
+  $D[q] = D[p] + D[m] \geq 2^{k-1} + 2^{k-1} = 2^k$.
 \end{proof}
 
-This feature ensures that the
-\emph{dsufsort} algorithm can perform at least as good as
-\emph{qsufsort}. However it is necessary to explore in which case the
-\emph{dsufsort} performs better, specially, in which
-case there is $D[q] > 2^k$. Suppose we are in the (\emph{k-1})-th
-round, and sort an unsorted bucket $B_p$ which is created in the
-(\emph{k-2})-th round with $D[p] = 2^{k-2}$. If a new unsorted
-bucket $B_q$ is created from $B_p$ and its anchor bucket is $B_m$,
-there is $D[q] = D[p] + D[m]$.
+该性质确保了 \emph{dsufsort} 算法的性能至少和 \emph{qsufsort} 持平. 然
+而, 有必要探讨在何种情形, \emph{dsufsort} 在性能上优
+于 \emph{qsufsort}, 更具体地, 何时会出现 $D[q] > 2^k$. 假设当前处于
+第 \emph{k-1} 轮, 正在处理第 $k-2$ 轮产生的未排序桶 $B_p$ 且有 $D[p] =
+2^{k-2}$. 如果一个新的未排序桶 $B_q$ 产生于 $B_p$ 且其锚桶为 $B_m$, 则
+有 $D[q] = D[p] + D[m]$.
 
-The key point is that, if $B_m$, which is the anchor bucket of $B_p$,
-is also a new unsorted bucket that created previously in the
-(\emph{k-1})-th round, due to the feature we have just proved, there
-must be $D[m] \geq 2^{k-1}$. So we have $D[q] = D[p] + D[m] \geq
-2^{k-2} + 2^{k-1} > 2^{k-1}$, which means the depth of $B_q$ is
-strictly larger than $2^{k-1}$. Consequently, when $B_q$ is processed
-in the \emph{k}-th round, any $S_i$ in $B_p$ is sorted according to
-its first $D[p] + D[B[i+D[p]]$ characters as stated before, since
-$D[q] > 2^{k-1}$ and $D[B[i+D[p]] \geq 2^{k-1}$, $S_i$ is sorted
-according to more than $2^k$ characters in the $k$-th round, which
-means the \emph{dsufsort} algorithm performs better than \emph{qsufsort}. Furthermore, if
-$B_m$ is in the same case as $B_q$, that is, the anchor bucket of
-$B_m$ is also a bucket created in the (\emph{k-1})-round, then there
-is $D[m] > 2^{k-1}$. Due to the \emph{accumulation of the depths},
-$D[q]$ can be much larger than $2^{k-1}$, as a result, the suffixes in
-$B_q$ can be sorted according to much more than $2^k$ characters in
-the $k$-th round.
+关键在于, 如果 $B_p$ 的锚桶 $B_m$ 也是先前在第 $k-1$ 轮中产的新的未排
+序桶, 根据刚才证明的性质, 一定有 $D[m] \geq 2^{k-1}$. 所以, 可以得到:
+$D[q] = D[p] + D[m] \geq 2^{k-2} + 2^{k-1} > 2^{k-1}$, 这意味着 $B_q$
+的深度严格大于 $2^{k-1}$. 因此, 当 $B_q$ 在第 $k$ 轮中被处理时, $B_p$
+中的任一 $S_i$ 将会基于其前 $D[p] + D[B[i+D[p]]$ 个字符被排序, 由于
+$D[q] > 2^{k-1}$ 且 $D[B[i+D[p]] \geq 2^{k-1}$, $S_i$ 在第$k$轮中将基
+于超过 $2^k$ 字符被排序, 这也意味着, \emph{dsufsort} 将优于
+\emph{qsufsort}. 更进一步, 如果 $B_m$ 和 $B_q$ 具有相同的情况, 即
+$B_m$ 的锚桶同样产生于第 $k-1$ 轮, 则有 $D[m] > 2^{k-1}$. 由于深度的相
+互叠加, $D[q]$ 可以远大于 $2^{k-1}$, 因此, 在第$k$轮中, 对$B_q$ 后缀排
+序所基于的字符数可以远大于 $2^k$.
 
 \begin{figure}[bh]
 \centerline{\includegraphics[width=9cm]{p1}}
 \vspace*{8pt}
-\caption{An example run of the \emph{dsufsort} algorithm with the input
-    string '\emph{tobeornottobe}'.}
+\caption{使用 \emph{dsufsort} 算法对字符串 '\emph{tobeornottobe}' 的后
+  缀进行排序.}
 \label{fig:1}
 \end{figure}
 
-\textbf{Example.} Figure \ref{fig:1} shows the procedure of the
-\emph{dsufsort} algorithm with the input string
-'\emph{tobeornottobe}'. For clearly show, we put $S_i$ in SA instead
-of its starting position $i$. The depth of a bucket is shown in the
-parentheses following the bucket. After round 0, all the suffixes are
-sorted according to their first characters. Since each of $B_0$, $B_5$
-and $B_{10}$ contains a single suffix, these three buckets are completely sorted.
+\textbf{例子.} 图 \ref{fig:1} 说明了使用 \emph{dsufsort} 算法对输入字符
+串 $tobeornottobe$ 进行后缀排序的过程. 为了清晰起见, 我们将完整的后
+缀 $S_i$ 放入SA中, 而非其起始位置 $i$. 每个桶的深度在其后的括号内显
+示. 第0轮过后, 所有后缀都基于其首字符被排序. 由于桶 $B_0$,
+$B_5$ 及 $B_{10}$ 都只包含一个后缀, 这三个桶已经完全有序了.
 
-In round 1, the four unsorted buckets $B_1$, $B_3$, $B_6$ and $B_{11}$
-left from round 0 are sorted in order. As an example, we sort $B_6$,
-and the other three buckets can be sorted in the same way. For any
-$S_i$ in $B_6$, its key can be computed from the bucket depth by
-$key(S_i) = B[i+D[6]]$. So the keys of suffixes of $B_6$ are:
-$key(S_1) = B[1+D[6]] = 1$, $key(S_4) = B[4+D[6]] = 10$, $key(S_7) =
-B[7+D[6]] = 11$, $key(S_{10}) = B[10+D[6]] = 1$. Then these keys are
-sorted by a regular integer sorting algorithm to have the order: $key(S_1) = key(S_{10})
-< key(S_4) < key(S_7)$.  According to the arithmetic order of their
-keys, the 1-order of the suffixes in $B_6$ can be determined: $S_1 =_
-1 S_{10} \prec_1 S_4 \prec_1 S_7$, and the suffixes are rearranged
-accordingly. Since $S_1$ and $S_{10}$ have the same key, they will be
-grouped together in a newly created unsorted bucket $B_6$. Note that,
-compared with the \emph{old} $B_6$(denoted by $B_6^{\;old}$) which is
-being processed now, the newly created $B_6$(denoted by $B_6^{\;new}$)
-has the same bucket number (which means the bucket numbers of $S_1$ and
-$S_{10}$ need not to be updated), but different size and depth. The
-depth of $B_6^{\;new}$ is $D[6]^{\;new} = D[6]^{\;old} + D[1] = 3$,
-because $B_1$ is the anchor bucket of $B_6^{\;new}$ and $D[1] = 2$.
-On the other hand, $S_4$ and $S_7$, each of which has a unique key,
-will be in completely sorted buckets $B_8$ and $B_9$ respectively, and
-only get their bucket number updated: $B[4] = 8$, $B[7] = 9$.  After
-round 1, there left three unsorted buckets: $B_1^{\;new}$,
-$B_6^{\;new}$, $B_{11}^{\;new}$.
+在第1轮中, 产生于第0轮的4个未被排序的桶 $B_1$, $B_3$,
+$B_6$ 及 $B_{11}$ 将被依次处理. 将处理 $B_6$ 作为例子, 其余3个桶可以类
+似方式处理. 对 $B_6$ 中任一后缀 $S_i$, 其键值可以通过桶的深度来计算:
+$key(S_i) = B[i+D[6]]$. 所以, $B_6$ 中所包含后缀的键值分别为:
+$key(S_1) = B[1+D[6]] = 1$, $key(S_4) = B[4+D[6]] = 10$,
+$key(S_7) = B[7+D[6]] = 11$, $key(S_{10}) = B[10+D[6]] = 1$. 然后, 使用
+普通的整数排序函数对这些键值进行排序: $key(S_1) = key(S_{10}) <
+key(S_4) < key(S_7)$.  根据键值的大小顺序, $B_6$ 中后缀的 1-序 可以被确
+定: $S_1 =_ 1 S_{10} \prec_1 S_4 \prec_1 S_7$. 由于 $S_1$ 和 $S_{10}$
+具有同样的键值, 它们将共同构成一个新的未排序桶 $B_6$. 注意, 相比于原先
+的(即当前正在被处理的) $B_6$(由 $B_6^{\;old}$ 表示), 新产生
+的 $B_6$(由 $B_6^{\;new}$ 表示) 具有相同的桶序号 (这意味
+着 $S_1$ 和 $S_{10}$ 所在的桶不变), 但不同的大小和深度. $B_6^{\;new}$
+的深度为 $D[6]^{\;new} = D[6]^{\;old} + D[1] = 3$, 这是因
+为 $B_1$是 $B_6^{\;new}$ 的锚桶且 $D[1] = 2$. 另一方面, $S_4$ 和 $S_7$
+都具有唯一的键值, 它们将分别构成完全有序的桶 $B_8$ 和 $B_9$, 且仅需要更
+新它们所在的桶号: $B[4] = 8$, $B[7] = 9$. 第1轮过后, 将剩余3个未排序的
+桶: $B_1^{\;new}$, $B_6^{\;new}$, $B_{11}^{\;new}$.
 
- In round 2, $B_1^{\;new}$, $B_6^{\;new}$ and $B_{11}^{\;new}$ will be
-sorted in order. Using $D[1] = 2$, $D[6] = 3$, and $D[11] = 4$
-respectively to compute the keys of suffixes and sort them in the
-corresponding unsorted buckets, all these three buckets will be
-completely sorted in this round, which ends the whole algorithm.
+在第2轮中, $B_1^{\;new}$, $B_6^{\;new}$ 及 $B_{11}^{\;new}$ 将会依次被
+处理. 通过使用 $D[1] = 2$, $D[6] = 3$ 及 $D[11] = 4$ 来分别计算后缀的
+键值并对其进行排序, 所有3个桶将会在本轮中被完全排序, 算法也随即结束.
 
-To illustrate the advantage of \emph{dsufsort} over \emph{qsufsort},
-we examine the sorting process of $B_{11}^{\;old}$ in round 1 . Since
-the keys of the suffixes in $B_{11}^{\;old}$ are: $key(S_0)=6$,
-$key(S_9)=6$ and $key(S_8) = 11$, $S_8$ is completed sorted in
-$B_{13}$, while $S_0$ and $S_9$ will be in unsorted bucket
-$B_{11}^{\;new}$.  Since $B_{11}^{\;new}$ is created from
-$B_{11}^{\;old}$, and its anchor bucket is $B_6^{\;new}$, the depth of
-$B_{11}^{\;new}$ is $D[11]^{\;new} = D[11]^{\;old} + D[6]^{\;new}$. As
-we have seen, $B_6^{\;new}$ is also created in round 1 with
-$D[6]^{\;new} = 3$, so $D[11]^{\;new} = 1 + 3 = 4$. Therefore the
-depth of $B_{11}^{\;new}$ is larger than 2 which is the ``depth'' of
-all buckets computed by \emph{qsufsort} in round 1.  Consequently in
-round 2, the suffixes contained in $B_{11}^{\;new}$ are sorted
-according to at least their first $4 +2$ characters instead of $2 + 2
-$ characters as in the \emph{qsufsort}. The keys of suffixes are:
-$key(S_0)=B[0+D[11] ^{\;new}]= 8$ and $key(S_9)=B[9+D[11]^{\;new}]=
-13$, which means $B_{11}$ can be completely sorted in round 2. By
-contrast, in the \emph{qsufsort}, the keys of suffixes in
-$B_{11}^{\;old}$ are $key(S_0) = B[0+2] = 1$ and $key(S_9) = B[9+2] =
-1$ which means $B_{11}^{\;old}$ can not be completely sorted after the
-second round.  The result is that \emph{dsufsort} algorithm only needs
-3 rounds to completely sort all the suffixes, while \emph{qsufsort}
-needs 4.
+为了说明 \emph{dsufsort} 相比于 \emph{qsufsort} 的优势, 考察在第1轮中
+对 $B_{11}^{\;old}$ 的处理过程. 由于 $B_{11}^{\;old}$ 中所包含后缀的键
+值分别为: $key(S_0)=6$, $key(S_9)=6$, $key(S_8) = 11$, $S_8$ 将构成完全
+有序的桶 $B_{13}$, 而 $S_0$ 和 $S_9$ 将构成未排序的
+桶 $B_{11}^{\;new}$. 由于 $B_{11}^{\;new}$ 产生于 $B_{11}^{\;old}$, 且
+其锚桶为 $B_6^{\;new}$, 因此 $B_{11}^{\;new}$ 的深度为
+$D[11]^{\;new} = D[11]^{\;old} + D[6]^{\;new}$. 正如已经知道的,
+$B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
+3$, 所以 $D[11]^{\;new} = 1 + 3 = 4$. 因此 $B_{11}^{\;new}$ 的深度大
+于2 (在 \emph{qsufsort} 的第1轮中, 所有桶的"深度"都为2). 这样, 在第2轮
+中, $B_{11}^{\;new}$ 中的后缀将至少基于其前 $4+2$ 个字
+符 (而非\emph{qsufsort}算法所基于的前 $2+2$ 个字符) 被排序. 其后缀的键
+值分别是: $key(S_0)=B[0+D[11] ^{\;new}]=
+8$ 和 $key(S_9)=B[9+D[11]^{\;new}]= 13$, 这说明 $B_{11}$ 可以在第2轮中
+被完全排序. 相比之下, 在 \emph{qsufsort} 算法中, $B_{11}^{\;old}$ 中后
+缀的键值为 $key(S_0) = B[0+2] = 1$ 及 $key(S_9) = B[9+2] = 1$, 这意味
+着 $B_{11}^{\;old}$ 无法在第2轮中被完全排序. 所以, \emph{dsufsort} 算法
+仅需要3轮便可对所有的后缀完成排序, 而 \emph{qsufsort} 算法则需要4轮.
 
-For the input string with a large \emph{average LCP}, the feature of
-the \emph{depth accumulations} of \emph{dsufsort} can be fully used,
-and the order of the suffixes with very long common prefix can be
-determined much faster.
+对于平均LCP较大的输入字符串, \emph{dsufsort}算法所具有的"深度叠加"的特
+性将充分发挥, 使其可以更快地确定具有较长公共前缀后缀的次序.
 
 
-\section{Efficient Implementation}
+\section{高效的实现}
 
-In this section, we describe some techniques used to derive efficient
-implementation of the proposed algorithm.
+本节中, 我们将讨论一些用于提高算法效率的实现技巧.
 
-\subsection{Input transformation}
+\subsection{输入变换}
 
-In round 0, the suffixes are sorted only according to their first
-characters. Actually, they can be sorted according to the first
-\emph{few} characters by using a technique called \emph{input
-transformation} to the input string in advance. The \emph{input
-transformation} includes the following  two phases:
+在第0轮中, 所有后缀都将基于其首字符被排序. 实际上, 通过对输入字符串进行
+预先变换, 可以使后缀根据前几个字符进行排序. 输入变换包括以下两个步骤:
 
-\subsubsection{Alphabet compaction}
+\subsubsection{字符集压缩}
 
-Given a text string $T = t_0t_1...t_{n-1}\$$ over $\Sigma$, suppose
-the characters that actually appear in $T$ form an ordered set $C =
-\{c_0, c_1,\dots, c_{m-1}\}$, in which $c_i < c_j \iff i < j$. Note
-that, the smallest terminal character '\$' must be $c_0$.  Then, for
-each character in $T$, we can replace that character by its
-corresponding ordinal number in $C$, that is: $t_i \mapsto j \iff t_i
-= c_j$.  By using this mapping, each character of $T$ is encoded as an
-integer, and the order of suffixes is preserved. With the alphabet
-compaction, $\Sigma$ is transformed into a smaller integer alphabet:
-$\{0,1,\dots,m-1\}$.
+给定$\Sigma$上的字符串 $T = t_0t_1...t_{n-1}\$$, 令实际出现于$T$ 中的字
+符构成有序集 $C = \{c_0, c_1,\dots, c_{m-1}\}$, 其中 $c_i < c_j \iff i
+< j$. 注意, 最小的终结字符 '\$' 一定是 $c_0$. 然后, 对$T$中的每一个字
+符 $t_i$, 可以将其替换为$t_i$ 在 $C$ 中的序数, 即: $t_i \mapsto j \iff
+t_i = c_j$. 通过使用这种映射,
+$T$ 中的每个字符将被映射为一个整数, 同时保持后缀之间的顺序不变. 通过字
+符集压缩, $\Sigma$ 将被转化为较小的整数集: $\{0,1,\dots,m-1\}$.
 
-\subsubsection{Characters aggregation}
+\subsubsection{字符累加}
 
 After applying the alphabet compaction to $T$, we get a new alphabet
 of size $m$: $\{0,1,\dots,m-1\}$. Let $k$ be the largest integer such
