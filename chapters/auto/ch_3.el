@@ -22,30 +22,6 @@
     "eq:ca1"
     "eq:ca2"
     "tab:data"
-    "tab:time")
-   (LaTeX-add-bibitems
-    "Manber"
-    "Karp"
-    "survey1"
-    "survey2"
-    "Copy_Cache"
-    "deep_shallow"
-    "qsufsort"
-    "bpr"
-    "RadixSA"
-    "KA"
-    "KS"
-    "KSP"
-    "Farach"
-    "two_stages"
-    "SA_IS_DS"
-    "SACA_K"
-    "em_1"
-    "em_2"
-    "em_3"
-    "t_quciksort"
-    "quicksort"
-    "DC32"
-    "dataset"))
+    "tab:time"))
  :latex)
 

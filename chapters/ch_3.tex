@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Trim Size: 9.75in x 6.5in
+%% TRIM Size: 9.75in x 6.5in
 %% Text Area: 8in (include Runningheads) x 5in
 %% ws-ijprai.cls   :   8-8-2014
 %% Class file to use with ws-ijprai.tex written in Latex2E.
@@ -76,7 +76,7 @@ biology}
 \label{sec:introduction}
 
 如何将给定字符串的所有后缀按照字典序进行排序, 是构建后缀数组(SA)的主要
-问题. 目前, \emph{qsufsort}\cite{qsufsort} 算法是解决该问题广泛使用的算
+问题. 目前, \emph{qsufsort}\cite{Larsson2007} 算法是解决该问题广泛使用的算
 法之一. 该算法对后缀进行逐轮排序, 每一轮的排序将基于上一轮的结果, 直到
 所有后缀都处于正确的字典序. 具体地, 首先所有后缀将根据其首字符进行排
 序, 然后在每一轮中, 排序所依据的字符数将翻倍, 这样, 在第\emph{k}轮之
@@ -107,64 +107,65 @@ biology}
 
 在过去的二十年中, 大量的具有不同时间和空间复杂度的后缀数组构建算法(即后
 缀排序算法) 被提出. 接下来, 将对其中的一些算法进行简要地回顾, 对其更详
-细的介绍, 可参考综述文献 \cite{survey1,survey2}.
+细的介绍, 可参考综述文献 \cite{Puglisi2007} \cite{Dhaliwal2012}.
 
 从后缀树来构造后缀数组, 是构建后缀数组最简单的方法之一, 其主要缺陷在于
-过高的空间和和时间开销. Manber 和 Myers\cite{Manber} 第一个提出了直接构
-建后缀数组的算法, 其时间复杂度为 $O(nlog^n)$ (其中$n$是给定字符串的长
-度). 该算法使用了一种被称为''前缀倍增''的技术(最早来源
-于Karp\cite{Karp}): 首先, 后缀将按照其首字符进行排序, 接着在之后的每一
-轮中, 将按照加倍长度的前缀对后缀进行排序.
-Larsson和Sadakane\cite{qsufsort} 提出了 \emph{qsufsort} 算法对Manber的
+过高的空间和和时间开销. Manber 和 Myers \cite{Manber1993} 第一个提出了
+直接构建后缀数组的算法, 其时间复杂度为 $O(nlog^n)$ (其中$n$是给定字符串
+的长度). 该算法使用了一种被称为''前缀倍增''的技术(最早来源于Karp
+\cite{Karp1972}): 首先, 后缀将按照其首字符进行排序, 接着在之后的每一轮
+中, 将按照加倍长度的前缀对后缀进行排序.
+Larsson和Sadakane\cite{Larsson2007} 提出了 \emph{qsufsort} 算法对Manber的
 算法进行改进. 与Manber算法在每一轮中都需要检查SA中所有的桶不同,
 \emph{qsufsort} 算法会标记那些之前已经被排过序的桶. 这样, 在每轮中它将
 跳过那些被标记的桶, 只对未排序的桶进行排序. 尽管在理论上,
 \emph{qsufsort} 算法和Manber的算法具有相同的时间复杂度, 在实际当中,
-\emph{qsufsort}算法要高效得多. Schurmann\cite{bpr} 提出了一种具
+\emph{qsufsort}算法要高效得多. Schurmann\cite{Schurmann2007} 提出了一种具
 有 $O(n^2)$ 时间复杂度的方法-- \emph{bpr}. 与Manber算法
 和 \emph{qsufsort} 算法在每一轮中使用广度优先策略来对每一个桶进行排序不
 同, \emph{bpr} 使用了深度优先的排序策略: 对于每一个未排序的桶, 它将递归
 地对其中的后缀进行排序, 直到所有后缀都完全有序.  Rajasekaran
-\cite{RadixSA} 提出了被称为 \emph{RadixSA} 的新算法, 该算法具
+\cite{Rajasekaran2014} 提出了被称为 \emph{RadixSA} 的新算法, 该算法具
 有 $O(nlog^n)$ 的时间复杂度. 与前面三个算法使用简单的从左到右的顺序来对
 桶进行排序不同, \emph{RadixSA} 使用了特殊的排序顺序: 假设第$i$个后
 缀 $S_i$ 处于桶$B_i$中, 那么算法将首先对桶 $B_n$ 进行排序, 然后依次对
 桶 $B_{n-1},\,\dots,\, B_1$ 进行排序. 这种顺序确保了在对桶 $B_i$ 排序之
 后, 后缀$S_i$ 已经处于其在SA中的最终位置.
 
-Seward\cite{Copy_Cache} 提出了另外两个后缀排序算法:
+Seward \cite{Seward2000} 提出了另外两个后缀排序算法:
 \emph{Copy} 和 \emph{Cache}. 它们首先将基于后缀的前两个字符对其进行排
 序, 然后按照由小到大的顺序(即根据桶中所包含后缀的多少，由少到多)对未排
 序的桶进行排序, 一旦一个桶完全有序, 排序的结果将被后续过程使用. 然而,
 \emph{Copy} 和 \emph{Cache} 使用相同的函数对所有后缀进行排序， 这对具有
 很长公共前缀的后缀(即具有较大$LCP$的后缀)效率不高. 为解决此问题,
-Manzini\cite{deep_shallow} 提出了被称为 \emph{deep-shallow} 的算法. 当
+Manzini \cite{Manzini2004} 提出了被称为 \emph{deep-shallow} 的算法. 当
 对一个桶进行排序时, \emph{deep-shallow} 会使用\emph{shallow} 排序函数对
 具有较短公共前缀的后缀进行排序， 而使用 \emph{deep} 排序函数对具有较长
 公共前缀的后缀进行排序。 尽管 \emph{deep-shallow} 在理论上有良好的性能,但
 复杂的框架限制了它在实际当中的使用。
 
 以上所介绍的算法都具有超线性的时间复杂度。 然而, 已经有线性时间复杂度的
-算法被提出，比较知名的包括 \emph{KA}\cite{KA},
-\emph{KS}\cite{KS} 和 \emph{KSP}\cite{KSP} 算法. \emph{KSP} 算法采用了
-和Farach算法\cite{Farach} 类似地归并策略。 \emph{KS} 算法使用了分而治之
-的策略，包含3步: (1) 递归地为那些起始于位置 $i$ ($i~mod~3 \neq 0$) 的后
-缀构造后缀数组； (2) 使用第一步的排序结果，为那些剩余后缀构建后缀数
-组； (3) 将第一步和第二步中构建的后缀数组合并为一个. \emph{KA} 算法
-是 \emph{two-stage} 算法\cite{two_stages} 的一个改进, 它将字符串中的所
-有后缀分成两类：L-类和S-类。 然后递归地对所有L-类后缀进行排序，之
-后，S-类后缀的顺序可由L-类后缀的顺序诱导得到。 Nong\cite{SA_IS_DS}提出
-了两个算法 \emph{SA-IS} 和 \emph{SA-DS} 来改进 \emph{KA} 算法。 它们分
-别使用了“变长最左S-类子串”和“定长d-关键子串”来对问题进行规约, 同时
-使用了简单高效的算法对这些采样子串进行排序。 最近, Nong\cite{SACA_K} 针
-对常量字符集又提出了一个线性时间算法--\emph{SACA-K}, 该算法仅需
-要 $O(1)$ 大小的工作空间. 尽管线性时间算法在理论上具有较好的时间复杂度，
-但在实际应用中， 它们的性能却常常不如在实现方面经过高度优化过的超线性算
-法\cite{RadixSA}.
+算法被提出，比较知名的包括 \emph{KA} \cite{Ko2005}, \emph{KS}
+\cite{Karkkainen2006} 和 \emph{KSP}\cite{Kim2005} 算法. \emph{KSP} 算法
+采用了和Farach算法 \cite{Farach1997} 类似地归并策略。 \emph{KS} 算法使
+用了分而治之的策略，包含3步: (1) 递归地为那些起始于位置 $i$ ($i~mod~3
+\neq 0$) 的后缀构造后缀数组； (2) 使用第一步的排序结果，为那些剩余后缀
+构建后缀数组； (3) 将第一步和第二步中构建的后缀数组合并为一个.
+\emph{KA} 算法是 \emph{two-stage} 算法\cite{Itoh1999} 的一个改进, 它将
+字符串中的所有后缀分成两类：L-类和S-类。 然后递归地对所有L-类后缀进行排
+序，之后，S-类后缀的顺序可由L-类后缀的顺序诱导得到。 Nong
+\cite{Nong2011}提出了两个算法 \emph{SA-IS} 和 \emph{SA-DS} 来改
+进 \emph{KA} 算法。 它们分别使用了“变长最左S-类子串”和“定长d-关键子
+串”来对问题进行规约, 同时使用了简单高效的算法对这些采样子串进行排
+序。 最近, Nong\cite{Nong2013} 针对常量字符集又提出了一个线性时间算
+法--\emph{SACA-K}, 该算法仅需要 $O(1)$ 大小的工作空间. 尽管线性时间算法
+在理论上具有较好的时间复杂度，但在实际应用中， 它们的性能却常常不如在实
+现方面经过高度优化过的超线性算法 \cite{Rajasekaran2014}.
 
-目前, 有许多外存算法\cite{em_1,em_2,em_3} 被提出用于构建较大的后缀数组,外
-存算法所需要的空间主要由价格低廉且空间巨大的磁盘来提供。 通过使用外存算
-法，可以构造出那些无法放入内存的巨大后缀数组。
+目前, 有许多外存算法\cite{Karkkainen2014} \cite{Nong2014}
+\cite{Nong2015} 被提出用于构建较大的后缀数组,外存算法所需要的空间主要由
+价格低廉且空间巨大的磁盘来提供。 通过使用外存算法，可以构造出那些无法放
+入内存的巨大后缀数组。
 
 \section{相关概念}
 \label{sec:stucture}
@@ -510,42 +511,39 @@ $B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
 
 \section{高效的实现}
 
-本节中, 我们将讨论一些用于提高算法效率的实现技巧.
+本节中, 将讨论一些用于提高算法效率的实现技巧.
 
 \subsection{输入变换}
 
-在第0轮中, 所有后缀都将基于其首字符被排序. 实际上, 通过对输入字符串进行
-预先变换, 可以使后缀根据前几个字符进行排序. 输入变换包括以下两个步骤:
+在第0轮中, 所有后缀都将基于其首字符被排序. 实际上, 通过预先对输入字符串
+进行变换, 可以使后缀根据前几个字符进行排序. 输入变换包括以下两个步骤:
 
 \subsubsection{字符集压缩}
 
 给定$\Sigma$上的字符串 $T = t_0t_1...t_{n-1}\$$, 令实际出现于$T$ 中的字
 符构成有序集 $C = \{c_0, c_1,\dots, c_{m-1}\}$, 其中 $c_i < c_j \iff i
-< j$. 注意, 最小的终结字符 '\$' 一定是 $c_0$. 然后, 对$T$中的每一个字
-符 $t_i$, 可以将其替换为$t_i$ 在 $C$ 中的序数, 即: $t_i \mapsto j \iff
-t_i = c_j$. 通过使用这种映射,
+< j$. 注意, 末尾的终结字符 '\$', 一定是 $c_0$. 然后, 对$T$中的每一个字
+符 $t_i$, 将其替换为$t_i$ 在 $C$ 中的序数, 即: $t_i \mapsto j \iff t_i
+= c_j$. 通过使用这种映射,
 $T$ 中的每个字符将被映射为一个整数, 同时保持后缀之间的顺序不变. 通过字
 符集压缩, $\Sigma$ 将被转化为较小的整数集: $\{0,1,\dots,m-1\}$.
 
 \subsubsection{字符累加}
 
-After applying the alphabet compaction to $T$, we get a new alphabet
-of size $m$: $\{0,1,\dots,m-1\}$. Let $k$ be the largest integer such
-that $m^k-1$ can be held in a typical machine integer. Then, for each
-suffix of $T$, we can aggregate its first $k$ characters into one
-using the following formula:
+通过对 $T$ 使用字符压缩, 可以得到一个大小为 $m$ 的整数集:
+$\{0,1,\dots,m-1\}$. 令 $k$ 为最大的整数, 使得 $m^k-1$ 可以由一个典型的
+机器整数类型表示(比如 int型). 然后, 对 $T$ 的每个后缀, 将其前 $k$个字符
+通过以下方式累加:
 
 \begin{equation}\label{eq:ca1}
   T[i] = \sum_{j=1}^k t_{i+j-1} \cdot m^{k-j}  ~~(0 \leq i \leq n),
 \end{equation}
 
-\noindent where we define $t_s = 0$, for $s \geq n$.  In round 0,
-$T[i]$ is used as the key for $S_i$, thus, sorting is based on not
-only the first character of each suffixes, but also the first $k$
-characters. The subsequent rounds of sorting can start with bucket
-depth $k$ instead of 1, and the number of rounds will be
-reduced. Formula (\ref{eq:ca1}) can be computed in linear time through
-an alternate form:
+\noindent 其中, 定义 $t_s = 0$, 对于所有 $s \geq n$. 在第0轮中, $T[i]$
+将作为 $S_i$ 的键值, 这样, 排序将不仅仅基于后缀的首字符, 而是其前 $k$
+个字符. 随后的排序过程将从深度为 $k$的桶开始, 而不是深度为1的桶, 因此,
+所需要的排序轮数也会减少. 公式 (\ref{eq:ca1}) 可以由以下线性时间算法替
+代:
 
 \begin{equation}\label{eq:ca2}
  T[i]  = \left\{
@@ -556,106 +554,75 @@ an alternate form:
 \end{equation}
 
 \par\noindent
-where $t_s = 0$, for $s \geq n$. The multiplication and modulo
-operation can be replaced by faster bitwise operations \emph{shift}
-and \emph{and}.
+其中, 对于 $s \geq n$ 令 $t_s = 0$. 乘法和取模操作可由更快的"按位与"和
+移位操作实现.
 
-Note that, since the alphabet of $T$ may not be consecutive after
-characters aggregation, we need to use alphabet compaction again to
-the new aggregated string $T$.
+注意, 由于在对 $T$ 进行字符累加后, 其字符集将变得不再连续, 所以需要再次
+对累加后的$T$使用字符集压缩技术.
 
-\subsection{Initial bucket sorting}
+\subsection{初始桶排序}
 
-The round 0 (initialization) of the algorithm is quite independent
-to the rest of the algorithm and is not required to use the same
-sorting method as the following rounds. Since this step must process
-all of the suffixes in a single round, a substantial improvement
-can be gained by using a linear time bucket sorting algorithm
-instead of a comparison-based algorithm that requires $O(nlog^n)$
-time.
+算法的第0轮 (初始化) 将独立于算法的其余部分, 它不需要使用和后续过程相同
+的排序方法. 由于这一轮将处理所有的后缀, 通过使用一个线性时间复杂度的桶
+排序算法来取代基于比较的$O(nlog^n)$时间算法, 可以使算法性能得到很大提升.
 
-A reasonable improvement can be gained by combining bucket sorting
-with input transformation as described above. Given a string $T =
-t_0t_1 \dots t_{n-1}\$$, suppose the new alphabet after applying input
-transformation to $T$ is $I = \{0,1,\dots,m-1\}$. For each integer $i$ in
-$I$, its number of occurrences in $T$ is counted and an array $F$ of size $m$ is
-used to record that number. In particular, if integer $i$ occurs
-$j$ times in $T$, then $F[i] = j$, and based on this definition, there
-is $\sum_{i=0}^{m-1} F[i] = n + 1$. To conclude, the round 0 of the
-\emph{dsufsort} algorithm using bucket sorting includes the following four steps:
+一种十分有效的方式是结合桶排序算法和以上介绍的输入变换技术. 给定字符
+串 $T = t_0t_1 \dots t_{n-1}\$$, 假设对 $T$ 进行输入变换之后, 新的字符
+集为 $I = \{0,1,\dots,m-1\}$. 对 $I$ 中每一个整数 $i$, 它在$T$ 中的出现
+频率记录在一个长为 $m$ 的数组 $F$ 中. 具体地讲,如果整数 $i$ 在 $T$中出
+现了 $j$ 次, 则有 $F[i] = j$, 基于此, 一定有 $\sum_{i=0}^{m-1} F[i] =
+n + 1$. 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 
 \begin{arabiclist}
-\item Initialize $F$: $\forall i \in I$, set $F[i] = 0$.
-\item Scan $T$ forwards to compute the occurrence frequency of
-its symbols: for $i = 0,\dots,n$, increment $F[T[i]]$ by 1.
-\item Traverse $F$ forwards, and sum adjacent elements so as
-to form cumulative frequency counts: for $i = 1, \dots, m-1$, set
-$F[i] = F[i] + F[i-1]$.
-\item Scan $T$ backwards to put each of its suffix in the proper
-bucket: for $i = n, n-1,\dots, 0$, decrement $F[T[i]]$ by 1, and set
-$SA[F[T[i]]] = i$.
+\item 初始化 $F$: $\forall i \in I$, 令 $F[i] = 0$.
+\item 正向扫描 $T$, 计算其中每个字符的出现频率: 对 $i =
+  0,\dots,n$, 将 $F[T[i]]$ 加1.
+\item 正向遍历 $F$, 相加相邻元素: 对 $i = 1, \dots, m-1$, 令 $F[i] =
+  F[i] + F[i-1]$.
+\item 反向扫描 $T$, 将其每个后缀放入适当的桶内: 对 $i = n, n-1,\dots,
+  0$, 将 $F[T[i]]$ 减1, 同时令 $SA[F[T[i]]] = i$.
 \end{arabiclist}
 
-After round 0, SA is partitioned into $m$ (completely sorted or
-unsorted) buckets , and all suffixes in an unsorted bucket start with
-the same $k$ characters. In essence, the term \emph{bucket} in the
-\emph{bucket sort} here is exactly the depth-$k$ bucket defined by
-Definition 5 in the Preliminaries.
+第0轮过后, SA将被划分为$m$个桶 (完全有序的或未排序的), 且未排序的桶中所
+包含的后缀, 其前$k$个字符都相同. 实际上, "桶排序"中的"桶"的概念特指由定
+义5中所定义的深度为$k$的桶.
 
-\subsection{Choosing an integer sorting subroutine}
+\subsection{选择整数排序算法}
 
-Both of the \emph{qsufsort} and the \emph{dsufsort} algorithm need an
-integer sorting subroutine to sort the keys, thus, this subsidiary
-subroutine may have a great effect on the performance of the whole
-algorithms. The sorting subroutine used in this paper is called
-\emph{split-end partitioning} which is proposed by Bentley and
-Mcllroy\cite{t_quciksort}. It is a variant of the well known
-\emph{Quicksort}\cite{quicksort}, but uses a \emph{ternary-split
-partition} strategy.
+前面提到过, \emph{qsufsort} 算法和 \emph{dsufsort} 算法都需要一个整数排
+序子程序来对键值进行排序, 因此, 该整数排序子程序对算法整体的性能具有重
+要影响. 本章中所使用的子程序被称为 \emph{split-end
+  partitioning}, 由Bentley和Mcllroy\cite{Bentley1993} 提出. 它是著名的
+快速排序算法\cite{Hoare1962}的一种变体, 使用了三元分割策略.
 
-The classical \emph{Quicksort} which uses a \emph{binary-split
-partition} strategy recursively partitions an array into \emph{two}
-parts, one with smaller elements than a pivot element and one with
-larger elements. Then the parts are processed recursively until the
-whole array is sorted. The \emph{Quicksort} mixes the elements being
-equal to the pivot into one or both of the parts depending on the
-implementation. However, the \emph{split-end partitioning} algorithm
-which uses a ternary-split partition strategy generates \emph{three}
-parts: one with elements smaller than the pivot, one with elements
-equal to the pivot, and one with elements larger than the pivot. The
-smaller and larger parts are then processed recursively while the
-equal part is remained, since its elements are already correctly
-placed.
+经典的快速排序算法使用二元分割策略, 递归地将待排序数组分为两部分, 其中
+一部分的元素小于枢轴元素, 令一部分的元素大于枢轴. 接着, 这两部分将被递
+归地处理, 直到整个数组有序. 快速排序算法将相等于枢轴的元素放入其中一个
+数组部分或同时放入两个部分, 取决于具体实现. 然而, 使用三元分割
+的 \emph{split-end partitioning} 算法将数组划分为3个部分: 一部分元素小
+于枢轴, 一部分元素大于枢轴, 另一部分元素等于枢轴. 大于或小于枢轴元素的
+部分将被递归地排序, 而等于枢轴的部分则保持不变, 因为其中元素已经处于正
+确的位置.
 
-The implementation of \emph{split-end partitioning} in our algorithm
-is based on Program 7 of Bentley and Mcllroy \cite{t_quciksort} with
-one exception: for fast handling of small buckets, a variant of
-selection sort which is non-recursive is used to sort buckets with
-less than 7 elements.
+对 \emph{split-end partitioning} 算法的实现将直接基于Bentley和Mcllroy
+\cite{Bentley1993} 中的Program 7, 只有一点例外: 为了快速处理较小的桶,
+将使用一种非递归的选择排序方法来处理后缀数量小于7的桶.
 
+\section{实验结果}
 
-\section{Experimental Results}
+本节将比较 \emph{dsufsort} 算法和其它三个比较知名的算法
+即 \emph{qsufsort} \cite{Larsson2007},
+\emph{DC32}\cite{Burkhardt2003} 算法, 和 \emph{KS} 算法\cite{Karkkainen2006}. 其中
+\emph{dsufsort} 算法是 \emph{qsufsort} 算法的改进. \emph{DC32} 算法是
+将 difference-cover设置为模32的 \emph{difference-cover} 算法.
+\emph{KS} 是最快的具有线性时间复杂度的后缀排序算法之一. 通过使用现实世
+界中的数据和人工产生的(具有较大平均LCP的)数据来评估测试算法的性能.
 
-We compared the \emph{dsufsort} algorithm to three well known
-algorithms, i.e. the original \emph{qsufsort}
-algorithm\cite{qsufsort}, the \emph{DC32}\cite{DC32} algorithm, and
-the \emph{KS} algorithm\cite{KS}.  Our \emph{dsufsort} algorithm is an
-improvement of \emph{qsufsort} algorithm. The \emph{DC32} is the
-\emph{difference-cover} algorithm with difference-cover modulo 32.
-The \emph{KS} algorithm is one of the fastest suffixes sorting
-algorithms of a worst-case linear time complexity. We evaluated the
-performance of these algorithms for real world data and for
-degenerated data: artificial strings with very high \emph{average
-LCP}.
-
-The experiments were performed on a notebook running Ubuntu
-14.04-64bit operating system with the following configuration: Intel
-Core i7-2630QM 2.00GHz processor, 8GB 1333Mhz DDR3 SDRAM, 500GB SATA
-disk. All the programs were implemented in C/C++, and compiled by
-\emph{gcc} 4.8.2 with flags``--O3''. To ensure the correctness of the
-testing algorithms, all the sorting results are checked by a
-\emph{suffix array checker} which is described in
-Burkhardt\cite{DC32}.
+实验在一台笔记本电脑是进行, 软硬件配置如下: Intel Core i7-2630QM
+2.00GHz CPU, 8GB RAM, 500GB 磁盘. 操作系统为 Ubuntu 14.04-64bit.  所有
+算法由 C/C++ 实现, 由 \emph{gcc} 4.8.2 编译 (-O3). 为了确保算法实现的正
+确性, 所有测试算法的排序结果都由Burkhardt \cite{Burkhardt2003} 提供的检测程
+序 \emph{suffix array checker} 检验.
 
 \begin{table}[th]
 \tbl{Data sets used in the experiment.}
@@ -671,16 +638,15 @@ Burkhardt\cite{DC32}.
   \label{tab:data}
 \end{table}
 
-The real world data set we used in the experiment is the \emph{Pizza
- Chili Corpus}\cite{dataset} which contains six kinds of data:
-source code, pitch values, protein sequence, DNA sequence, English
-text, and XML files. The characteristic of the data set is shown in
-Table 1 which shows the size, the average and maximum LCP
-lengthes for each file. The average/maximum LCP for a string is the
-average/maximum ones for all pairs of adjacent suffixes in the suffix
-array .The maximum LCP length is equivalent to the length of the
-longest repeated substring. These values give a good estimate of the
-repetitiveness of the data.
+实验所使用的现实世界数据来源于 \emph{Pizza Chili Corpus}
+(http://pizzachil.dcc.uchile.cl) 语料库, 其中包含6中类型的数据: 源代
+码 (source code), 音符 (pitch values), 蛋白质序列 (protein sequence),
+DNA 序列(DNA sequence), 英文文本 (English text), 和 XML文本 (XML
+files). 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括数据集大
+小 (size), 每个文件(字符串)的平均/最大LCP. 字符串的平均/最大LCP指的是为
+该字符串所构建的后缀数组中, 任意相邻后缀的平均/最大LCP. 字符串的最
+大LCP等价于字符串中最长重复子串的长度. 这些特性参数能够较好的反映数据的
+重复程度.
 
 \begin{table}
   \tbl{Sorting times in seconds.}
@@ -703,166 +669,140 @@ repetitiveness of the data.
   \label{tab:time}
 \end{table}
 
-Table 2 shows the mean sorting time of each testing algorithm based on
-10 independent runs, in which the best run times among all compared
-algorithms are shown in bold. We also use artificial repetitive files
-to test the robustness of the testing algorithms. The first two files
-contain solely the letter \emph{a} and the pair \emph{ab}
-respectively, and the following three files that have the form
-`\emph{rand-k-rep}' are generated by a single random \emph{seed}
-string of length $k$ which is repeated until 100MB characters are
-reached.
+表 \ref{tab:time} 显示了每个测试算法基于10次独立运行的平均运行时间, 其
+中最好的结果将加粗显示. 我们同样使用了人工产生的重复数据来测试算法的鲁
+棒性. 前两个人工产生的文件分别由单个字符 'a' 和 字符块 'ab' 组成, 随后
+的三个具有 \emph{rand-k-rep} 形式的文件, 是由长度为 $k$ 的随机字符串重
+复出现, 直到构成100MB的数据.
 
-From the results, we can see that, for real world data, the
-\emph{dsufsort} and the \emph{qsufsort} perform best, and the
-\emph{dsufsort} performs better than \emph{qsufsort} on most real
-world data. Only for Proteins and XML files which have very low
-\emph{average LCP}, \emph{dsufsort} performs a little bit worse than
-\emph{qsufsort}. The reason is that, compared with \emph{qsufsort},
-the \emph{dsufsort} needs to read and update the $D$ array during the
-processing, and these operations require additional random memory
-accesses which will lead to additional cache misses. So the time cost
-will be over the one we saved from the \emph{depth accumulation} which
-is not very effective for strings with very low \emph{average LCP}.
+从实验结果可得, 对于真实数据, \emph{dsufsort} 和 \emph{qsufsort} 算法表
+现地最好, 其中对于大多数真实数据, \emph{dsufsort} 要优
+于 \emph{qsufsort} 算法. 仅仅对于蛋白质和XML这两种平均LCP极低的数据,
+\emph{dsufsort} 稍逊于 \emph{qsufsort}. 主要原因
+是, 相比 \emph{qsufsort}, \emph{dsufsort} 算法在运行过程中需要实时更
+新 $D$ 数组, 这需要额外的时间开销. 而对于平均LCP极低的数据, 由深度累加
+技术所带来的时间上的收益, 将不足以抵消更新 $D$ 数组的开销.
 
-For artificial data whose \emph{average LCP} is relatively high, the
-\emph{dsufsort} can dramatically reduce the time for sorting suffixes
-with long \emph{LCP}. The results in Table 2 also show that
-\emph{dsufsort} dominates others except for \emph{KS} on one file
-(rand-20-rep) where the liner time algorithm \emph{KS} is faster. This
-is because the performance of linear time algorithm is not severely
-affected by the characteristic of input data.  However the \emph{KS}
-algorithm performs not well for ordinary data, and this limits its
-application in practice.
+对于平均LCP相对较高的人工数据, \emph{dsufsort} 算法可以极大地节省运行时
+间. 表 \ref{tab:time} 中的结果显示, \emph{dsufsort} 对于大部分人工数据
+都优于其它算法, 除了在 \emph{rand-20-rep} 数据上稍逊于线性时间算
+法 \emph{KS}. 这是由于, 线性时间算法的性能较为稳定, 受测试数据特性的影
+响较小. 然而, \emph{KS} 算法对于普通真实数据并不十分高效, 这限制了其在
+实际环境中的应用.
 
-In summary, we can draw the conclusion that \emph{dsufsort}
-algorithm outperforms the others in most cases. Only for case with
-very low \emph{average LCP}, \emph{dsufsort} algorithm does not
-outperform \emph{qsufsort}, and for case with very high
-\emph{average LCP}, it does not outperform \emph{KS} algorithm
-sometimes.
+综上所述, 对于绝大多数测试数据, \emph{dsufsort} 算法的性能都是最优
+的. 仅仅对于平均LCP极低或极高的数据, \emph{dsufsort} 稍逊
+于 \emph{qsufsort} 和 \emph{KS} 算法.
 
-\section{Conclusions and Future Work}
+\section{本章小节}
 
-In this paper, an efficient suffixes sorting algorithm,
-i.e. \emph{dsufsort}, is proposed, which is based on the framework of
-\emph{qsufsort}. Unlike the \emph{qsufsort} sort suffixes according to
-a fixed number of characters in each round, \emph{dsufsort} maintains
-the depth for each unsorted bucket, and sort the bucket based its
-depth, furthermore, the \emph{accumulation of depths} during
-processing makes \emph{dsufsort} very efficient, especially for
-strings with large \emph{average LCP}.
+本章提出了一种基于\emph{qsufsort}算法的高效的后缀排序算
+法 \emph{dsufsort}. 不同于 \emph{qsufsort} 算法在每轮中都依据固定数量的
+前缀字符来对后缀进行排序, \emph{dsufsort} 会维持每个未排序桶的深度, 并
+基于桶深来对其中后缀进行排序, 其深度累加效应使得 \emph{dsufsort} 相比
+于 \emph{qsufsort} 算法更加高效, 尤其对于平均LCP较大的数据.
 
-There are two problems left for further research: Firstly, in our
-implementation, the unsorted buckets are simply processed one by one
-from left to right. However, the order in which the buckets are
-processed can have an effect on the performance of algorithm, so what
-is the best order from which the buckets should be processed?
-Secondly, the $D$ array used to record the depth information may be
-very sparse, which leads to unnecessary excessive memory
-consumption. How to compact the $D$ array to reduce the space
-complexity?
+未来将关注于两个问题: 首先, 在当前的实现中, 未排序的桶将按照从左到右的
+顺序依次处理, 然而, 对桶的处理顺序会对算法的性能造成一定影响, 所以我们
+将致力于寻求最优的桶处理顺序. 其次, 用来记录桶深的 $D$ 数组可能会非常稀
+疏, 这会增加空间开销, 所以研究稀疏数组压缩技术也非常重要.
 
-\section*{Acknowledgements}
-
-This work is supported by National Natural Science Foundation of China
-(No.61203372, No.61472297 and No.U1404622).
 
 \begin{thebibliography}{99}
 
-\bibitem{Manber} U. Manber and G. Myers, ``Suffix arrays: A new method
-for on-line string searches,'' {\it SIAM J: Comput.}, {\bf 22}(1993)
-935--948.
+% \bibitem{Manber} U. Manber and G. Myers, ``Suffix arrays: A new method
+% for on-line string searches,'' {\it SIAM J: Comput.}, {\bf 22}(1993)
+% 935--948.
 
-\bibitem{Karp} Karp RM, Miller RE and Rosenberg AL, ``Rapid
-identification of repeated patterns in strings, trees and arrays,''
-{\it Proc. 4th Ann. Theory of Computing}. ACM Press, New York, 1972,
-pp.~125--136.
+% \bibitem{Karp} Karp RM, Miller RE and Rosenberg AL, ``Rapid
+% identification of repeated patterns in strings, trees and arrays,''
+% {\it Proc. 4th Ann. Theory of Computing}. ACM Press, New York, 1972,
+% pp.~125--136.
 
-\bibitem{survey1} S.J. Puglisi, W.F. Smyth and A.H. Turpin, ``A
-Taxonomy of Suffix Array Construction Algorithms,'' {\it ACM Computing
-Surveys.} {\bf 39}(2007) 1--31.
+% \bibitem{survey1} S.J. Puglisi, W.F. Smyth and A.H. Turpin, ``A
+% Taxonomy of Suffix Array Construction Algorithms,'' {\it ACM Computing
+% Surveys.} {\bf 39}(2007) 1--31.
 
-\bibitem{survey2} J. Dhaliwal, S.J. Puglisi and A. Turpin, ``Trends in
-Suffix Sorting: A Survey of Low Memory Algorithms,'' {\it
-Proc. 12nd. Australasian Computer Science Conference}, Darlinghurst,
-Australia, 2012. pp. ~91--98.
+% \bibitem{survey2} J. Dhaliwal, S.J. Puglisi and A. Turpin, ``Trends in
+% Suffix Sorting: A Survey of Low Memory Algorithms,'' {\it
+% Proc. 12nd. Australasian Computer Science Conference}, Darlinghurst,
+% Australia, 2012. pp. ~91--98.
 
-\bibitem{Copy_Cache} J. Seward, ``On the performance of BWT sorting
-algorithms,'' {\it In DCC: Data Compression Conference}, IEEE Computer
-Society Press, Los Alamitos, CA, 2000.  pp.~173--182
+% \bibitem{Copy_Cache} J. Seward, ``On the performance of BWT sorting
+% algorithms,'' {\it In DCC: Data Compression Conference}, IEEE Computer
+% Society Press, Los Alamitos, CA, 2000.  pp.~173--182
 
-\bibitem{deep_shallow} Giovanni Manzini and Palol Ferragina,
-``Engineering a lightweight suffix array construction
-algorithm''. {\it Algorithmica}. {\bf 40}(2004) 33--50.
+% \bibitem{deep_shallow} Giovanni Manzini and Palol Ferragina,
+% ``Engineering a lightweight suffix array construction
+% algorithm''. {\it Algorithmica}. {\bf 40}(2004) 33--50.
 
-\bibitem{qsufsort} N. Larsson and K. Sadakane, ``Faster suffix
-sorting,'' {\it Theor. Comput. Sci.} {\bf 387}(2007) 258--272.
+% \bibitem{qsufsort} N. Larsson and K. Sadakane, ``Faster suffix
+% sorting,'' {\it Theor. Comput. Sci.} {\bf 387}(2007) 258--272.
 
-\bibitem{bpr} K.-B. Schurmann and J. Stoye, ``An incomplex algorithm
-for fast suffix array construction,'' {\it Softw. Pract. Exp.}  {\bf
-37}(2007) 309--329.
+% \bibitem{bpr} K.-B. Schurmann and J. Stoye, ``An incomplex algorithm
+% for fast suffix array construction,'' {\it Softw. Pract. Exp.}  {\bf
+% 37}(2007) 309--329.
 
-\bibitem{RadixSA} S. Rajasekaran and M. Nicolae, ``An elegant
-algorithm for the construction of suffix arrays,'' {\it J.  Discrete
-Algorithms}. {\bf 27} (2014) 21--28.
+% \bibitem{RadixSA} S. Rajasekaran and M. Nicolae, ``An elegant
+% algorithm for the construction of suffix arrays,'' {\it J.  Discrete
+% Algorithms}. {\bf 27} (2014) 21--28.
 
-\bibitem{KA} P. Ko and S. Aluru, ``Space Efficient Linear Time
-Construction of Suffix Arrays,'' {\it J. Discrete Algoritms.} {\bf
-3}(2005) 143--156.
+% \bibitem{KA} P. Ko and S. Aluru, ``Space Efficient Linear Time
+% Construction of Suffix Arrays,'' {\it J. Discrete Algoritms.} {\bf
+% 3}(2005) 143--156.
 
-\bibitem{KS} J. Karkkainen, P. Sanders and S. Burkhardt, ``Linear Work
-Suffix Array Construction,'' {\it J. ACM.} {\bf 53}(2006) 918--936.
+% \bibitem{KS} J. Karkkainen, P. Sanders and S. Burkhardt, ``Linear Work
+% Suffix Array Construction,'' {\it J. ACM.} {\bf 53}(2006) 918--936.
 
-\bibitem{KSP} Kim, Sim, H. Park and K. Park, ``Consructing suffix
-arrays in linear time,'' {\it J. Discrete Algorithms.} {\bf 3}(2005)
-126--142.
+% \bibitem{KSP} Kim, Sim, H. Park and K. Park, ``Consructing suffix
+% arrays in linear time,'' {\it J. Discrete Algorithms.} {\bf 3}(2005)
+% 126--142.
 
-\bibitem{Farach} M. Farach. ``Optimal Suffix Tree Construction with
-Large Alphabets,'' {\it Proc. 38th Ann. Symp. Foundations of Computer
-Science}. Miami Beach, FL, Oct. 1997, pp.~137--143.
+% \bibitem{Farach} M. Farach. ``Optimal Suffix Tree Construction with
+% Large Alphabets,'' {\it Proc. 38th Ann. Symp. Foundations of Computer
+% Science}. Miami Beach, FL, Oct. 1997, pp.~137--143.
 
-\bibitem{two_stages} H. Itoh and H. Tanaka, ``An Efficient Method for
-In Memory Construction of Suffix Arrays,'' . {\it
-Proc. 2nd. Ann. Symp. String Processing and Information Retrieval
-Symposium \& International Workshop on Groupware} Cancun, Mexico,
-September. 1999, pp.~34--42.
+% \bibitem{two_stages} H. Itoh and H. Tanaka, ``An Efficient Method for
+% In Memory Construction of Suffix Arrays,'' . {\it
+% Proc. 2nd. Ann. Symp. String Processing and Information Retrieval
+% Symposium \& International Workshop on Groupware} Cancun, Mexico,
+% September. 1999, pp.~34--42.
 
-\bibitem{SA_IS_DS} Nong, G., Zhang,S. and Chan,W.H, ``Two efficient
-algorithms for linear time suffix array construction,'' {\it IEEE
-Trans. Comput.} {\bf 60}(2011) 1471--1484.
+% \bibitem{SA_IS_DS} Nong, G., Zhang,S. and Chan,W.H, ``Two efficient
+% algorithms for linear time suffix array construction,'' {\it IEEE
+% Trans. Comput.} {\bf 60}(2011) 1471--1484.
 
-\bibitem{SACA_K} Nong, g., ``Practical Linear-Time O(1)-Workspace
-Suffix Sorting for Constant Alphabets'' {\it ACM Trans. Information
-System.} {\bf 31}(2013): 15:1--15:15.
+% \bibitem{SACA_K} Nong, g., ``Practical Linear-Time O(1)-Workspace
+% Suffix Sorting for Constant Alphabets'' {\it ACM Trans. Information
+% System.} {\bf 31}(2013): 15:1--15:15.
 
-\bibitem{em_1} J.Kaarkkainen and D.Kempa, ``Engineering a Lightweight
-External Memory Suffix Array Construction Algorithm''{\it Proc. 2nd.
-International Conference on Algorithms for Big Data,} Palermo, Italy,
-April. 2014, pp.~7--9.
+% \bibitem{em_1} J.Kaarkkainen and D.Kempa, ``Engineering a Lightweight
+% External Memory Suffix Array Construction Algorithm''{\it Proc. 2nd.
+% International Conference on Algorithms for Big Data,} Palermo, Italy,
+% April. 2014, pp.~7--9.
 
-\bibitem{em_2} Nong.G, Chan.W.H, Zhang.S, and Guan.X.F., ``Suffix
-Array Construction in External Memory Using D-Critical Substrings''
-{\it ACM Trans. Information Systems.} {\bf 32}(2014) 1:1--1:15.
+% \bibitem{em_2} Nong.G, Chan.W.H, Zhang.S, and Guan.X.F., ``Suffix
+% Array Construction in External Memory Using D-Critical Substrings''
+% {\it ACM Trans. Information Systems.} {\bf 32}(2014) 1:1--1:15.
 
-\bibitem{em_3} Nong.G, Chan.W.H, Hu.S.Q and Wu.Y., ``Induced Sorting
-Suffixes in External Memory,'' {\it ACM Trans. Information Systems.}
-{\bf 33}(2015) 12:1--12:15.
+% \bibitem{em_3} Nong.G, Chan.W.H, Hu.S.Q and Wu.Y., ``Induced Sorting
+% Suffixes in External Memory,'' {\it ACM Trans. Information Systems.}
+% {\bf 33}(2015) 12:1--12:15.
 
-\bibitem{t_quciksort} Jon L.Bentley and M. Douglas Mcllroy,
-``Engineering a sort function,'' {\it Softw. Pract. Exp.} {\bf
-23}(1993) 1249--1265.
+% \bibitem{t_quciksort} Jon L.Bentley and M. Douglas Mcllroy,
+% ``Engineering a sort function,'' {\it Softw. Pract. Exp.} {\bf
+% 23}(1993) 1249--1265.
 
-\bibitem{quicksort} C.A.R.Hoare. ``Quickfort,''{\it Computer
-Journal}. {\bf 5} (1962) 10--15.
+% \bibitem{quicksort} C.A.R.Hoare. ``Quickfort,''{\it Computer
+% Journal}. {\bf 5} (1962) 10--15.
 
-\bibitem{DC32} S.Burkhardt, J.KarKKainen, ``Fast lightweight suffix
-array construction and checking,'' {\it Proc. 14th
-Ann. Symp. Combinatorial Pattern Matching}, Morelia, Michoacan,
-Mexico, June. 2003, pp.~55--69.
+% \bibitem{DC32} S.Burkhardt, J.KarKKainen, ``Fast lightweight suffix
+% array construction and checking,'' {\it Proc. 14th
+% Ann. Symp. Combinatorial Pattern Matching}, Morelia, Michoacan,
+% Mexico, June. 2003, pp.~55--69.
 
 
-\bibitem{dataset} {\it http://pizzachil.dcc.uchile.cl/}
+% \bibitem{dataset} {\it http://pizzachil.dcc.uchile.cl/}
 
 % %1. 书
 % \bibitem{beeson} M. J. Beeson, {\it Foundations of Constructive

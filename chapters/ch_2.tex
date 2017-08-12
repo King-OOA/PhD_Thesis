@@ -200,7 +200,7 @@ $B$通常取2或3). WM算法的时间复杂度为 $O(B \cdot n/lsp)$, 其中 $n$
 提出了一种基于流水线二叉树的内存节约型框架构--\textsf{MASM} 用于解决大规
 模模式匹配问题, 它使用了被称为 ``leaf-attaching''的技术来对给定模式集
 进行压缩, 被压缩过的模式集将被进而转化为一棵流水线二叉查找树, 用于在匹
-配阶段. Moraru \cite{Moraru2013} 提出了一种内存节约及cache友好型的算
+配阶段. Moraru \cite{Moraru2012} 提出了一种内存节约及cache友好型的算
 法, 用于处理大模式集. 该算法基于 Rabin-Karp \cite{Karp1987} 单模式匹
 配算法构造, 包含了一种新的前向反馈布隆过滤器, 该过滤器能够充分利用现代
 计算机的内存架构. 该算法同样适宜在GPU上进行并行化实现.
@@ -954,8 +954,8 @@ $P=\{p_1=e^6u^5sscc,\; p_2=e^6u^5,\; p_3=e^6\}$ 和其所对应
 
 实验在一台PC上进行，配置有 Intel core i7 2.93GHz CPU, 8GB 内存 和 1TB硬
 盘, 操作系统为GNU/Linux. 所有算法以 C/C++ 实现， gcc编译（-O2)。 测试数
-据为来自于 Pizza\;\&\;Chili 语料库 \cite{pizzachil} 的真实英文文本. 模
-式串从文本串中随机抽取，构成模式集。
+据为来自于 Pizza\;\&\;Chili 语料库 (http://pizzachil.dcc.uchile.cl) 的
+真实英文文本. 模式串从文本串中随机抽取，构成模式集。
 
 实验过程中， \textsf{FEMPM} 的参数设置如下： 对于字符串数组, 如果其包
 含的键数大于4， 则在键数组上使用二分查找来搜索目标字符串; 否则, 将使用
@@ -1237,156 +1237,156 @@ $1 \times 10^7$ & 558,241 &  591,455  & 115,012 &  11,922   &   79 &  3,986,683 
 
 \begin{thebibliography}{99}
 
-\bibitem{Yan2016} Yan, Ruoyu. ``Combining Renyi Entropy and EWMA to
-  Detect Common Attacks in Network'' {\it International Journal of
-    Pattern Recognition and Artificial Intelligence}, 30(10),
-  pp.1650021, 2016.
+% \bibitem{Yan2016} Yan, Ruoyu. ``Combining Renyi Entropy and EWMA to
+%   Detect Common Attacks in Network'' {\it International Journal of
+%     Pattern Recognition and Artificial Intelligence}, 30(10),
+%   pp.1650021, 2016.
 
 
-\bibitem{Xue2015} Xue, Xingsi and Wang, Yuping, ``Optimizing ontology
-  alignments through a Memetic Algorithm using both MatchFmeasure and
-  Unanimous Improvement Ratio'', {\it ARTIFICIAL INTELLIGENCE}, 223,
-  pp.65-81, 2015.
+% \bibitem{Xue2015} Xue, Xingsi and Wang, Yuping, ``Optimizing ontology
+%   alignments through a Memetic Algorithm using both MatchFmeasure and
+%   Unanimous Improvement Ratio'', {\it ARTIFICIAL INTELLIGENCE}, 223,
+%   pp.65-81, 2015.
 
-\bibitem{Xue2016} Xue, Xingsi and Wang, Yuping, ``Using Memetic
-  Algorithm for Instance Coreference Resolution'', {\it IEEE
-    TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING}, 223, pp.65-81,
-  2015.
+% \bibitem{Xue2016} Xue, Xingsi and Wang, Yuping, ``Using Memetic
+%   Algorithm for Instance Coreference Resolution'', {\it IEEE
+%     TRANSACTIONS ON KNOWLEDGE AND DATA ENGINEERING}, 223, pp.65-81,
+%   2015.
 
-\bibitem{Kim2015} Kim, HyunJin and Choi, Kang-Il and Choi, Sang-Il,
-  ``A Memory-Efficient Deterministic Finite Automaton-Based Bit-Split
-  String Matching Scheme Using Pattern Uniqueness in Deep Packet
-  Inspection'', {\it PLOS ONE}, 10(5), 2015.
+% \bibitem{Kim2015} Kim, HyunJin and Choi, Kang-Il and Choi, Sang-Il,
+%   ``A Memory-Efficient Deterministic Finite Automaton-Based Bit-Split
+%   String Matching Scheme Using Pattern Uniqueness in Deep Packet
+%   Inspection'', {\it PLOS ONE}, 10(5), 2015.
 
 
-\bibitem{Xiao2016} Guoqing Xiao, Kenli Li, Xu Zhou, Keqin
-  Li. ``Queueing Analysis of Continuous Queries for Uncertain Data
-  Streams Over Sliding Windows'' {\it International Journal of Pattern
-    Recognition and Artificial Intelligence}, 30(9), pp.1660001, 2016.
+% \bibitem{Xiao2016} Guoqing Xiao, Kenli Li, Xu Zhou, Keqin
+%   Li. ``Queueing Analysis of Continuous Queries for Uncertain Data
+%   Streams Over Sliding Windows'' {\it International Journal of Pattern
+%     Recognition and Artificial Intelligence}, 30(9), pp.1660001, 2016.
 
-\bibitem{Wu1994} Sun Wu and Udi Manber, ``A fast algorithm for
-  multi-pattern searching'', {\it Technical Report-94-17}, 1994.
+% \bibitem{Wu1994} Sun Wu and Udi Manber, ``A fast algorithm for
+%   multi-pattern searching'', {\it Technical Report-94-17}, 1994.
 
-\bibitem{Lee2013} Tsern-Huei Lee and Nai-Lun Huang, ``A
-  pattern-matching scheme with high throughput performance and low
-  memory requirement'', {\it IEEE/ACM Transactions on Networking},
-  21(4), pp.1104--1116, 2013.
+% \bibitem{Lee2013} Tsern-Huei Lee and Nai-Lun Huang, ``A
+%   pattern-matching scheme with high throughput performance and low
+%   memory requirement'', {\it IEEE/ACM Transactions on Networking},
+%   21(4), pp.1104--1116, 2013.
 
-\bibitem{Aho1975} Alfred V. Aho and Margaret J. Corasick, ``Efficient
-  string matching:An aid to bibliographic search'', {\it Commun. ACM}
-  18(6), pp.333-340, 1975.
+% \bibitem{Aho1975} Alfred V. Aho and Margaret J. Corasick, ``Efficient
+%   string matching:An aid to bibliographic search'', {\it Commun. ACM}
+%   18(6), pp.333-340, 1975.
 
-\bibitem{Knuth1977} Donald E. Knuth, Jr. James H. Morris, and Vaughan
-  R. Pratt, ``Fast pattern matching in strings'', {\it SIAM Journal on
-    Computing}, 6(2), pp.323–350, 1977.
+% \bibitem{Knuth1977} Donald E. Knuth, Jr. James H. Morris, and Vaughan
+%   R. Pratt, ``Fast pattern matching in strings'', {\it SIAM Journal on
+%     Computing}, 6(2), pp.323–350, 1977.
 
-\bibitem{Boyer1977} Robert S. Boyer and J. Strother Moore, ``A fast
-  string searching algorithm'', {\it Commun. ACM}, 20(10), pp.762–772,
-  1977.
+% \bibitem{Boyer1977} Robert S. Boyer and J. Strother Moore, ``A fast
+%   string searching algorithm'', {\it Commun. ACM}, 20(10), pp.762–772,
+%   1977.
 
-\bibitem{Zhang2016} Lungan Zhang, Liangxiao Jiang, Chaoqun Li. ``A New
-  Feature Selection Approach to Naive Bayes Text Classifiers'' {\it
-    International Journal of Pattern Recognition and Artificial
-    Intelligence}, 30(9), pp.1650003 2016.
+% \bibitem{Zhang2016} Lungan Zhang, Liangxiao Jiang, Chaoqun Li. ``A New
+%   Feature Selection Approach to Naive Bayes Text Classifiers'' {\it
+%     International Journal of Pattern Recognition and Artificial
+%     Intelligence}, 30(9), pp.1650003 2016.
 
-\bibitem{Tang2015} Guoyu Tang, Yunqing Xia, Erik Cambria, Peng Jin,
-  Thomas Fang Zheng. ``Document Representation with Statistical Word
-  Senses in Cross-Lingual Document Clustering'' {\it International
-    Journal of Pattern Recognition and Artificial Intelligence},
-  30(9), pp.1559003, 2015.
+% \bibitem{Tang2015} Guoyu Tang, Yunqing Xia, Erik Cambria, Peng Jin,
+%   Thomas Fang Zheng. ``Document Representation with Statistical Word
+%   Senses in Cross-Lingual Document Clustering'' {\it International
+%     Journal of Pattern Recognition and Artificial Intelligence},
+%   30(9), pp.1559003, 2015.
 
-\bibitem{Tuck2004} N. Tuck, T. Sherwood, B. Calder, and G. Varghese,
-  ``Deterministic memory-efficient stringmatching algorithms for
-  intrusion detection'', {\it Twenty-third AnnualJoint Conference of
-    the IEEE Computer and Communications Societies}, Vol 4,
-  pp.2628–2639, 2004.
+% \bibitem{Tuck2004} N. Tuck, T. Sherwood, B. Calder, and G. Varghese,
+%   ``Deterministic memory-efficient stringmatching algorithms for
+%   intrusion detection'', {\it Twenty-third AnnualJoint Conference of
+%     the IEEE Computer and Communications Societies}, Vol 4,
+%   pp.2628–2639, 2004.
 
-\bibitem{Bremler2011} A. Bremler-Barr, Y. Harchol, and D. Hay,
-  ``Space-time tradeoffs in software-based deep packet inspection'',
-  {\it In High Performance Switching and Routing (HPSR), IEEE 12th
-    International Conference on}, pp.1–8, 2011.
+% \bibitem{Bremler2011} A. Bremler-Barr, Y. Harchol, and D. Hay,
+%   ``Space-time tradeoffs in software-based deep packet inspection'',
+%   {\it In High Performance Switching and Routing (HPSR), IEEE 12th
+%     International Conference on}, pp.1–8, 2011.
 
-\bibitem{Ramakrishnan2010} Ramakrishnan Kandhan, Nikhil Teletia, and
-  Jignesh M. Patel, ``Sigmatch: Fast and scalable multi-pattern
-  matching'', {\it Proceedings of the VLDB Endowment}, 3(1),
-  pp.1173–1184, 2010.
+% \bibitem{Ramakrishnan2010} Ramakrishnan Kandhan, Nikhil Teletia, and
+%   Jignesh M. Patel, ``Sigmatch: Fast and scalable multi-pattern
+%   matching'', {\it Proceedings of the VLDB Endowment}, 3(1),
+%   pp.1173–1184, 2010.
 
-\bibitem{Zhou2007} Zongwei Zhou, Yibo Xue, Junda Liu, Wei Zhang, and
-  Jun Li, ``MDH: A high speed multi-phase dynamic hash string matching
-  algorithm for large-scale pattern set'', {\it Information and
-    Communications Security Springer}, pp.201-215, 2007.
+% \bibitem{Zhou2007} Zongwei Zhou, Yibo Xue, Junda Liu, Wei Zhang, and
+%   Jun Li, ``MDH: A high speed multi-phase dynamic hash string matching
+%   algorithm for large-scale pattern set'', {\it Information and
+%     Communications Security Springer}, pp.201-215, 2007.
 
-\bibitem{Zhan2014} P. Zhan, W. Yuping, and X. Jinfeng, ``An improved
-  multi-pattern matching algorithm for large-scale pattern sets'',
-  {\it In Computational Intelligence and Security (CIS), Tenth
-    International Conference on}, pp.197–200, 2014.
+% \bibitem{Zhan2014} P. Zhan, W. Yuping, and X. Jinfeng, ``An improved
+%   multi-pattern matching algorithm for large-scale pattern sets'',
+%   {\it In Computational Intelligence and Security (CIS), Tenth
+%     International Conference on}, pp.197–200, 2014.
 
-\bibitem{Zhang2009} Baojun Zhang, Xiaoping Chen, Xuezeng Pan, and
-  Zhaohui Wu, ``High concurrence wu-manber multiple patterns matching
-  algorithm'', {\it Proceedings of the International Symposium on
-    Information Process}, pp.404-409, 2009.
+% \bibitem{Zhang2009} Baojun Zhang, Xiaoping Chen, Xuezeng Pan, and
+%   Zhaohui Wu, ``High concurrence wu-manber multiple patterns matching
+%   algorithm'', {\it Proceedings of the International Symposium on
+%     Information Process}, pp.404-409, 2009.
 
-\bibitem{Choi2011} Yoon-Ho Choi, Moon-Young Jung, and Seung-Woo Seo,
-  ``A fast pattern matching algorithm with multi-byte search unit for
-  highspeed network security'', {\it Computer Communications}, 34(14),
-  pp.1750–1763, 2011.
+% \bibitem{Choi2011} Yoon-Ho Choi, Moon-Young Jung, and Seung-Woo Seo,
+%   ``A fast pattern matching algorithm with multi-byte search unit for
+%   highspeed network security'', {\it Computer Communications}, 34(14),
+%   pp.1750–1763, 2011.
 
-\bibitem{Le2013} Hoang Le and V.K. Prasanna, ``A memory-efficient and
-  modular approach for large-scale string pattern matching'', {\it
-    Computers, IEEE Transactions on}, 62 (5), pp.844–857, 2013.
+% \bibitem{Le2013} Hoang Le and V.K. Prasanna, ``A memory-efficient and
+%   modular approach for large-scale string pattern matching'', {\it
+%     Computers, IEEE Transactions on}, 62 (5), pp.844–857, 2013.
 
-\bibitem{Moraru2013} Iulian Moraru and David G. Andersen, ``Exact
-  pattern matching with feed-forward bloom filters'', {\it Journal of
-    Experimental Algorithmics}, Vol.17, pp.3-4, 2013.
+% \bibitem{Moraru2013} Iulian Moraru and David G. Andersen, ``Exact
+%   pattern matching with feed-forward bloom filters'', {\it Journal of
+%     Experimental Algorithmics}, Vol.17, pp.3-4, 2013.
 
-\bibitem{Karp1987} R. M. Karp and M. O. Rabin, ``Efficient randomized
-  patternmatching algorithms'', {\it IBM Journal of Research and
-    Development}, 31 (2), pp.249-260, 1987.
+% \bibitem{Karp1987} R. M. Karp and M. O. Rabin, ``Efficient randomized
+%   patternmatching algorithms'', {\it IBM Journal of Research and
+%     Development}, 31 (2), pp.249-260, 1987.
 
-\bibitem{Agarwal2013} K. Agarwal and R. Polig, ``A high-speed and
-  large-scale dictionary matching engine for information extraction
-  systems'',{\it Application-Specific Systems, Architectures and
-    Processors (ASAP), IEEE 24th International Conference on},
-  pp.59–66, 2013.
+% \bibitem{Agarwal2013} K. Agarwal and R. Polig, ``A high-speed and
+%   large-scale dictionary matching engine for information extraction
+%   systems'',{\it Application-Specific Systems, Architectures and
+%     Processors (ASAP), IEEE 24th International Conference on},
+%   pp.59–66, 2013.
 
-\bibitem{Zhang2015} Hongli Zhang, Dongliang Xu, Zhihong Tian, and
-  Yujian Fan, ``An efficient parallel algorithm for exact
-  multi-pattern matching'', {\it Security And Communication Networks},
-  8 (9), pp.1688–1697, 2015.
+% \bibitem{Zhang2015} Hongli Zhang, Dongliang Xu, Zhihong Tian, and
+%   Yujian Fan, ``An efficient parallel algorithm for exact
+%   multi-pattern matching'', {\it Security And Communication Networks},
+%   8 (9), pp.1688–1697, 2015.
 
-\bibitem{I2015} Tomohiro I, Takaaki Nishimoto, Shunsuke Inenaga, Hideo
-  Bannai, and Masayuki Takeda, ``Compressed automata for dictionary
-  matching'', {\it Theoretical Computer Science}, Vol.578, pp.30–41,
-  2015.
+% \bibitem{I2015} Tomohiro I, Takaaki Nishimoto, Shunsuke Inenaga, Hideo
+%   Bannai, and Masayuki Takeda, ``Compressed automata for dictionary
+%   matching'', {\it Theoretical Computer Science}, Vol.578, pp.30–41,
+%   2015.
 
-\bibitem{Khancome2013} Chouvalit Khancome and Veera Boonjing, ``A new
-  linear-time dynamic dictionary matching algorithm'', {\it Computing
-    And Informatics}, 32 (5), pp.897–923, 2013.
+% \bibitem{Khancome2013} Chouvalit Khancome and Veera Boonjing, ``A new
+%   linear-time dynamic dictionary matching algorithm'', {\it Computing
+%     And Informatics}, 32 (5), pp.897–923, 2013.
 
-\bibitem{Amir2015} Amihood Amir, Avivit Levy, Ely Porat, and B. Riva
-  Shalom, ``Dictionary matching with a few gaps'', {\it Theoretical
-    Computer Science}, Vol.589, pp.34–46, 2015.
+% \bibitem{Amir2015} Amihood Amir, Avivit Levy, Ely Porat, and B. Riva
+%   Shalom, ``Dictionary matching with a few gaps'', {\it Theoretical
+%     Computer Science}, Vol.589, pp.34–46, 2015.
 
-\bibitem{Neuburger2012} Shoshana Neuburger and Dina Sokol. ``Succinct
-  2d dictionary matching'', {\it Algorithmica}, 65 (3), pp.662–684,
-  2012.
+% \bibitem{Neuburger2012} Shoshana Neuburger and Dina Sokol. ``Succinct
+%   2d dictionary matching'', {\it Algorithmica}, 65 (3), pp.662–684,
+%   2012.
 
-\bibitem{Leis2013} V. Leis, A. Kemper, and T. Neumann. ``The adaptive
-  radix tree: Artful indexing for main-memory databases'', {\it In
-    Data Engineering(ICDE), IEEE 29th International Conference on},
-  pp.38–49, 2013.
+% \bibitem{Leis2013} V. Leis, A. Kemper, and T. Neumann. ``The adaptive
+%   radix tree: Artful indexing for main-memory databases'', {\it In
+%     Data Engineering(ICDE), IEEE 29th International Conference on},
+%   pp.38–49, 2013.
 
-\bibitem{Ramakrishna1997} M. V. Ramakrishna and Justin
-  Zobel. ``Performance in practice of string hashing functions'', {\it
-    In Proceedings of the Fifth International Conference on Database
-    Systems for Advanced Applications (DASFAA)}, pp.215–224, 1997.
+% \bibitem{Ramakrishna1997} M. V. Ramakrishna and Justin
+%   Zobel. ``Performance in practice of string hashing functions'', {\it
+%     In Proceedings of the Fifth International Conference on Database
+%     Systems for Advanced Applications (DASFAA)}, pp.215–224, 1997.
 
-\bibitem{Kim2015} Kim, HyunJin AND Choi, Ki AND Choi,
-  Si. ``A Memory-Efficient Deterministic Finite Automaton-Based
-  Bit-Split String Matching Scheme Using Pattern Uniqueness in Deep
-  Packet Inspection'', {\it PLOS ONE}. vol.10, pp.1-24, 2015.
+% \bibitem{Kim2015} Kim, HyunJin AND Choi, Ki AND Choi,
+%   Si. ``A Memory-Efficient Deterministic Finite Automaton-Based
+%   Bit-Split String Matching Scheme Using Pattern Uniqueness in Deep
+%   Packet Inspection'', {\it PLOS ONE}. vol.10, pp.1-24, 2015.
 
-\bibitem{pizzachil} {\it http://pizzachil.dcc.uchile.cl/}
+% \bibitem{pizzachil} {\it http://pizzachil.dcc.uchile.cl/}
 
 \end{thebibliography}  
 
