@@ -1,27 +1,150 @@
 
 \begin{abstract}
-ժҪ��ѧλ���ĵ����ݲ���ע�ͺ����۵ļ�̳�����������Ҫ����ѧλ���ĵ��о�Ŀ�ġ����ݡ��������ɹ��ͽ��ۣ��ص�ͻ��ѧλ���ĵĴ����Գɹ��͹۵㡣ժҪ��������ժҪ��Ӣ��ժҪ��˶ʿѧλ��������ժҪ����һ��Ϊ~1000~�����ң���ʿѧλ��������ժҪ����һ��Ϊ~1500~�����ҡ�Ӣ��ժҪ����������ժҪ���ݱ���һ�£��������������׼��ժҪ�������·���ע�����ĵĹؼ��ʣ��ؼ���һ��Ϊ~3~��~8~�����ؼ��ʺ͹ؼ���֮���ö��Ų���һ��\par
-����ժҪ��ʽҪ��Ϊ������С�ġ����˶��롢��������~2~�ַ����о�Ϊ�̶�ֵ~20~����������Ϊ��ǰ~0~�����κ�~0~����\par
-Ӣ��ժҪ��ʽҪ��Ϊ��Times New Roman��С�ġ����˶��롢���в��������о�Ϊ�̶�ֵ~20~����������Ϊ��ǰ~0~�����κ�~0~���������֮���һ�С�\par
 
-\keywords{XXX,\quad{}XXX,\quad{}XXX,\quad{}XXX,\quad{}XXX} \par
+  在计算机科学及其它许多领域中，序列（字符串）都是最基本而重要的数据类
+  型之一，有大量的研究对象，例如普通文本、程序源代码、以及生物学中
+  的DNA和蛋白质等，都可以用序列模型加以表示，然后借助于计算机进行处理。
+  因此研究序列模型的相关理论和算法具有基本的重要性。 本文针对序列挖掘领
+  域中的三个关键问题，即多模式（字符串）匹配问题，后缀排序问题，以及序
+  列的最长公共子序列问题，进行了探索和研究，主要工作包括以下几个方面：
+
+  \begin{enumerate}
+  \item 对于多模式匹配问题，针对现有算法鲁棒性较差、性能易受到模式集自
+    身特性的影响，以及可伸缩性较差、无法处理大规模模式集的缺陷，设计并
+    实现了一种高效的多模式匹配引擎。该引擎由过滤模块与核实模块构成，过
+    滤模块基于位图结构，用于快速地过滤掉文本串中不可能出现匹配的位置；
+    对每一个潜在的匹配位置，调用核实模块确定最终匹配结果。 特别地，对于
+    核实模块，设计了一种被称为“自适应匹配树”的紧凑型数据结构，树中的
+    每个节点都保存了模式集的一部分片段，节点将根据自身所保存的模式集片
+    段的特征，自适应地调整其内部存储结构。 由于每个节点的自适应性，使得
+    对于任何特性的模式集，所构造的自适应匹配树都能够保持最高效的形态，
+    使其具有良好的鲁棒性和可伸缩性。
+
+    另外，针对实际中广泛使用的多模式匹配算法---Wu-Manber算法，提出了一
+    种改进算法。改进算法通过动态地选取每个模式串的特征串，使得模式串能
+    够更加均匀地分布于哈希表中，提高了算法在处理较大规模模式集时的性能；
+    同时，为模式链表设计了基于二分查找的索引表，进一步提高算法的搜索速
+    度。
+
+  \item 对于后缀排序问题，提出了一种基于qsufsort算法的改进的后缀排序算
+    法---dsufsort。 传统的qsufsort算法，在每一轮中将根据固定数量的前导
+    字符(即在第$k$轮中，根据每个后缀的前$2^k$个字符)来对后缀进行排序，
+    这使得前$2^k$个字符都相同的后缀，无法在第$k$轮中被确定顺序。为了解
+    决该问题，dsufsort算法将记录并维护后缀数组中未排序部分的深度，在每
+    一轮排序中，将根据待排序部分的深度对其中的后缀进行排序, 这使得在
+    第$k$轮中，后缀可以基于超过前$2^k$个字符被排序，从而在第$k$轮中被确
+    定顺序, 因此， 每轮中有更多的排序结果可以被后面的过程利用， 相应
+    地，dsufsort算法仅需要较少的轮数就可以完成排序。 此外，由
+    于dsufsort算法具有“深度累加”的特性，因此，对于具有很长公共前缀的
+    后缀，dsufsort算法可以更加快速地完成排序。
+
+  \item 对于最长公共子序列问题， 为了改善现有算法在构建有向无环图时，需
+    要消耗大量的存储空间和运行时的问题，提出了一种新的层次化图模
+    型---Leveled-DAG，以及相应的构建算法。 不同于现有的算法在构造有向无
+    环图时，需要保留所有产生的节点，并在图构造好之后通过搜索其中的最长
+    路径来构建相应的最长公共子序列， Leveled-DAG模型可以在建图的过程中
+    实时地构建最长公共子序列，并及时删除那些对最终结果没有任何影响的过
+    时节点。在任一时刻，Leveled-DAG只需保存最新产生的一层节点以及前面产
+    生的未过时节点(即入度不为0的节点)，并且，随着构建过程的进行，图中的
+    节点数将会逐渐减少，最终将只剩余一个节点，所有输入序列的最长公共子
+    序列都保存在该节点中。 实验结果表明，得益于实时地构造最长公共子序列
+    及删除无用节点，Leveled-DAG相比现有算法在时间和空间效率上都有很大提
+    升。
+
+  \end{enumerate}
+
+  \keywords{多模式匹配,\quad{}Wu-Manber算法,\quad{}后缀排序,\quad{}最长
+    公共子序列} \par
+
 \end{abstract}
 
 \begin{englishabstract}
-The Abstract is a brief description of a thesis or dissertation without notes or comments. It represents concisely the research purpose, content, method, result and conclusion of the thesis or dissertation with emphasis on its innovative findings and perspectives. The Abstract Part consists of both the Chinese abstract and the English abstract. The Chinese abstract should have the length of approximately 1000 Chinese characters for a master thesis and 1500 for a Ph.D. dissertation. The English abstract should be consistent with the Chinese one in content. The keywords of a thesis or dissertation should be listed below the main body of the abstract, separated by commas and a space. The number of the keywords is typically 3 to 5.
-\par~\par
-The format of the Chinese Abstract is what follows: Song Ti, Small 4, justified, 2 characters indented in the first line, line spacing at a fixed value of 20 pounds, and paragraph spacing section at 0 pound.
-\par~\par
-The format of the English Abstract is what follows: Times New Roman, Small 4, justified, not indented in the first line, line spacing at a fixed value of 20 pounds, and paragraph spacing section at 0 pound with a blank line between paragraphs.
-~\par
-\englishkeywords{XXX,\space{}XXX,\space{}XXX,\space{}XXX,\space{}XXX} \par
+
+  In computer science and many other fields, sequence(string) is one
+  of the most fundamental and important data types, and there are many
+  subjects such as text, source code, and DNA/protein of
+  biological,etc, can be represented by sequences and then processed
+  by computer. Therefore, researching the theory and algorithm about
+  sequence is fundamentally important. In this thesis, we focus on
+  three critical problems in sequence mining, i.e., multiple pattern
+  (string) matching problem, suffix sorting problem, and multiple
+  longest common subsequences problem. The main contributions of this
+  thesis are as follows:
+  
+  \begin{enumerate}
+  \item For the multiple pattern (string) matching problem, to improve
+    the poor robustness and scalability of the existing methods, a
+    fast matching engine is proposed. The engine includes a filter
+    module and a verification module. The filter module is based on
+    several bitmaps which are response for quickly filtering out the
+    invalid positions in the text, while for each potential matched
+    position, the verification module confirms true pattern
+    occurrence. In particular, we design a compact data structure
+    called Adaptive Matching Tree (AMT) for the verification module,
+    in which each tree node only saves some pattern fragments of the
+    whole pattern set and the inner structure of each tree node is
+    chosen adaptively according to the features of the corresponding
+    pattern fragments. So no matter what the input pattern sets are,
+    the AMT can adjust to the optimal form, thus, achieves a good
+    robustness and scalability.
+
+    Additionally, an improved multiple pattern matching algorithm is
+    proposed based on the widely used Wu-Manber (WM) algorithm. The
+    proposed algorithm improves the Wu-Manber algorithm in two
+    aspects: firstly, by dynamically selecting the signature of each
+    pattern, the lengths of lists in the HASH table are balanced to
+    reduce the number of candidate patterns; Secondly, a data
+    structure called the “INDEX table” based on binary search is
+    designed to reduce the time for finding candidate patterns.
+    
+  \item For the suffix sorting problem, an efficient suffix sort
+    algorithm called \emph{dsufsort} is proposed based on the widely
+    used \emph{qsufsort} algorithm. The \emph{qsufsort} suffers one
+    critical limitation that it sorts the suffix according to a fixed
+    number of characters in each round, specifically, the suffixes are
+    sorted based on their first $2^k$ characters in the $k$-th round,
+    so the order of suffixes starting with the same $2^k$ characters
+    can not be determined in the $k$-th round. To overcome this
+    drawback, the \emph{dsufsort} algorithm maintains the \emph{depth}
+    of each unsorted portion of SA, and sorts the suffixes based on
+    the \emph{depth} in each round. By this means, some suffixes that
+    can not be sorted by \emph{qsufsort} in each round can be sorted
+    now, as a result, more sorting results in current round can be
+    utilized by the latter rounds and the total number of sorting
+    rounds will be reduced. Moreover, due to the accumulation of
+    depth, the \emph{dsufsort} algorithm can quickly sort the suffixes
+    with long common prefix.
+
+  \item For the multiple longest common subsequence (MLCS) problem,
+    the time and space efficiency of the existing approaches is
+    unsatisfactory: the Directed Acyclic Graphs (DAG) constructed by
+    these algorithms consume a huge amount of memory and time during
+    processing, since they need to keep all the generated nodes and
+    search the graph for longest paths. To address this problem, a new
+    time and space efficient graph model called the Leveled-DAG for
+    MLCS problems is proposed. During processing, the Leveled-DAG
+    model can timely construct the MLCS of input sequences and
+    eliminate all nodes in the DAG that can not contribute to the
+    construction of MLCS. At any moment, only the current level and
+    some previously generated nodes with incoming edges in the graph
+    need to be kept in the memory. Also, the number of nodes in the
+    graph will gradually decrease, and the final graph contains only
+    one node in which all of the MLCS are saved, thus, no further
+    operations for searching the MLCS are needed.  The experimental
+    results show that the time and space efficiency of the Leveled-DAG
+    approach are better than the existing approaches.
+  \end{enumerate}
+
+  \englishkeywords{Multiple Pattern Matching,\space{}Wu-Manber
+    Algorithm,\space{}Suffix Sort,\space{}Multiple Longest Common
+    Subsequence}\par
 
 \end{englishabstract}
 
 \XDUpremainmatter
 
 \begin{symbollist}
-\item ~���� \hspace{12em} ��������
+\item ~符号 \hspace{12em} 符号名称
 \item XXX \hspace{12.5em} XXX
 \item XXX \hspace{12.5em} XXX
 \item XXX \hspace{12.5em} XXX
@@ -29,9 +152,14 @@ The format of the English Abstract is what follows: Times New Roman, Small 4, ju
 \end{symbollist}
 
 \begin{abbreviationlist}
-\item ������\hspace{6em}Ӣ��ȫ��\hspace{6em}���Ķ���
-\item ~XXX \hspace{7em} XXX \hspace{7.5em} XXX
-\item ~XXX \hspace{7em} XXX \hspace{7.5em} XXX
-\item ~XXX \hspace{7em} XXX \hspace{7.5em} XXX
+\item 缩略语\hspace{6em}英文全称\hspace{6em}中文对照
+\item ~PM \hspace{7em}Pattern Matching \hspace{7.5em} 模式匹配
+\item ~SPM \hspace{7em} Single Pattern Matching \hspace{7.5em} 单模式匹配
+\item ~MPM \hspace{7em} Multiple Pattern Matching \hspace{7.5em} 多模式匹配
+\item AMT \hspace{7em} Adaptive Matching Tree  \hspace{7.5em} 自适应匹配树
+\item lsp \hspace{7em} length of the shortest patterns  \hspace{7.5em} 最短模式串长
+\item DFA \hspace{7em} Deterministic Finite Automaton  \hspace{7.5em} 确定性有限状态自动机
+\item SA \hspace{7em} Suffix Array  \hspace{7.5em} 后缀数组
+
 \item \ldots
 \end{abbreviationlist}

@@ -2,17 +2,13 @@
  "ch_2"
  (lambda ()
    (TeX-run-style-hooks
-    "latex2e"
-    "ws-ijprai"
-    "ws-ijprai10"
     "enumerate"
     "graphicx"
     "algorithm"
     "algorithmic"
     "multirow"
     "amsmath"
-    "color"
-    "pgfplots")
+    "color")
    (TeX-add-symbols
     '("DEFAULTLINE" 1)
     '("CASELINE" 1)

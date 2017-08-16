@@ -8,11 +8,6 @@
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
    (add-to-list 'LaTeX-verbatim-macros-with-delims-local "path")
-   (TeX-run-style-hooks
-    "latex2e"
-    "ws-ijprai"
-    "ws-ijprai10"
-    "enumerate")
    (LaTeX-add-labels
     "sec:introduction"
     "sec:stucture"

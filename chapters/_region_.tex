@@ -1,1021 +1,788 @@
-\message{ !name(ch_3.tex)} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is just an example/guide for you to refer to when submitting manuscripts to Frontiers, it is not mandatory to use Frontiers .cls files nor frontiers.tex  %
-% This will only generate the Manuscript, the final article will be typeset by Frontiers after acceptance.   
-%                                              %
-%                                                                                                                                                         %
-% When submitting your files, remember to upload this *tex file, the pdf generated with it, the *bib file (if bibliography is not within the *tex) and all the figures.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\message{ !name(3_SS.tex)}
+\message{ !name(3_SS.tex) !offset(-2) }
 
-%%% Version 3.3 Generated 2016/11/10 %%%
-%%% You will need to have the following packages installed: datetime, fmtcount, etoolbox, fcprefix, which are normally inlcuded in WinEdt. %%%
-%%% In http://www.ctan.org/ you can find the packages and how to install them, if necessary. %%%
-%%%  NB logo1.jpg is required in the path in order to correctly compile front page header %%%
+% \begin{abstract} The Suffix Array (SA) is a fundamental data structure
+% which is widely used in the applications such as string matching, text
+% index and computation biology, etc. How to sort the suffixes of a string in
+% lexicographical order is a primary problem in constructing SAs, and
+% one of the widely used suffix sorting algorithms is
+% \emph{qsufsort}. However, \emph{qsufsort} suffers one critical
+% limitation that the order of suffixes starting with the same $2^k$
+% characters can not be determined in the $k$-th round. To this point,
+% in our paper, an efficient suffix sorting algorithm called
+% \emph{dsufsort} is proposed by overcoming the drawback of the
+% \emph{qsufsort} algorithm. In particular, our proposal maintains the
+% \emph{depth} of each unsorted portion of SA, and sorts the suffixes
+% based on the \emph{depth} in each round. By this means, some suffixes
+% that can not be sorted by \emph{qsufsort} in each round can be sorted
+% now, as a result, more sorting results in current round can be
+% utilized by the latter rounds and the total number of sorting rounds
+% will be reduced, which means \emph{dsufsort} is more efficient than
+% \emph{qsufsort}. The experimental results shows the effectiveness of
+% the proposed algorithm, especially for the text with high repetitions.
+% \end{abstract}
 
-\documentclass[utf8]{frontiersSCNS} % for Science, Engineering and Humanities and Social Sciences articles
-%\documentclass[utf8]{frontiersHLTH} % for Health articles
-%\documentclass[utf8]{frontiersFPHY} % for Physics and Applied Mathematics and Statistics articles
-
-%\setcitestyle{square} % for Physics and Applied Mathematics and Statistics articles
-\usepackage{url,hyperref,lineno,microtype,subcaption}
-\usepackage[onehalfspacing]{setspace}
-\usepackage{graphicx}
-\usepackage{algorithm}
-\usepackage{algorithmic}
-\usepackage{multirow}
-\usepackage{amsmath}
-\usepackage{color}
-%\usepackage{natbib}
-\usepackage{setspace}
-
-\renewcommand{\algorithmicrequire}{\textbf{输入:}}
-\renewcommand{\algorithmicensure}{\textbf{输出:}}
-
-\newenvironment{varalgorithm}[1]
-  {\algorithm\renewcommand{\thealgorithm}{#1}}
-  {\endalgorithm}
-
-
-\linenumbers
-
-
-% Leave a blank line between paragraphs instead of using 
-
-
-\def\keyFont{\fontsize{8}{11}\helveticabold }
-\def\firstAuthorLast{Zhan Peng, Yuping Wang} %use et al only if is more than 1 author
-\def\Authors{Zhan Peng$^1$, \, Yuping Wang\,$^{1*}$}
-% Affiliations should be keyed to the author's name with superscript numbers and be listed as follows: Laboratory, Institute, Department, Organization, City, State abbreviation (USA, Canada, Australia), and Country (without detailed address information such as city zip codes or street names).
-% If one of the authors has a change of address, list the new address below the correspondence details using a superscript symbol and use the same symbol to indicate the author in the author list.
-\def\Address{$^1$School of Computer Science and Technology, Xidian
-  University, Xi'an, Shanxi, China}
-% The Corresponding Author should be marked with an asterisk
-% Provide the exact contact address (this time including street name and city zip code) and email of the corresponding author
-\def\corrAuthor{}
-
-\def\corrEmail{ywang@xidian.edu.cn}
-
-
-\begin{document}
-
-\message{ !name(ch_3.tex) !offset(-3) }
-
-\onecolumn
-\firstpage{1}
-
-\title[A Novel Graph Model For The MLCS Problem]{\\
-  A Novel Efficient Graph Model For The Multiple Longest Common
-  Subsequences (MLCS) Problem}
-
-\author[\firstAuthorLast ]{\Authors} %This field will be automatically populated
-\address{} %This field will be automatically populated
-\correspondance{} %This field will be automatically populated
-
-\extraAuth{}% If there are more than 1 corresponding author, comment this line and uncomment the next one.
-%\extraAuth{corresponding Author2  Laboratory X2, Institute X2, Department X2, Organization X2, Street X2, City X2 , State XX2 (only USA, Canada and Australia), Zip Code2, X2 Country X2, email2@uni2.edu}
-
-
-\chapter{求解最长公共子序列(MLCS)问题的层次化图模型}
-
-
+\chapter{一种高效的后缀排序算法}
 \section{引言}
 \label{sec:introduction}
 
-度量生物序列间的相似性是生物信息学中的一类基本问题，它们在癌症检
-测\cite{Aravanis2017}，探寻物种的共同起源\cite{Zvelebil2007}等许多方面具有广泛的
-应用。度量序列间相似性最重要手段之一是寻找序列间的最长公共子序列 (Longest Common
-Subsequence，简称为LCS), 这已被证实是一类NP难问题\cite{Maier1978}。根据目标序列的
-个数，该问题可以被分为两类：(1)寻找两个序列的最长公共子序列被称为最长公共子序
-列(LCS)问题；(2) 寻找超过两个序列的最长公共子序列被称为多最长公共子序列(MLCS)问
-题。
+如何将给定字符串的所有后缀按照字典序进行排序, 是构建后缀数组(SA)的主要
+问题。 目前, \emph{qsufsort}\cite{Larsson2007} 算法是解决该问题广泛使用的算
+法之一。 该算法对后缀进行逐轮排序, 每一轮的排序将基于上一轮的结果, 直到
+所有后缀都处于正确的字典序。 具体地, 首先所有后缀将根据其首字符进行排
+序, 然后在每一轮中, 排序所依据的字符数将翻倍, 这样, 在第\emph{k}轮之
+后, 所有后缀将根据其前 $2^{k}$ 个字符进行排序。 这也意味着, 对于那些
+前$2^{k}$字符相同的后缀, 它们的次序无法在第$k$轮之后被确定。 因此, 对于
+那些具有较大 \emph{LCP}(Length of the Longest Common Prefix)的后缀,
+\emph{qsufsort} 需要许多轮才能确定它们的次序, 这会严重影响算法效率。
 
-传统上, 研究工作主要集中于第一类问题。然而近些年来，越来越多的来自生物信息学及其
-他领域的应用要求寻找超过两个序列的最长公共子序列(MLCS)。例如，多序列比
-对(Multiple Sequence Alignment) 是MLCS问题在生物信息学中最主要的应用之一，该技术
-能够重排多个DNA，RNA，或蛋白质序列，找出序列间具有相似性的片段，以此来识别序列间
-功能性的，结构性的，或进化性的联系。 MLCS算法同样可以应用到许多其他种类的序列中，
-比如在自然语言处理中计算字符串之间的编辑距离，以及应用到许多金融类数据中。目前，
-针对这些应用的现有算法大多基于支配点图模型--该类算法将基于目标序列构建支配点有向
-无环图(DAG)，从而将寻找序列MLCS的问题转化为寻找有向无环图中最长路径的问题。但是由
-于这类算法构造DAG的时间/空间开销过大，使其无法应用于多序列或长序列的情形。
+为了克服 \emph{qsufsort} 的这种缺陷, 在本章中, 将提出一种基
+于 \emph{qsufsort} 算法的改进的后缀排序算法--\emph{dsufsort}。 其核心思
+想在于, 对后缀数组SA中每一个还未排序的部分(称作一个''桶''(bucket)),
+\emph{dsufsort} 算法将记录该桶中所包含后缀(已知的)最大的\emph{LCP} (称
+为该桶的''深度''), 并且在运行过程中对其进行实时更新。 然后, 在每一轮中,
+每一个未排序桶中的后缀, 将基于该桶的深度进行排序。 通过这种方式, 许多后
+缀在第$k$轮中, 可以基于超过前$2^k$个字符进行排序。 这意味
+着, 在第$k$轮中, 无法由\emph{qsufsort}算法确定顺序的那些前$2^{k}$字符相
+同的后缀, 有可能在$k$轮中被确定顺序。 由于在每轮中有更多的后缀能够被排
+序, 因此有更多的排序结果可以被后面的过程所利用, 这会减少总共所需要的轮
+数。 因此, \emph{dsufsort} 比 \emph{qsufsort} 更加高效, 尤其对于拥有较
+大 \emph{LCP} 的后缀。
 
-本章中，我们提出了一种时空高效的有向无环图模型，被称为“层次化有向无环图”(简称
-为Leveled-DAG)，同时设计了相应的构建算法。类似于现有(基于支配点的)算法中的有向无
-环图的构造方式，Leveled-DAG模型将被逐层地构造，然而，区别于现有算法在构造有向无环
-图时需要产生大量节点并将其全部保存在内存中, Leveled-DAG模型会实时地删除那些过时的
-节点, 这些节点不会对构造MLCS再产生影响的。 在任意时刻，Leveled-DAG只需保存新产生
-的一层节点及部分以前产生的节点，因此，Leveled-DAG的规模比现有算法构造的有向图无环
-图小很多，这会极大的减少空间开销。此外，随着构建过程的进行，Leveled-DAG的规模将越
-来越小，最终将只包含一个节点(终止节点)，而目标序列的MLCS都存储在该节点中从而直接
-可得，无序任何额外操作来寻找MLCS，这将节省算法的运行时间, 提高算法效率。 实验结果
-证实，Leveled-DAG模型在时间和空间两方面均非常高效，尤其对于大规模或长序列
-集，Leveled-DAG模型明显优于现有方法。
+本章内容组织如下: 第2节介绍相关工作。 第3节将给出所用的符号和术语。
+\emph{qsufsort} 和改进的 \emph{dsufsort} 算法将在第4节中进行详细介
+绍。 第5节将讨论一些高效的实现技术。 第6节进行实验对比。 第7节是对本章进行
+总结。
 
-本章组织如下： 节介绍了背景知识及相关工作；节详细的介绍了Leveled-DAG模型及其构建
-算法；节进行了仿真实验和结果分析；节总结了本章内容。
+\section{相关工作}
 
+在过去的二十年中, 大量的具有不同时间和空间复杂度的后缀数组构建算法(即后
+缀排序算法) 被提出。 接下来, 将对其中的一些算法进行简要地回顾, 对其更详
+细的介绍, 可参考综述文献 \cite{Puglisi2007} \cite{Dhaliwal2012}。
 
+从后缀树来构造后缀数组, 是构建后缀数组最简单的方法之一, 其主要缺陷在于
+过高的空间和和时间开销。 Manber 和 Myers \cite{Manber1993} 第一个提出了
+直接构建后缀数组的算法, 其时间复杂度为 $O(nlogn)$ (其中$n$是给定字符串
+的长度)。 该算法使用了一种被称为''前缀倍增''的技术(最早来源于Karp
+\cite{Karp1972}): 首先, 后缀将按照其首字符进行排序, 接着在之后的每一轮
+中, 将按照加倍长度的前缀对后缀进行排序。
+Larsson和Sadakane\cite{Larsson2007} 提出了 \emph{qsufsort} 算法对Manber的
+算法进行改进。 与Manber算法在每一轮中都需要检查SA中所有的桶不同,
+\emph{qsufsort} 算法会标记那些之前已经被排过序的桶。 这样, 在每轮中它将
+跳过那些被标记的桶, 只对未排序的桶进行排序。 尽管在理论上,
+\emph{qsufsort} 算法和Manber的算法具有相同的时间复杂度, 在实际当中,
+\emph{qsufsort}算法要高效得多。 Schurmann\cite{Schurmann2007} 提出了一种具
+有 $O(n^2)$ 时间复杂度的方法-- \emph{bpr}。 与Manber算法
+和 \emph{qsufsort} 算法在每一轮中使用广度优先策略来对每一个桶进行排序不
+同, \emph{bpr} 使用了深度优先的排序策略: 对于每一个未排序的桶, 它将递归
+地对其中的后缀进行排序, 直到所有后缀都完全有序。  Rajasekaran
+\cite{Rajasekaran2014} 提出了被称为 \emph{RadixSA} 的新算法, 该算法具
+有 $O(nlogn)$ 的时间复杂度。 与前面三个算法使用简单的从左到右的顺序来对
+桶进行排序不同, \emph{RadixSA} 使用了特殊的排序顺序: 假设第$i$个后
+缀 $S_i$ 处于桶$B_i$中, 那么算法将首先对桶 $B_n$ 进行排序, 然后依次对
+桶 $B_{n-1},\,\dots,\, B_1$ 进行排序。 这种顺序确保了在对桶 $B_i$ 排序之
+后, 后缀$S_i$ 已经处于其在SA中的最终位置。
+
+Seward \cite{Seward2000} 提出了另外两个后缀排序算法:
+\emph{Copy} 和 \emph{Cache}。 它们首先将基于后缀的前两个字符对其进行排
+序, 然后按照由小到大的顺序(即根据桶中所包含后缀的多少，由少到多)对未排
+序的桶进行排序, 一旦一个桶完全有序, 排序的结果将被后续过程使用。 然而,
+\emph{Copy} 和 \emph{Cache} 使用相同的函数对所有后缀进行排序， 这对具有
+很长公共前缀的后缀(即具有较大$LCP$的后缀)效率不高。 为解决此问题,
+Manzini \cite{Manzini2004} 提出了被称为 \emph{deep-shallow} 的算法。 当
+对一个桶进行排序时, \emph{deep-shallow} 会使用\emph{shallow} 排序函数对
+具有较短公共前缀的后缀进行排序， 而使用 \emph{deep} 排序函数对具有较长
+公共前缀的后缀进行排序。 尽管 \emph{deep-shallow} 在理论上有良好的性能,但
+复杂的框架限制了它在实际当中的使用。
+
+以上所介绍的算法都具有超线性的时间复杂度。 然而, 已经有线性时间复杂度的
+算法被提出，比较知名的包括 \emph{KA} \cite{Ko2005}, \emph{KS}
+\cite{Karkkainen2006} 和 \emph{KSP}\cite{Kim2005} 算法。 \emph{KSP} 算法
+采用了和Farach算法 \cite{Farach1997} 类似地归并策略。 \emph{KS} 算法使
+用了分而治之的策略，包含3步: (1) 递归地为那些起始于位置 $i$ ($i~mod~3
+\neq 0$) 的后缀构造后缀数组； (2) 使用第一步的排序结果，为那些剩余后缀
+构建后缀数组； (3) 将第一步和第二步中构建的后缀数组合并为一个。
+\emph{KA} 算法是 \emph{two-stage} 算法\cite{Itoh1999} 的一个改进, 它将
+字符串中的所有后缀分成两类：L-类和S-类。 然后递归地对所有L-类后缀进行排
+序，之后，S-类后缀的顺序可由L-类后缀的顺序诱导得到。 Nong
+\cite{Nong2011}提出了两个算法 \emph{SA-IS} 和 \emph{SA-DS} 来改
+进 \emph{KA} 算法。 它们分别使用了“变长最左S-类子串”和“定长d-关键子
+串”来对问题进行规约, 同时使用了简单高效的算法对这些采样子串进行排
+序。 最近, Nong\cite{Nong2013} 针对常量字符集又提出了一个线性时间算
+法--\emph{SACA-K}, 该算法仅需要 $O(1)$ 大小的工作空间。 尽管线性时间算法
+在理论上具有较好的时间复杂度，但在实际应用中， 它们的性能却常常不如在实
+现方面经过高度优化过的超线性算法 \cite{Rajasekaran2014}。
+
+目前, 有许多外存算法\cite{Karkkainen2014} \cite{Nong2014}
+\cite{Nong2015} 被提出用于构建较大的后缀数组,外存算法所需要的空间主要由
+价格低廉且空间巨大的磁盘来提供。 通过使用外存算法，可以构造出那些无法放
+入内存的巨大后缀数组。
 
 \section{相关概念}
-\label{sec:MM}
+\label{sec:stucture}
 
-首先, 令 $\Sigma$ 表示序列的字符集, 即序列中所出现符号的有限集合. 例如, DNA序列的
-字符集是: $\Sigma=\{A, C, G, T\}$.
+令 $\Sigma$ 表示有限个字符组成的\emph{字符集} (本章只关注于ASCII字符
+集, 即 $|\Sigma| = 256$ 且每个字符占用一个字节的存储空间)。 给定字符
+集$\Sigma$， $\Sigma$ 上的字符串及其子串定义如下：
 
-\textbf{定义 1.} 令 $\Sigma$ 表示序列的字符集，令 $s=c_1c_2...c_n$ 表示长为 $n$
-的一个序列，其中每个字符 $c_i\in\Sigma$, $i=1,2,\cdots,n$. 序列 $s$ 中的第 $i$ 个
-字符表示为 $s[i]=c_i$. 如果一个序列 $s'$ 是由删除 $s$ 中零个或多个(不一定连续)字
-符而得到的，即 $s'=c_{i_1}c_{i_2}...c_{i_k}$ 且满足 $1 \leq i_1<i_2<\cdots<i_k
-\leq n$, 则序列 $s'$ 被称为序列 $s$ 的一个长为 $k$ 的子序列。
+\textbf{定义 1.} $\Sigma$ 上的\emph{字符串}是由有限个 $\Sigma$ 中的字符
+组成的序列。 $\Sigma$ 上长为$n$的字符串可表示为: $T =
+t_0t_1..t_{n-1}$, 其中 $T[i] = t_i \in \Sigma$ $(0 \leq i \leq
+n-1)$。$T$ 上的一个\emph{子串}是由 $T$ 中任意个连续字符所构成的字符
+串。 $T$中, 起始于位置 $i$ 且终止于位置 $j$ 的子串可表示 $T[i,j]$。
 
-\textbf{定义 2.} 给定字符集 $\Sigma$ 上的 $d$ 个序列 $s_1, s_2, ..., s_d$, 如果一
-个序列 $s'=c_{i_1}c_{i_2}...c_{i_k}$ 满足: (1) 它是 $d$ 个序列中每一个序列的子序
-列。 (2) 它是 $d$ 个序列最长的子序列. 则 $s'$ 被称为这 $d$ 个序列的最长公共子序
-列（简称为LCS)。
+在后缀排序中，最基本的概念是后缀和前缀，它们都是给定字符串特殊的子串，
+定义如下：
 
-通常, 多个序列的最长公共子序列并不唯一。 例如，给定三个DNA序列 $ACTAGTGC$,
-$TGCTAGCA$ 和 $CATGCGAT$, 它们有两个长为4的最长公共子序列，分别
-是 $CAGC$ 和 $CTGC$. 所谓的多最长公共子序列(MLCS)问题, 就是要找出三个或多个目标序
-列的所有最长公共子序列。
+\textbf{定义2.} 对于字符串 $T = t_0t_1..t_{n-1}$, 其起始于位置
+$i(0 \leq i \leq n-1)$ 的\emph{后缀}是子串 $T[i,n-1]$, 由$S_i(T)$表
+示。  $T$ 的长为 $h$ 的\emph{前缀}是子串 $T[0,h-1]$, 由 $P_h(T)$ 表示。
 
-针对MLCS问题，在过去几十年中，许多算法已被提出。根据这些算法所基于的模型，它们可
-以被分为两大类：基于动态规划的算法和基于支配点模型的算法。下面将简要介绍这两类方
-法。
+在本章中, 当提及某些后缀时, 它们一定是关联于同一个字符串的，所以符
+号 $S_i(T)$ 可以无歧义地简写成 $S_i$。 为了确保没有后缀是其它某个后缀的
+前缀, 通常会向字符串 $T$ 的末尾插入一个特殊字符 '\$', '\$' 被定义为在字
+典序上小于任何 $\Sigma$ 中的字符。 使用表达式 $S_i \prec S_j$ 来表示后
+缀 $S_i$ 以字典序小于后缀 $S_j$。 且我们的最终目标是, 将给定字符串的所
+有后缀按照字典序由小到大进行排序, 形成后缀数组:
 
-\subsection{基于动态规划的算法}
-\label {sec:Dynamic Programming}
+\textbf{定义 3.} 给定字符串 $T = t_0t_1..t_{n-1}\$$,
+$T$ 的\emph{后缀数组}(SA)是一个具有 $n+1$ 个元素的数组 $SA[0 \dots
+n]$, 其元素是 $0 \sim n$ 的整数, 使得对于任意 $0 \leq i < j \leq n$, 都
+有 $S_{SA[i]} \prec S_{SA[j]}$。
 
-求解MLCS问题的经典方法基于动态规划 \cite{Smith1981}, \cite{Sankoff1972}. 给定$d$
-个序列 $s_1,\, s_2,\,...,\, s_d$, 其长度分别为 $n_1,\, n_2,\, ...,\, n_d$, 基于动
-态规划的算法将递归的构造一个具有 $n_1 \times n_2 \times ... \times n_d$ 个元素
-的“得分矩阵” $T$, 其中元素 $T[i_1,\, i_2,\, ...,\, i_d]$ 记录了前缀序
-列 $s_1[1...i_1]$, $s_2[1...i_2]$, ..., $s_d[1...i_d]$ 的最长公共子序列的长
-度。 元素 $T[i_1,\, i_2,\, ...,\, i_d]$ 可由以下公式递归计算：
+由于一个后缀可以唯一地由其起始位置确定, 只需要在SA中存储后缀的起始位置。
+为了简单起见, 术语“(后缀的)次序”如果不做特殊说明, 将总是代表字典
+序。 基于字典序, 可以通过只比较后缀的前$h$个字符, 来进一步定义后缀
+的 \emph{h-序}: $S_i$ 被称为 \emph{h-小于} $S_j$ 当且仅当 $P_h(S_i)
+\prec P_h(S_j)$, 这种关系被表示为 $S_i \prec_h
+S_j$。  同理, 符号 $=_h$ 和 $\preceq_h$ 可以被类似地定义。 明显地, 有:
+$S_i \prec_h S_j \Longrightarrow S_i \prec S_j$。 如果所有的后缀都都依
+据其前 $h$ 个字符被排好序, 则它们被称为是\emph{h-有序}的。
+
+接下来将介绍“桶”(bucket)的概
+念, 它是 \emph{qsufsort} 和 \emph{dsufsort} 算法中的核心概念。
+
+\textbf{定义 4.} 给定后缀数组SA, SA上一个深度为$h$的\emph{桶}, 是一个子
+数组 $SA[l \dots r]$ $(l \leq r)$, 满足:
+$S_{SA[l]} =_h S_{SA[l+1]}\dots =_h S_{SA[r]}$ 且
+$S_{SA[l-1]} \neq_h S_{SA[l]}$ 及 $S_{SA[r]} \neq_h
+S_{SA[r+1]}$。 桶 $SA[l \dots r]$ 的序号被定义为 $l$, 该桶被表示
+为 $B_l$。
+
+注意, 深度 \emph{h} 是桶 $B_l$ 中所包含后缀\emph{当前已知的}公共前缀的
+长度。 为了记录每一个后缀所在的桶, 使用一个数组 $B$: 若 $B[i] =
+j$, 则 $S_i$ 当前处于桶 $B_j$ 中。 注意区别: $B_i$ 是编号为 $i$ 的桶,
+而 $B[i]$ 是后缀 $S_i$ 当前所在桶的编号。
+
+给定后缀 $S_i$ 和 $S_j$, $LCP(S_i, S_j)$ 被定义为 $S_i$ 和 $S_j$ 最长公
+共前缀的长度。 基于 $LCP(S_i, S_j)$, 字符串的平均 \emph{LCP} 可以按如下
+定义:
+
+给定长为$n+1$的字符串 $T$ 及其后缀数组 $SA$, $T$ 的平均$LCP$由以下公式
+计算:
 
 \begin{equation}
-  T[i_1,\, i_2,\, ...,\, i_d] =
-  \begin{cases}
-    0 & \text{if $\exists j(1 \leq j \leq d), i_j = 0$}\\
-    T[i_1-1,\, ...,\, i_d-1] + 1  & \text{if $s_1[i_1] = s_2[i_2] =
-      ... = s_d[i_d]$}\\
-    max(\bar{T}) & \text{otherwise}
-  \end{cases}
+\frac{1}{n}\sum_{i=0}^{n-1}LCP(S_{SA[i]},S_{SA[i+1]}).
 \end{equation}
 
-其中
-$\bar{T} = \{T[i_1-1,\, i_2,\, ...,\, i_d],\, T[i_1,\, i_2-1,\, ...,\, i_d],\,
-...,\, T[i_1,\, i_2,\, ...,\, i_d-1]\}$. 一旦得分矩阵 $T$ 构建完成, 目标序列的最
-长公共子序列可由 $T$ 的最后一个元素 $T[n_1,\, n_2,\, ...,\, n_d]$ 向其第一个元
-素 $T[0,\, 0,\, ...,\, 0]$ 进行反向回溯而得到。 图 \ref{fig:DM} A 显示了两个序
-列 $s_1 = ACTAGCTA$ 和 $s_2 = TCAGGTAT$ 的得分矩阵 $T$. 如图\ref{fig:DM} (B) 所
-示， 这两个序列的最长公共子序 (分别是 $TAGTA$ 和 $CAGTA$), 可由元素 $T[8,\, 8]$
-向元素 $T[0,\, 0]$ 进行回溯而得到。
+字符串的平均$LCP$, 可以粗略地估计对该字符串后缀进行排序所需的计算量: 如
+果平均$LCP$较大, 原则上我们将需要比较更多的字符来确定两个后缀的顺序。
 
-\begin{figure}[!h]
-  \centering
-  \includegraphics[height=2in, width=4.5in]{./eps/DM}
-  \caption{(A) 两个DNA序列 ACTAGCTA 和 TCAGGTAT 的得分矩阵. (B) 通过得分矩阵构建
-    最长公共子序列，其中的阴影元素对应于支配点.}
-\label{fig:DM}
-\end{figure}
+\section{ \emph{dsufsort} 算法}
 
-很明显，对于具有相同长度 $n$ 的 $d$ 个序列， 使用基于动态规划的算法求解其MLCS的时
-间和空间复杂度均为 $O(n^d)$ \cite{Hsu1984}. 已经有许多算法被提出用于改进基于动态
-规划方法的效率, \cite{Hirschberg1977}, \cite{Apostolico1992}, \cite{Masek1980},
-\cite{Rick1994}. 然而, 随着 $d$ 和 $n$ 的增加, 所有这些方法的效率仍然无法满足实际
-需求。
+本节将介绍基于 \emph{qsufsort} 算法的改进的后缀排序算法--
+\emph{dsufsort}。 \emph{dsufsort} 通过在排序过程中实时地维护每个桶的深度
+来提高 \emph{qsufsort} 算法的效率。 当对某个桶进行处理时, 将根据桶的深度
+对其中的后缀进行排序。 通过这种方式, 相比 \emph{qsufsort} 算法,
+\emph{dsufsort} 算法在每一轮中可以确定更多后缀的顺序, 换言之, 对所有后
+缀进行排序, \emph{dsufsort} 算法将需要较少的轮数, 这能够减少算法的运行
+时间, 提高算法效率。 接下来, 先简要地介绍 \emph{qsufsort} 算法的核心思
+想, 然后详细地讨论对其的改进算法 \emph{dsufsort}。
 
-\subsection{基于支配点的算法}
-\label{sec:Dominant Point}
+\subsection{ \emph{qsufsort}算法简介}
+\label{sec:qsufsort}
 
-为了减少基于动态规划方法的时空复杂度，许多新方法已被提出，基于支配点图模型的算法
-是其中最有效的方法之一。在介绍该方法前首先给出一些基本定义。
+Larsson和Sadakane所提出的 \emph{qsufsort} 算法使用了被称为''前缀倍
+增''的技术来对后缀进行逐轮排序。 在第0轮中, 给定字符串的所有后缀将根据其
+首字符进行排序。 之后, 所有具有相同首字符的后缀都会被排列到一起形
+成$SA$上一个深度为1的桶, 而整个 $SA$ 将(在逻辑上)被划分为一系列的深度
+为1的桶: 第一个桶中所包含的后缀具有最小的首字符, 第二个桶中所包含的后缀
+具有次小的首字符, .... 依此类推。
 
-\textbf{定义 3.} 给定 $\Sigma$ 上的 $d$ 个序列 $s_1,\, s_2,\, ...,\,
-s_d$, 向量 $p = (p_1,\, p_2,\, ...,\, p_d)$ 被称为这 $d$ 个序列的一个匹配点, 如果
-其满足 $s_1[p_1] = s_2[p_2] = ... = s_d[p_d] = \delta$, 即 $\delta$ 是位于序
-列 $s_i$ 第 $p_i$ ($i=1,2,\cdots,d$) 个位置的公共字符。 匹配点 $p$ 所对应的公共字
-符 $\delta$ 表示为 $C(p)$.
+注意, 如果一个深度为1的桶只包含一个后缀, 该桶及其包含的单个后缀被称为
+是\emph{完全有序的}, 因为该后缀可以根据首字符将其从其它后缀中区分出来,
+它已经处于SA的最终位置, 将来无需再对其进行排序。 然而, 如果一个深度为1的
+桶包含了超过一个后缀, 该桶及其所包含的后缀则被称为是\emph{未排序的}, 后
+续将需要比较更多的字符来确定其后缀的顺序。
 
-\textbf{定义 4.} 给定 $d$ 个序列的两个匹配点 $p = (p_1,\, p_2,\, ...,\,
-p_d)$ 和 $q = (q_1,\, q_2,\, ...,\, q_d)$, 我们称： (1) $p = q$ 当且仅当 $p_i =
-q_i$ ($1 \leq i \leq d$). (2) $p$ 支配 $q$ 或 $q$ 被 $p$ 支配 (表示为 $p \preceq
-q$), 如果对每一个 $i$ ($1 \leq i \leq d$) 都有 $p_i \leq q_i$, 并且存在 $j$
-($1 \leq j \leq d$) 使得 $p_j<q_j$. (3) $p$ 强支配 $q$ 或 $q$ 被 $p$ 强支配 (表示
-为 $p \prec q$)， 如果对每一个 $i$ ($1 \leq i \leq d$) 都有 $p_i < q_i$. (4) $q$
-是 $p$ 的一个后继或 $p$ 是 $q$ 的前驱, 如果 $p \prec q$ 并且不存在匹配
-点 $r$ 使得 $p \prec r \prec q$ 且 $C(q) = C(r)$.
+在第0轮后, 所有后缀都处于\emph{1-有序}的状态。 并且不失一般性地, 任意两
+个后缀 $S_i$ 和 $S_j$ 的1-序可由其所在桶的序号确定:
+$S_i \preceq_1 S_j \iff B[i] \leq B[j]$。
 
-注意, 一个匹配点最多有 $|\Sigma|$ 个后继， 其中每个后继对应于 $\Sigma$ 中的一个字
-符。
+通过使用前缀倍增技术, 在每轮过后, 所有的后缀都将基于其倍增长度的前缀被
+排序。 这样, 在第 \emph{k-1} 轮之后, 所有的后缀都将处于 $2^{k-1}$-有序,
+换言之, 所有未排序的桶都有同样的深度 $2^{k-1}$, 且这些未排序的桶, 将在
+第$k$轮中被从左到右逐个进行排序。
 
-\textbf{定义 5.} 匹配点 $p = (p_1,\, p_2,\, ...,\, p_d)$ 所在的层次被定义
-为 $L(p) = T[p_1,\, p_2,\, ...,\, p_d]$, 其中 $T$ 是由公式 (1) 计算得到的得分矩
-阵。 匹配点 $p$ 被称为一个 $k$-支配点, 当且仅当: (1) $L(p) = k$. (2) 不存在其他匹
-配点 $q$ 使得 $L(q) = k$ 且 $q \preceq p$. 所有 $k$-支配点构成了集合 $D^k$.\\
+现在, 假设未排序的桶 $B_p$ 即将在第 $k$ 轮被排序。 对 $B_p$ 中任意
+的 $S_j$ 和 $S_i$, 由于 $S_i =_{2^{k-1}} S_j$, $S_i$ 和 $S_j$ 之间的次
+序将依赖于 $S_{i+2^{k-1}}$ 和 $S_{j+2^{k-1}}$ 的次序， 即:
+$S_i \prec S_j \iff S_{i+2^{k-1}} \prec S_{j+2^{k-1}}$。 这里,
+$S_{i+2^{k-1}}$($S_{j+2^{k-1}}$) 被称作 $S_i$($S_j$) 的锚后缀。 然而，由
+于当前仅能够确定 $S_{i+2^{k-1}}$ 和 $S_{j+2^{k-1}}$ 的 $2^{k-1}$-序, 相
+应地，也仅能够确定 $S_i$ 和 $S_j$ 的 $2^k$-序:
+$S_i \preceq_{2^k} S_j \iff S_{i+2^{k-1}} \preceq S_{j+2^{k-1}} \iff
+B[i+2^{k-1}] \leq B[j+2^{k-1}]$。  这种等价关系说明了如何在第 $k$ 轮中，
+将 $B_p$ 中的后缀排成 $2^k$-有序的: 首先，对于 $B_p$ 中任一后缀 $S_i$，
+将其锚后缀所在的桶序号，即 $B[i+2^{k-1}]$ 作为 $S_i$ 的键值: $key(S_i)
+= B[i+2^{k-1}]$, 然后，使用普通的整数排序算法对所有的键值进行排序，接着
+将 $B_p$ 中的后缀，依据其键值的整数序进行重新排序，之后，$B_p$ 中的后缀
+将处于 $2^k$-有序。
 
-基于支配点模型的方法的动机在于减少动态规划方法的时空复杂度。 其核心思想基于这样的
-事实，即只有支配点才能够影响MLCS的构建（如图\ref{fig:DM} B 所示， 阴影元素对应于
-支配点)。由于支配点的数量远小于矩阵 $T$ 中的所有元素的数量，而基于支配点模型的方
-法将只需计算支配点而非整个矩阵的元素，因此相比动态规划方法极大地降低了时空复杂
-度。
+一旦某个未被排序的桶被处理过, 将会根据以下两种情况产生新的桶： 1) 如果
+某个后缀具有唯一的键值, 那么它将处于SA的最终位置，并独自形成一个完全有
+序的(包含单个后缀的)桶。 2) 如果某些后缀具有相同的键值, 那么它们将被排列
+在一起形成一个新的未排序的桶，并将在后续过程中进一步对其排序。 另
+外，$B$ 数组也需要根据新产生的桶做出相应的更新。
 
-基于支配点模型的算法的搜索空间可以被组织为一个有向无环图(DAG): 图中的每一个节点代
-表一个匹配点，边 $\langle p,\, q \rangle$ 代表 $q$ 是 $p$ 的一个后继，即 $p
-\prec q$ 且 $L(q) = L(p) + 1$. 最初, 图中仅包含一个没有任何入边的源节点 $(0,\,
-0,\, ...,\, 0)$ 以及一个没有任何出边的终止节点 $(\infty,\, \infty,\, ...,\,
-\infty)$. 接着, 有向无环图将按照如下方式被逐层构造: 首先, 令层次 $k =
-0$, 且 $D^0 = \{(0,\, 0,\, ...,\, 0)\}$, 然后,
-通过一个正向迭代的过程：$D^k \rightarrow D^{k+1}$, $(k+1)$-支配点集 $D^{k+1}$ 将
-基于 $k$-支配点集 $D^k$ 而产生。 具体地, $D^k$ 中的每个节点将会通过产生其所
-有 $|\Sigma|$ 个后继而被扩展, 接着通过一个被称为 $Minima$ 的剪枝操作找出所有那些
-支配其它节点的支配点，只有这些支配点才被保留下来以构成 $D^{k+1}$. 一旦图中所包含
-的所有节点均已被扩展, 整个有向无环图便构造完毕， 图中从源节点到终止节点的一条最长
-路径对应于目标序列的一个最长公共子序列, 这样, MLCS 问题便转化为寻找图中从源节点到
-终止节点的所有最长路径的问题. 下面将给出一个简单的例子来说明以上过程。
+\emph{qsufsort} 算法逐轮地对未排序的桶进行排序，直到所有后缀都被完全有
+序。注意, 通过使用前缀倍增技术， 确定每个后缀次序所依据的前缀将会在每一
+轮后倍增，所以，对长为$n$的字符串，其任意两个后缀的次序都可以在最
+多 $logn$ 轮后被确定。
 
-\textbf{例 1.} 基于支配点模型求解序列 $ACTAGCTA$ 和 $TCAGGTAT$ 的最长公共子序列,
-如图 \ref{fig:DAG} 所示。
+\subsection{dsufsort 算法: 记录并维护每一个未排序桶的深度}
+\label{sec:dsufsort}
 
-\begin{figure}[!h]
-  \centering
-  \includegraphics[height=3.8in, width=3.6in]{./eps/DAG}
-  \caption{基于支配点模型所构造的序列 $ACTAGCTA$ 和 $TCAGGTAT$ 的有向无环图，图中
-    黑色和灰色的节点将被 $Minima$ 剪枝操作删除。}
-  \label{fig:DAG}
-\end{figure}
+如前所述, 在第 $k$ 轮中, \emph{qsufsort} 算法将依据每个后缀前 $2^k$个字
+符对其进行排序, 这意味着， 对于那些前$2^k$个字符都相同的后缀， 该算法无
+法在第 $k$ 轮中确定其次序。 因此，对于具有很长公共前缀的后
+缀， \emph{qsufsort} 需要许多轮才能确定其次序，这会严重影响算法效率。
 
+为了提升算法性能，在每一轮中，应依据尽可能多的(前缀)字符来对后缀进行排
+序。 为此, 对每一个未排序的桶, \emph{dsufsort} 算法将维护其桶的深度 (即
+当前已知的，桶中后缀的最长公共前缀的长度), 并在每一个桶被处理后，对其深
+度进行更新。 在每轮中, 当对某个桶中的后缀进行排序时， \emph{dsufsort}
+算法将使用桶的深度来计算其后缀的键值， 然后对其进行排序。 在第$k$轮中，
+通过使用基于桶深度计算得到的键值, 对于某些后缀，可以依据多于$2^k$个前缀
+字符来对其进行排序， 这样, 一些前 $2^k$ 字符都相同的后缀，便可以在
+第 $k$ 轮中确定其次序。 相比\emph{qsufsort}算法, \emph{dsufsort} 算法在
+每轮中可以确定更多后缀的次序， 因此，需要更少的轮数来完成排序任务。
+
+为了记录桶的深度, 使用一个数组 $D$，使得每个桶的深度可以由其编号索引得
+到: 对于桶 $B_p$, 它的深度为 $D[p]$。 在第0轮后, 对每一个新产生的
+桶 $B_p$，令 $D[p] = 1$。
+
+类似于 \emph{qsufsort}, \emph{dsufsort} 算法逐轮地对后缀进行排序， 直到
+所有后缀都完全有序。 在每轮中, \emph{dsufsort} 算法采用了两阶段的“排序-更
+新” 策略来处理未排序的桶及更新其深度信息。 举例说明, 假设桶 $B_p$ 即将
+在第$k$轮中被处理：
+
+\begin{arabiclist}
+\item \textbf{排序:} 不失一般性地, 对 $B_p$ 中的任意 $S_i$ 和 $S_j$, 由
+  于 $S_i =_{D[p]} S_j$, $S_i$ 和 $S_j$ 之间的次序将取决
+  于 $S_{i+D[p]}$ 和 $S_{j+D[p]}$ 之间的次序:
+  $S_i \prec S_j \iff S_{i+D[p]} \prec S_{j+D[p]} \iff B[i+D[p]] <
+  B[j+D[p]]$。 其中 $S_{i+D[p]}$($S_{j+D[p]}$) 是 $S_i$($S_j$) 的锚后
+  缀。 根据以上等价关系, 对任意 $B_p$ 中的 $S_i$ , \emph{dsufsort} 算法
+  将使用 $B[i+D[p]]$ (而非 \emph{qsufsort} 使用的 $B[i+2^{k-1}]$) 作为
+  它的键值, 并使用普通的整数排序算法, 对所有后缀的键值进行排序。 然后,
+  根据键值的(算术)顺序, 对 $B_p$ 中的后缀进行重新排序。
+
+  现在, $B_p$中的每个 $S_i$, 都根据其前 $D[p] + D[B[i+D[p]]$ 个字符(而
+  非前 $2^k$ 个字符)被排序。 稍后将看到, 在第 $k$ 轮中 (即在 \emph{k-1}
+  轮之后), 一定有: $D[p] \geq 2^{k-1}$ 且 $D[B[i+D[p]] \geq 2^{k-1}$,
+  这意味着, 所有后缀将根据其前至少$2^k$个字符进行排
+  序, 这样 \emph{dsufsort} 的性能至少和 \emph{qsufsort} 持平。 同时也将
+  看到, 在某些时刻, 存在 $D[p] > 2^{k-1}$ 的情况, 这意味着 $B_p$ 中的所
+  有后缀将基于超过前 $2^k$ 个字符进行排序, 此时, \emph{dsufsort} 要优
+  于 \emph{qsufsort}。
+
+\item \textbf{更新:} 当$B_p$ 被处理之后, 数组 $D$ 和 $B$ 将立刻被更新。
+  假设根据键值大小:
+  $key(S_{i_1}) \leq key(S_{i_2}) \leq \dots \leq key(S_{i_s})$, 后缀被
+  重排为 $S_{i_1}, S_{i_2},\dots,S_{i_s}$。 根据其键值是否唯一,可将后缀
+  分为两类:
 
 \begin{itemize}
-\item \textbf{步骤 0}. 产生源节点 $(0,0)$ 和终止节点 $(\infty, \infty)$.
-\item \textbf{步骤 1.} 构造图的第一层节点。 对于字符 $A$, 其匹配点 $(1,3)$ 中的两
-  个分量分别是 $A$ 在两个输入序列中第一次出现的位置。 这样, 节点 $A(1,3)$ 便是源
-  节点在第一层中对应于字符 $A$ 的后继。 类似地, 节点 $C(2,2)$,
-  $G(5,4)$ 和 $T(3,1)$ 是源节点分别对应于字符 $C$, $G$ 和 $T$ 的后继。 在第一层的
-  这4个节点当中, 通过 \emph{Minima} 剪枝操作找出并删除被支配
-  点 $G(5,4)$, 如图 \ref{fig:DAG} 中灰色节点所示。 剩下的3个支配节点构成了图的第
-  一层 $D^1=\{A(1,3),C(2,2),T(3,1)\}$.
-  
-\item \textbf{步骤 2}. 构造图的第二层节点。 对于 $D^1$ 中的每一个节
-  点, 比如 $A(1,3)$, 由于匹配点 $(4,7)$ 的分量是继匹配点 $(1,3)$ 之后字符 $A$ 在
-  两个序列中第一次出现的位置。 这样, 节点 $A(4,7)$ 便是节点 $A(1, 3)$ 在第二层中
-  对应于字符 $A$ 的后继。 类似地, 节点 $T(3,6)$ 和 $G(5,4)$ 是节点 $A(1, 3)$ 在第
-  二层中分别对应于字符 $T$ 和 $G$ 的后继。 以此类推, 第一层中的节点 $C(2,2)$ 可以
-  产生3个第二层中的后继节点: $A(4,3)$, $G(5,3)$ 和 $T(3,6)$，第一层中的节
-  点 $T(3,1)$ 可以产生4个第二层中的后继节点： $A(4,3)$, $C(6,2)$,
-  $G(5,4)$ 和 $T(7,6)$。 注意， 有些节点会被重复产生。 在新产生的第二层的10个节点
-  中, 通过剪枝操作 \emph{Minima} 找到并删除重复节点 $A(4,3)$, $G(5,4)$ (会被删除
-  两次) 和 $T(3,6)$， 如图第二层中的黑色节点所示。 同样, 通过 \emph{Minima} 操作
-  找到并删除被支配节点 $(4, 7)$, $(5, 4)$ 和 $(7, 6)$ 如图第二层中的灰色节点所
-  示。 剩余的支配点构成了图的第二层 $D^2=\{T(3, 6),\; A(4, 3),\;$ $C(6,2)\}$。 注
-  意, 如果一个节点没有任何后继，那么令终止节点为其唯一后继。
-\item \textbf{步骤 3}. 逐层重复以上步骤，直到有向无环图构造完毕，即图中所有节
-  点(除了终止节点)均已被扩展。
-  
-\end{itemize}
 
-从以上例子可以看出，基于支配点模型的方法有以下两个缺陷：
-\begin{enumerate}
-\item 每层中会产生大量重复的，被支配的冗余节点，它们将消耗大量的存储空间。
-\item 找出并删除冗余节点的剪枝操作需要对大量的 $d$ 维向量进行逐对比较，每次比较又
-  需要 $d$ 次整数比较，当 $d$ 较大时，对每一层进行剪枝操作将会变得极其耗时。
+\item 对任意 $S_{i_j}$ 满足 $key(S_{i_{j-1}}) \neq
+  key(S_{i_j})$ 且 $key(S_{i_j}) \neq key(S_{i_{j+1}})$, $S_{i_j}$ 将处
+  于其在SA中的最终位置, 同时构成一个完全有序的单元素桶:
+  $B_{p+j-1}$。 $S_{i_j}$ 所在的桶, 将相应地被更新为: $B[i_j] = p+j-1$。
+  然而, 无需更新已经完全有序的桶的深度(即无需更新$D$数组)。
+
+\item 对每一组后缀 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 满足:
+  $key(S_{i_l}) = key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$,
+  $key(S_{i_{l-1}}) \neq m$ 且 $key(S_{i_{r+1}}) \neq m$, 该后缀
+  组 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 将构成一个新的未排序桶:
+  $B_{p+l-1}$。 由于 $B_{p+l-1}$ 中每个后缀的锚后缀都在桶 $B_m$ 中,
+  $B_m$ 被称为是 $B_{p+l-1}$ 的"锚桶"。 该组中所有后缀所在的桶也将被相应
+  地更新: 每一个 $B[i_l], B[i_{l+1}], \dots, B[i_r]$ 都将被更新
+  为 $p+l-1$。  由于已经知道:
+  $S_{i_l} =_{D[p]} S_{i_{l+1}} =_{D[p]} \dots =_{D[p]}
+  S_{i_r}$ 及
+  $S_{i_l+D[p]} =_{D[m]} S_{i_{l+1}+D[p]} =_{D[m]} \dots =_{D[m]}
+  S_{r+D[p]}$, 所以有:
+  $S_{i_l} =_{D[p]+D[m]} S_{i_{l+1}} =_{D[p]+D[m]} \dots =_{D[p]+D[m]}
+  S_{i_r}$。  因此, 新产生桶 $B_{p+l-1}$ 的深度应为: $D[p+l-1] = D[p] +
+  D[m]$, 我们使用该等式来设置新的未排序桶的深度。
+\end{itemize}
+\end{arabiclist}
+
+
+基于两阶段的\emph{排序--更新}策略, \emph{dsufsort} 算法的框架可以总结如
+下:
+
+\begin{enumerate}[\hspace{0.3cm}]
+
+\item 初始化(第0轮): 根据首字符, 对输入字符串的所有后缀进行排序。 对每一
+  个新产生的未排序桶 $B_p$, 令 $D[p] = 1$, 且对 $B_p$ 中的任一 $S_i$,
+  令 $B[i] = p$。
+
+\item 对SA中每一个未排序的桶 (比如 $B_p$), 执行以下\emph{排序--更新}操
+  作:
+
+\begin{enumerate}[\bfseries i.]
+\item \emph{排序}: 对 $B_p$ 中的每个后缀 $S_i$, 令 $B[i+D[p]]$ 作为它的
+  键值, 并使用整数排序算法, 对所有后缀的键值进行排序, 再根据键值大小,
+  对 $B_p$ 中的后缀进行由小到大排序。
+\item \emph{更新}: 假设 $B_p$ 中的后缀被排序为: $S_{i_1},
+  S_{i_2},\dots,S_{i_s}$。 对任意 $S_{i_j}$ 满足:
+  $key(S_{i_{j-1}}) \neq key(S_{i_j})$
+  且$key(S_{i_j}) \neq key(S_{i_{j+1}})$, 将 $B[i_j]$ 设置
+  为 $p+j-1$。 对每一组后缀 $\{S_{i_l}, S_{i_{l+1}},\dots,S_{i_r}\}$ 满
+  足: $key(S_{i_l}) = key(S_{i_{l+1}}) = \dots = key(S_{i_r}) = m$,
+  $key(S_{i_{l-1}}) \neq m$ 且 $key(S_{i_{r+1}}) \neq m$, 产生一个新的
+  未排序桶 $B_{p+l-1}$。 将 $D[p+l-1]$ 设置为 $D[p] + D[m]$, 同时将每一
+  个 $B[i_l], B[i_{l+1}], \dots, B[i_r]$ 设置为 $p+l-1$。
 \end{enumerate}
 
-\cite{Hunt1977} 首次提出了针对两个序列的基于支配点的算法，其时间复杂度
-为 $O((r+n)logn)$, 其中 $r$ 是支配点图中节点的数量， $n$ 是两个目标序列的长
-度。 此后,为了进一步提高算法效率, 各种基于支配点模型的变体算法被相继提出.
-\cite{Korkin2001} 首次提出了并行MLCS求解算法，其时间复杂度为 $O(|\Sigma||D|)$, 其
-中 $|D|$ 是支配点图中的节点数量。 \cite{Chen2006} 提出了一种针对DNA序列的高效算
-法 -- FAST-LCS, 它采用了一种被称为后继表的新型数据结构，用来在常量时间内产生一个
-节点的所有后继，同时使用了剪枝操作用来删除每一层中的非支配节点。 \cite{Wang2011}
-提出了 Quick-DPAR 算法用以改进 FAST-MLCS 算法, 它使用了“分而治之”的策略来删除非
-支配点从而使其非常易于并行化, 作者称相比于串行版本的算法，其并行化算法获得了近似
-于线性的加速比。 \cite{Li2012} 和 \cite{Yang2010} 分别设计了在GPU上针对LCS问题的
-并行算法和在云平台上针对MLCS问题的并行化算法。 遗憾的是, 由于过大的同步开
-销， \cite{Yang2010} 所提所提算法并不适用于包含很多序列的MLCS问题。 最近,
-\cite{Li2016_ICDE} 和 \cite{Li2016_SIGKDD} 分别提出了两种基于支配点模型的算法:
-PTop-MLCS 和 RLP-MLCS, 它们都使用了被称为“无冗余公共子序列图”(简称为NCSG)的新的
-图模型， 该图模型在构建过程中能够极大地减少冗余节点的产生， 同时算法采用了正反向
-拓扑排序来寻找图中的最长路径。作者称两种算法的时空复杂度均线性于图中所包含的节点
-数量。
+\item 如果SA中没有未排序的桶, 则算法结束; 否则, 跳转到 step 2 并开始新
+  的一轮排序。
 
-在实际当中，对于大序列集，传统算法需要花费大量的时间和空间来求解其最优解(即完整的
-最长公共子序列集)，为解决此问题，一系列近似算法被相继提出。近似算法首先能够在极短
-的时间内找出一些次优解 (即非最长公共子序列)，然后通过反复迭代，逐步提高解的质量，
-最终使其逼近于真实的最优解。\cite{Yang2013} 提出了基于支配点模型的近似算
-法--Pro-MLCS及其并行化版本。 Pro-MLCS 能够以仅仅 $3\%$ 的总运行时间找到近似解, 然
-后通过反复迭代来提高解的质量, 迭代时间越长, 解的质量就越好。最近,
-\cite{Yang2014} 提出了另外两种近似算法 SA-MLCS 和 SLA-MLCS. SA-MLCS 使用了一种称
-为 “iterative beam widening” 的搜索策略来减少迭代过程中的空间消
-耗。 基于 SA-MLCS, 空间受限型算法 SLA-MLCS 被提出, 它可以确保算法的内存开销不超过
-预先设定的值。
-
-
-\section{一种新的图模型: Leveled-DAG 及其构建算法}
-\label{sec:Algorithm}
-
-本节中将介绍Leveled-DAG图模型及其相应的构建算法，在描述细节之前，首先介绍一些将要
-用到的核心数据结构。
-
-\subsection{核心数据结构}
-\label{sec:data structures}
-
-I. 后继表
-\label{sec:successor table}
-
-高效地产生每一个节点的后继，是构建Leveled-DAG的关键步骤。为此，需要为每一个输入序
-列构造一个后继表 \cite{Chen2006}. 通过查询这些后继表，能够在常量时间内产生一个节
-点的后继。 具体地，给定序列 $s=c_1c_2...c_n$, 其所对应的后继表(由 $ST$ 表示)是一
-个拥有 $|\Sigma| \times (n+1)$ 个元素的二维数组, 其中第 $i$ 行第 $j$ 列的元
-素(由$ST[i, j]$表示)按照如下方式计算:
-
-$$ST[i,j]=min\{m\;|\;c_m=\sigma_i,\; m > j,\; 1 \leq i \leq
-|\Sigma|,\; 0 \leq j \leq n\}$$
-
-其中 $\sigma_i$ 是字符集 $\Sigma$ 中第 $i$ 个字符。 事实上， $ST[i,j]$ 记录了在序
-列 $s$ 的第 $(j+1)$ 个位置之后，字符 $\sigma_i$ 第一次出现的位置。 例如,
-DNA序列 $ACTAGCTA$ 和 $TCAGGTAT$ 的后继表分别在图 \ref{fig:ST} A 和 B中所示。 给
-定 $d$ 个长为 $n$ 的序列， 其后继表可以在 $O(d|\Sigma|n)$ 时间内构建完成.
-
-\begin{figure}
-  \centering
-  \includegraphics[height=1.2in, width=4.8in]{./eps/ST}
-  \caption{(A) 序列 ACTAGCTA 的后继表. (B) 序列 TCAGGTAT 的后继表.}
-    \label{fig:ST}
-  \end{figure}
-
-  给定 $d$ 个序列, 通过查询后继表，一个节点的所有后继可以在 $O(|\Sigma|d)$ 时间内
-  产生。 例如, 图 \ref{fig:DAG} 中节点 $C(2, 2)$ 的后继可以通过查讯
-  图\ref{fig:ST}中所示的后继表而得到： $(ST_1[1, 2],\;ST_2[1, 2]) = (4, 3)$,\,
-  $(ST_1[2, 2],\;ST_2[2, 2]) = (6, -)$,\, $(ST_1[3, 2],\;ST_2[3, 2]) = (5, 4)$
-  and $(ST_1[4, 2],\;ST_2[4, 2]) = (3, 6)$, 分别对应于字符 $A$, $C$,
-  $G$ 和$T$， 其中 $(6, -)$ 意味着 $(2, 2)$ 没有对应字符 $C$ 的后继。 事实上, 一
-  个节点可以没有任何后继。
-
-II. Leveled-DAG 中的节点结构
-\label{sec:Node}
-
-Leveled-DAG中的每个节点，比如 $t$, 包含了以下信息：
-
-\begin{itemize}
-\item 节点 $t$ 所对应的匹配点, 用来标识 $t$ 的唯一性。
-\item $Suc(t)$: $t$ 所有后继的集合。
-\item $P\_LCS(t)$: 从源节点到 $t$ 的所有最长路径所对应的序列集 (它们是最长公共子
-  序列的前缀, 在下文中简称为“前缀序列”)。
-\end{itemize}
-
-节点 $t$ 的匹配点用于判断 $t$ 是否已经存在于图中。 后面将会看到, 当一个节点被删除
-时，其所包含的前缀序列会由其后继节点继承并加以延长。 当Leveled-DAG构造完毕时，其
-中仅剩的终止节点所包含的前缀序列就是要寻找的输入序列的最长公共子序列。
-
-III. 全局数据结构
-\label{sec:auxiliary}
-
-\begin{itemize}
-\item \emph{L\_DAG} : 用于保存图中的节点。
-\item $Cur\_Level$ : 用于保存当前待扩展节点的队列。
-\item $Next\_Level$ : 用于保存新产生节点的队列。
-\end{itemize}
-
-
-
-$L\_DAG$ 是一个映射表结构用于保存图中的节点， 一个节点可以通过其键值(即匹配点)进
-行检索。每当一个新节点产生后，通过在 $L\_DAG$ 中检索其匹配点，可以判断该节点是否
-已经存在于图中，如果不存在，便将其插入$L\_DAG$。 队列 $Cur\_Level$ 用于保存当前层
-中待扩展节点, 而队列 $Next\_Level$ 用于保存新产生的下一层节点(即当前层中节点的后
-继)。
-
-
-\subsection{一种新的图模型: Leveled-DAG}
-\label{sec:leveled DAG}
-
-Leveled-DAG模型的核心特性是，它采用了一种被称为“产生-删除”的策略来控制图的规
-模。 具体来说，每当新的一层节点产生之后，图中所有入度为零的节点(即没有任何边指向
-其的节点)就会变得“过时”，因为它们不会再是后续产生节点的后继，其所包含的前缀序列
-也因此不会再发生变化，所以可以安全地将其删除而不会对最终结果造成任何影响。通过及
-时地删除过时节点可以极大地缩小图的规模并降低内存开销。 基于这种策
-略，Leveled-DAG将会从源节点开始进行逐层构造，任意时刻，只有当前新产生层的节点以
-及(以前产生的)入度不为零的节点会被保留下来。 一旦构建完成，唯一剩余的终止节点便已
-包含了所有输入序列的最长公共子序列，无需任何图搜索操作，这将节省大量运行时间。 下
-面将给出一个例子来说明Leveled-DAG模型的构造过程。
-
-\begin{figure}
-  \centering
-  \includegraphics[height=4.5in, width=4.5in]{./eps/Level_DAG}
-  \caption{序列 ACTAGCTA 和 TCAGGTAT 所对应的 Leveled-DAG. 匹配点及其对应字符在节
-    点内部显示。 The partial LCSs are shown by red strings near the nodes. The
-    white nodes are newly created and will be expanded later. The green ones are
-    outdated and will be removed right away. The red ones with incoming edges
-    are left from the previous levels and cannot be removed at present.}
-  \label{fig:Leveled-DAG}
-\end{figure}
-
-\textbf{例 2.} 基于Leveled-DAG模型求解序列 $ACTAGCTA$ 和 $TCAGGTAT$ 的最长公共子
-序列。 最初, Leveled-DAG只包含属于第0层的源节点 $(0, 0)$. 然后，通过查询
-图\ref{fig:ST}中所示的后继表，产生源节点的4个后继： $A(1, 3)$, $C(2, 2)$, $G(5,
-4)$和 $T(3, 1)$. 由于这4个后继属于第1层，它们的前缀序列分别是单个字符：$A$, $C$,
-$G$ 和 $T$, 如图\ref{fig:Leveled-DAG} A 中对应节点上方的红色字符所示。 此时，由于
-源节点入度为0，它已经过时，可以从图中安全删除。
-
-然后，产生第1层节点的后继以构成第2层节点，这些后继是: $A(4, 7)$, $T(3, 6)$,
-$A(4, 3)$, $A(8, 7)$, $T(7, 6)$ 和 $C(6, 2)$, 如图 \ref{fig:Leveled-DAG} B 所
-示。 注意，如果一个后继已经存在于Leveled-DAG中 (比如 $G(5, 4)$), 它无需再重复产
-生。 当第2层节点被产生之后, 由于节点 $A(1, 3)$, $C(2, 2)$ 和 $T(3, 1)$ 入度为0,
-它们已经过时并将被删除, 此时, 其所包含的前缀序列需要被其后继节点继承并延
-长。 例如, 已经过时的节点 $A(1, 3)$ 有3个后继: $A(4, 7)$, $T(3, 6)$ 和 $G(5, 4)$
-(它没有对应于字符 $C$ 的后继). 每一个后继都需要将其所对应的字符附加到 $A(1, 3)$
-的前缀序列(即 $A$)之后， 然后将延长后的前缀序列保存为其自己的前缀序列。 具体地,
-后继 $A(4, 7)$ 将 $A$ 附加到 $A$ 之后, 然后将 $AA$ 保存为自己的前缀序
-列。 后继 $T(3, 6)$ 将 $T$ 附加到 $A$ 之后, 然后将 $AT$ 作为自己的前缀序列。 类似
-地，后继 $G(5, 4)$ 将 $G$ 附加到 $A$ 之后, 将 $AG$ 作为自己的前缀序列。 注意, 由
-于 $G(5, 4)$ 同时是这3个过时节点的后继， 它通过继承并延长这3个节点的前缀序列， 得
-到了自己的3个前缀序列，分别是: $TG$, $CG$ 和 $AG$。 在移除过时节点之后，图中仅剩
-余7个节点。
-
-接下来, 如图 \ref{fig:Leveled-DAG} C 所示, 产生第2层所有节点的所有后继：$T(7,
-8)$ 和 $A(8, 3)$ 构成图的第3层。 注意, 由于节点 $A(8, 7)$ 没有任何后继, 令终止节
-点 $(\infty, \infty)$ 为其唯一后继。 在第3层构建完毕之后, 节点 $T(3, 6)$, $A(4,
-3)$ 和 $C(6, 2)$ 已经过时。 在移除它们之前, 其所包含的前缀序列需要被其后继节点继
-承并延长。 作为特例, 由于 $A(4, 7)$ 是过时节点 $T(3, 6)$ 的一个后继, $T(3, 6)$ 的
-前缀序列 $CT$ 和 $AT$， 将由 $A(4, 7)$ 继承并加以延长(附加 $A$)。 由于延长后的前
-缀序列 $CTA$ 和 $ATA$ 比 $A(4, 7)$ 原有的前缀序列 $AA$ 要长， $A(4, 7)$ 的前缀序
-列将被相应地更新为 $CTA$ 和 $ATA$。 类似地, 节点 $G(5, 4)$ 和 $T(7, 6)$ 的前缀序
-列同样通过继承并延长其过时前驱的前缀序列加以更新。
-
-如图 \ref{fig:Leveled-DAG} D 所示, 需要扩展新产生的第3层中的节点 $T(7,
-8)$ 和 $A(8, 3)$。 由于这两个节点均没有后继， 终止节点将被定义为这两个节点的唯一
-后继。 由于没有新的节点产生, 此后将不再需要扩展任何节点。 从此刻起，算法只需要不
-断地删除过时节点，并更新其相应后继节点的前缀序列。 当前, 节点 $A(4, 7)$, $G(5,
-4)$ 和 $A(8, 3)$ 将被移除。 通过继承 $A(8, 3)$ 的前缀序列 $TCA$， 终止节点将其作
-为自身的前缀序列 (终止节点不附加任何字符)。 接着, 如图 \ref{fig:Leveled-DAG} E 所
-示, 节点 $T(7, 6)$ 和 $T(7, 8)$ 将被移除， 相应地，终止节点的前缀序列将被更新
-为 $CTAT$ 和 $ATAT$. 最终, 如图 \ref{fig:Leveled-DAG} F 所示, 在移除最后一个过时
-节点 $A(8, 7)$ 之后, 终止节点的前缀序列会被更新为 $TAGTA$ 和 $CAGTA$, 它们即是输
-入序列的最长公共子序列。
-
-从以上例子可以看到, 最初仅有一个源节点存在于Leveled-DAG中, 然后节点的数量将不断增
-加, 一旦不再有新的节点产生, 节点的数量将开始下降直到剩余终止节点。 在此过程中, 只
-有新产生的节点和以前产生的入度不为0的节点会被保留在Leveled-DAG中, 极大地减少了存
-储开销。 当Leveled-DAG构建结束后, 输入序列的最长公共子序列立即可得。
-
-\subsection{Leveled-DAG 模型的构建算法 }
-\label{sec:PMA}
-
-本节将给出Leveled-DAG模型构建算法的形式化描述。
-
-\textbf{算法 2. 构建 Leveled-DAG}
-\begin{itemize}
-\item \textbf{步骤 0.} 预处理。 对每一个输入序列，构造其后继表。
-\item \textbf{步骤 1.} 构建Leveled-DAG的第一层。通过查询后继表产生源节点的所有后
-  继，作为图的第一层。 令每一个后继所对应的字符作为其(单字符)前缀序列。删除源节
-  点。
-\item \textbf{步骤 2.} 产生Leveled-DAG的下一层节点并删除过时节
-  点 (即“产生-删除”策略)。 如果在Leveled-DAG中存在未扩展节点, 则重复以下两个子
-  步骤：
-  \begin{itemize}
-  \item \textbf{步骤 2.1（产生).} 对每一个未扩展节点 $t$, 产生 $t$ 的所有后继 (如果某个
-    后继已经存在于图中，无需重复产生， 只需通过指针建立其与 $t$ 的后继关系)。 如
-    果 $t$ 没有后继，令终止节点作为其唯一后继。
-  \item \textbf{步骤 2.2 (删除).} 令 $|p|$ 表示节点 $p$ 所包含前缀序列的长度。 对每一个
-    入度为0的节点 $p$, 以及 $p$ 的每一个后继 $s$:
-    \begin{itemize}
-    \item 如果 $|p| \geq |s|$, 则删除 $s$ 原有的前缀序列。 将 $s$ 所对应的字符附
-      加到 $p$ 的每一个前缀系列之后， 将这些延长后的前缀序列作为 $s$ 的(新的)前缀
-      序列加以保存。
-    \item 否则，如果 $|p| = |s|-1$, 则将 $s$ 所对应的字符附加到 $p$ 的每一个前缀
-      系列之后， 并将这些延长后的前缀序列添加到 $s$ 原有的前缀序列集中。
-    \end{itemize}
-    删除节点 $p$ 及其前缀序列集。
-  \end{itemize}
-\item \textbf{步骤 3.} 重复执行步骤 2.2, 直到剩余终止节点。
-\item \textbf{步骤 4.} 输出终止节点所保存的前缀序列，即输入序列的最长公共子序列。
-\end{itemize}
-
-如算法 2 中所示, 在预处理 (步骤 0) 之后, Leveled-DAG最初只包含源节点(步骤 1), 然
-后它采用 ”产生-删除“ 策略来产生下一层节点 (步骤 2.1) 和删除过时节
-点 (步骤 2.2), 一旦Leveled-DAG中所有的节点都被扩展, 即不再有新节点产生, 算法开始
-重复地删除过时节点 (步骤 3), 直到剩余终止节点。 最后, 输出终止节点所保存的前缀序
-列，即输入序列的最长公共子序列(步骤 4)。
-
-如下是算法2的伪代码描述， 其中所用到的数据结构在 \ref{sec:data structures} 节已经
-介绍, 构造后继表的过程已经省略, 后继表被直接作为输入数据。 算法2中的步骤1和步
-骤2被合并为一个 \emph{while} 循环 (7 $\sim$ 22行), 步骤3对应于随后
-的 \emph{while} 循环 (24 $\sim$ 26行). 移除过时节点的操作被单独封装为一个函
-数 $Remove\_Outdated$, 对应于 30 $\sim$ 49 行。
-
-\begin{varalgorithm}{2:}
-  \caption{伪代码}
-  \footnotesize
-  \label{alg:PMA}
-  \begin{algorithmic}[1]
-    \REQUIRE ~~\\
-    输入序列的后继表.\\
-    \ENSURE ~~\\
-    输入序列的最长公共子序列.
-    \STATE
-    \STATE $Suc(source) \leftarrow \emptyset$, $P\_LCS(source) \leftarrow \emptyset$
-    \STATE $Suc(end) \leftarrow \emptyset$, $P\_LCS(end) \leftarrow \emptyset$
-    \STATE $L\_DAG \leftarrow \{source, end\}$
-    \STATE $Cur\_Level \leftarrow \{source\}$
-    \STATE
-    \WHILE{$Cur\_Level \neq \emptyset$}
-    \FOR {每一个节点 $t \in Cur\_Level$}
-    \FOR {$t$ 的每一个后继 $s$}
-    \STATE $Suc(t) \leftarrow Suc(t) \cup \{s\}$
-    \IF{$s \notin L\_DAG$}
-    \STATE $L\_DAG \leftarrow L\_DAG \cup \{s\}$
-    \STATE $Next\_Level \leftarrow Next\_Level \cup \{s\}$
-    \ENDIF
-    \ENDFOR
-    \IF{$t$ 没有后继}
-    \STATE $Suc(t) \leftarrow \{end\}$
-    \ENDIF
-    \ENDFOR
-    \STATE $Remove\_Outdated(L\_DAG)$
-    \STATE $Cur\_Level \leftarrow Next\_Level$
-    \ENDWHILE
-    \STATE
-    \WHILE {$\exists t \in L\_DAG$ and $t \neq end$}
-    \STATE $Remove\_Outdated(L\_DAG)$
-    \ENDWHILE
-    \STATE
-    \STATE 输出: $P\_LCS(end)$
-    \STATE
-    \STATE $Remove\_Outdated(L\_DAG):$
-    \FOR {每一个入度为零的节点 $p \in L\_DAG$}
-    \FOR {$p$ 的每一个后继 $s$}
-    \STATE $|p| \leftarrow $ $p$ 所包含前缀序列的长度
-    \STATE $|s| \leftarrow $ $s$ 所包含前缀序列的长度
-    \STATE $\delta \leftarrow $ 节点 $s$ 所对应的字符
-    \IF {$|p| \geq |s|$}
-    \FOR {每一个 $plcs \in P\_LCS(p)$}
-    \STATE 将 $\delta$ 附加到 $plcs$ 末尾
-    \ENDFOR
-    \STATE $P\_LCS(s) \leftarrow $ \{所有延长后的前缀序列\} 
-    \ELSIF {$|p| + 1 = |s|$}
-    \FOR {每一个 $plcs \in P\_LCS(p)$}
-    \STATE 将 $\delta$ 附加到 $plcs$ 末尾
-    \ENDFOR
-    \STATE $P\_LCS(s) \leftarrow P\_LCS(s) \cup \{$所有延长后的前缀序列$\}$
-    \ENDIF
-    \STATE 从 $L\_DAG$ 中删除 $p$
-    \ENDFOR
-    \ENDFOR
-  \end{algorithmic}
-\end{varalgorithm}
-
-\subsubsection{时间/空间复杂度分析}
-\label{sec:complexity}
-
-接下来将给出Leveled-DAG方法粗略的时间/空间复杂度分析。
-
-如上所述, Leveled-DAG方法包含两个阶段: 1. 为每一个输入序列构造后继表; 2.基于后继
-表构造Leveled-DAG图。 第一个阶段, 如 \ref{sec:successor table} 节所示, 对长为
-$n$ 的序列，构造其后继表将花费 $O(|\Sigma|n)$ 时间, 因此，为 $d$ 个长为 $n$ 的序
-列构造后继表将花费 $O(d|\Sigma|n)$ 时间。 对于第二个阶段， 从宏观角度来看, 构造
-Leveled-DAG 图的过程仅仅是产生出所有图节点然后再将其全部删除 (除了终止节点)。 尽
-管产生节点和删除节点在构建过程中交织在一起, 图中任意节点仅被产生并删除一次, 并且
-整个构建过程不含任何递归调用 (见算法2的伪代码描述)。 因此, 构建图的时间复杂度为
-$O(2|Nodes|)$, 其中 $|Nodes|$ 为产生的节点数量, 产生节点和删除节点的过程都需要
-$O(|Nodes|)$ 时间。 结合这两个阶段, Leveled-DAG方法的时间复杂度为 $O(d|\Sigma|n
-+ 2|Nodes|)$. 由于总是有 $O(d|\Sigma|n) \ll O(2|Nodes|)$ (由实验证实), 所以
-$O(d|\Sigma|n + 2|Nodes|) \thickapprox O(2|Nodes|) \thickapprox O(|Nodes|)$, 这
-意味着Leveled-DAG方法的时间复杂度与图中节点的数量呈线性关系。
-
-对于空间复杂度, 一方面, Leveled-DAG 方法需要存储所有的后继表，这需
-要 $O(d|\Sigma|(n+1))$ 的存储空间。 另一方面, 如前所述, Leveled-DAG 图主要需要保
-存最新产生的一层节点, 且最新一层节点的数量会先增后降, 因此Leveled-DAG方法的内存开
-销也会先增后降。 所以, Leveled-DAG方法的峰值内存消耗
-为 $O(|Max\_Level|)$, 其中 $|Max\_Level|$ 是图中最大一层所包含节点的数量。 结合两
-方面内存开销， Leveled-DAG方法的空间复杂度为 $O(d|\Sigma|(n+1) + |Max\_Level|)$,
-由于总是有 $O(d|\Sigma|(n+1)) \ll O(|Max\_Level|)$, 所以
-$O(d|\Sigma|(n+1) + |Max\_Level|) \thickapprox O(|Max\_Level|)$, 这意味
-着Leveled-DAG方法的空间复杂度主要取决于图中最大一层的节点数量。
-
-
-\section{实验及结果分析}
-\label{sec:experiments}
-
-本节将使用真实的生物序列，从时间和空间两方面来比较Leveled-DAG方法和其它三个主
-流MLCS算法： \emph{Top\_MLCS} \cite{Li2016_ICDE}, \emph{Quick-DP}
-\cite{Wang2011} 和 \emph{Fast\_LCS} \cite{Chen2006} 的性能。
-
-\subsection{实验设定}
-\label{Test problems}
-
-实验将使用两种类型的生物序列: DNA序列 ($|\Sigma|=4$) 和蛋白质序
-列 ($|\Sigma|=20$) 作为输入数据。 我们将进行两方面的实验：
-
-\begin{enumerate}
-\item 测试不同数量的序列: 对每一种类型的生物序列, 序列的长度固定为100，数量由3逐
-  步增加到700.
-\item 测试不同长度的序列: 对每一种类型的生物序列, 序列的数量固定为5个，长度由50逐
-  步增加到5000.
 \end{enumerate}
 
-对每次实验, 根据指定的长度和数量，输入序列由一个大的原始序列集中随机抽取而产
-生。 所有测试算法均由C/C++实现，由gcc编译器编译(-O2), 在同一台服务器上运行，配置
-为: Intel Xeon E7-8880 2.2 GHz CPU, 700 GB内存 (由于服务器被多个用户共享，分配给
-每个进程的内存被限定为300GB)。操作系统为 GNU/Linux (amd64).
+如前所述, \emph{dsufsort} 算法具有如下重要性质:
 
-\subsection{测试不同数量的序列}
-\label{sec:number}
+\begin{lemma}
+  对第$k$ \emph{(}$k = 0,1,2,\dots$ \emph{)} 轮中产生的每一个未排序的
+  桶 $B_q$, 都有 $D[q] \geq 2^k$。
+\end{lemma}
 
-在第一种实验中，所有输入序列的长度均被固定为100， 序列的数量由3逐渐增加到700. 将
-对DNA和蛋白质两种序列分别进行实验。 所有算法独立运行5次，使用32个线程，它们的平
-均CPU占用时间（以及运行时间的标准差）和内存消耗被测量并分别显示于
-表 \ref{tab:times1} 和表 \ref{tab:memory1} 中。 值得指出的是, 算法的运行时间和内
-存消耗高度依赖于序列本身， 即使两个序列集包含相同数量和长度的序列, 如果其包含序列
-本身不同， 算法在这两个序列集上的运行时间和内存消耗可能变化很大。
+\begin{proof} 由归纳法可证。 首先, 对于任何第0轮中产生的未排序桶 $B_q$,
+  都有 $D[q] = 1 \geq 2^0$。  然后, 假设 $B_q$ 是第 $k$ 轮中产生
+  于 $B_p$ 的新的未排序桶, 且 $B_m$ 是 $B_q$ 的锚
+  桶。 由于 $B_p$ 和 $B_m$ 是产生于第$k-1$ 轮的未排序桶, 由归纳假设有:
+  $D[p] \geq 2^{k-1}$ 且 $D[m] \geq 2^{k-1}$, 因此
+  $D[q] = D[p] + D[m] \geq 2^{k-1} + 2^{k-1} = 2^k$。
+\end{proof}
 
-实验结果显示, 由于内存溢出，\emph{FAST\_LCS} 和 \emph{Quick-DP} 算法无法处理包
-含20个或更多序列的序列集。 如表 \ref{tab:memory1} 所示, 这两个算法的内存占用相当
-接近 (因为它们采用了同样的框架，唯一不同之处在于删除非支配节点的方式), 并且都随着
-序列数量的增加呈指数增长, 这是因为二者都需要产生大量的冗余节点，并将其保存在内存
-中。 如表 \ref{tab:times1} 所示, 它们的运行时间也随着序列数量的增长而快速增长，这
-是因为随着序列个数的增加，每个节点所包含的匹配点的维数也相应增加。 因此, 为了删除
-非支配节点, 两个算法所使用的 \emph{Minima} 操作需要在每一层中对所有节点的匹配向量
-进行逐维度比较。 这需要大量的比较操作且非常耗时。 另一方面, \emph{Quick-DP} 相比
-较 \emph{FAST\_LCS} 要快很多，因为它采用了非常适于并行化的分而治之的策略来删除非
-支配点。 遗憾的是, \emph{Quick-DP} 算法在应对包含很多序列的序列集时，无论在时间或
-空间方面仍然不够高效。
+该性质确保了 \emph{dsufsort} 算法的性能至少和 \emph{qsufsort} 持平。 然
+而, 有必要探讨在何种情形, \emph{dsufsort} 在性能上优
+于 \emph{qsufsort}, 更具体地, 何时会出现 $D[q] > 2^k$。 假设当前处于
+第 \emph{k-1} 轮, 正在处理第 $k-2$ 轮产生的未排序桶 $B_p$ 且有 $D[p] =
+2^{k-2}$。 如果一个新的未排序桶 $B_q$ 产生于 $B_p$ 且其锚桶为 $B_m$, 则
+有 $D[q] = D[p] + D[m]$。
 
-作为对比, 从试验结果可以看出 \emph{Top\_MLCS} 算法和本章提出
-的 \emph{Leveled-DAG} 算法都可以处理高达 700 个序
-列. 如表 \ref{tab:memory1} 所示, 二者的内存占用相比前两个算法都大幅减少, 这是因为
-它们都采用了新的图模型来减小支配点图的规模: \emph{Top\_MLCS} 算法所用
-的 \emph{ICSG} 模型不会产生冗余节点, 而 \emph{Leveled-DAG} 模型仅需要保存当前层及
-以前层的一部分节点。 相比 \emph{Top\_MLCS}, \emph{Leveled-DAG} 算法对于(数量超
-过100的)DNA和蛋白质序列，分别能够节省大约 $35\% \sim 40\%$ $/$ $33\% \sim 35\%$
-的存储空间， 这是由于对于规模较大的序列集，Leveled-DAG所保存的(最大)节点数量(包括
-最大一层的节点和以前层的入度非0的节点) 大约只占节点总数的 $40\%$。 需要注意的是，
-起初两个算法的内存开销都会随着序列数量的增加而快速增长, 但是当序列数量增加到某个
-特定值时 (本实验中，大约在 $80 \sim 90$ 之间)， 算法的内存增长率开始降低, 且最终
-算法的内存增长趋向一个常量。 我们发现，这是由于当序列的数量增长到某个特定的临界值
-时，节点数量的增长率开始下降 (临界值非常难以确定，因为它由许多因素决定，比如序列
-的字符集, 序列的长度和序列本身), 并且最终随着序列数量的进一步增长，图中的节点数量
-将保持大致不变, 此时的空间增长主要来自于每个节点内部匹配点维数的增长。
+关键在于, 如果 $B_p$ 的锚桶 $B_m$ 也是先前在第 $k-1$ 轮中产的新的未排
+序桶, 根据刚才证明的性质, 一定有 $D[m] \geq 2^{k-1}$。 所以, 可以得到:
+$D[q] = D[p] + D[m] \geq 2^{k-2} + 2^{k-1} > 2^{k-1}$, 这意味着 $B_q$
+的深度严格大于 $2^{k-1}$。 因此, 当 $B_q$ 在第 $k$ 轮中被处理时, $B_p$
+中的任一 $S_i$ 将会基于其前 $D[p] + D[B[i+D[p]]$ 个字符被排序, 由于
+$D[q] > 2^{k-1}$ 且 $D[B[i+D[p]] \geq 2^{k-1}$, $S_i$ 在第$k$轮中将基
+于超过 $2^k$ 字符被排序, 这也意味着, \emph{dsufsort} 将优于
+\emph{qsufsort}。 更进一步, 如果 $B_m$ 和 $B_q$ 具有相同的情况, 即
+$B_m$ 的锚桶同样产生于第 $k-1$ 轮, 则有 $D[m] > 2^{k-1}$。 由于深度的相
+互叠加, $D[q]$ 可以远大于 $2^{k-1}$, 因此, 在第$k$轮中, 对$B_q$ 后缀排
+序所基于的字符数可以远大于 $2^k$。
 
-时间方面, 两个算法比都比 \emph{FAST\_LCS} 和 \emph{Quick-DP} 算法快一到两个数量
-级。 这主要是由于二者不需要类似于 \emph{FAST\_LCS} 和 \emph{Quick-DP} 算法所使用
-的 \emph{Minima} 操作来. Compared with \emph{Top\_MLCS}, our \emph{Leveled-DAG}
-is about $10\%$ faster for smaller datasets (containing less than 10 sequences),
-and $10\%$ $\sim$ $20\%$ faster for larger datasets. This is because the
-\emph{Top\_MLCS} algorithm needs two topological sorting operations (forward and
-backward topological sort) to search for the MLCS after the graph is built,
-while the \emph{Leveled-DAG} does not need any searching operation after
-\emph{Leveled-DAG} is constructed. In fact, the wanted MLCS are saved in the
-only end node left in the graph, which can be gotten immediately. This
-demonstrates that the \emph{Leveled-DAG} approach is more suitable than the
-compared algorithms for large-scale sequences sets. Note that, the growth in
-running time of both algorithms also begins to slow down as the number of
-sequences grows to a threshold.
+\begin{figure}[bh]
+\centerline{\includegraphics[width=9cm]{p1}}
+\vspace*{8pt}
+\caption{使用 \emph{dsufsort} 算法对字符串 '\emph{tobeornottobe}' 的后
+  缀进行排序。}
+\label{fig:1}
+\end{figure}
 
-From Table \ref{tab:times1} and Table \ref{tab:memory1}, we can also
-see that both time and space efficiency of all the test algorithms for
-protein sequences are superior to that for DNA sequences, this is
-because the scale of DAG for large alphabet sequences (such as
-protein) is smaller than that for small alphabet sequences (such as
-DNA). We leave the detailed discussion of the effect of alphabet size
-in the later section.
+\textbf{例子.} 图 \ref{fig:1} 说明了使用 \emph{dsufsort} 算法对输入字符
+串 $tobeornottobe$ 进行后缀排序的过程。 为了清晰起见, 我们将完整的后
+缀 $S_i$ 放入SA中, 而非其起始位置 $i$。 每个桶的深度在其后的括号内显
+示。 第0轮过后, 所有后缀都基于其首字符被排序。 由于桶 $B_0$,
+$B_5$ 及 $B_{10}$ 都只包含一个后缀, 这三个桶已经完全有序了。
 
+在第1轮中, 产生于第0轮的4个未被排序的桶 $B_1$, $B_3$,
+$B_6$ 及 $B_{11}$ 将被依次处理。 将处理 $B_6$ 作为例子, 其余3个桶可以类
+似方式处理。 对 $B_6$ 中任一后缀 $S_i$, 其键值可以通过桶的深度来计算:
+$key(S_i) = B[i+D[6]]$。 所以, $B_6$ 中所包含后缀的键值分别为:
+$key(S_1) = B[1+D[6]] = 1$, $key(S_4) = B[4+D[6]] = 10$,
+$key(S_7) = B[7+D[6]] = 11$, $key(S_{10}) = B[10+D[6]] = 1$。 然后, 使用
+普通的整数排序函数对这些键值进行排序: $key(S_1) = key(S_{10}) <
+key(S_4) < key(S_7)$。  根据键值的大小顺序, $B_6$ 中后缀的 1-序 可以被确
+定: $S_1 =_ 1 S_{10} \prec_1 S_4 \prec_1 S_7$。 由于 $S_1$ 和 $S_{10}$
+具有同样的键值, 它们将共同构成一个新的未排序桶 $B_6$。 注意, 相比于原先
+的(即当前正在被处理的) $B_6$(由 $B_6^{\;old}$ 表示), 新产生
+的 $B_6$(由 $B_6^{\;new}$ 表示) 具有相同的桶序号 (这意味
+着 $S_1$ 和 $S_{10}$ 所在的桶不变), 但不同的大小和深度。 $B_6^{\;new}$
+的深度为 $D[6]^{\;new} = D[6]^{\;old} + D[1] = 3$, 这是因
+为 $B_1$是 $B_6^{\;new}$ 的锚桶且 $D[1] = 2$。 另一方面, $S_4$ 和 $S_7$
+都具有唯一的键值, 它们将分别构成完全有序的桶 $B_8$ 和 $B_9$, 且仅需要更
+新它们所在的桶号: $B[4] = 8$, $B[7] = 9$。 第1轮过后, 将剩余3个未排序的
+桶: $B_1^{\;new}$, $B_6^{\;new}$, $B_{11}^{\;new}$。
 
-\subsection{Evaluation under various lengths of sequences}
-\label{sec:times2}
+在第2轮中, $B_1^{\;new}$, $B_6^{\;new}$ 及 $B_{11}^{\;new}$ 将会依次被
+处理。 通过使用 $D[1] = 2$, $D[6] = 3$ 及 $D[11] = 4$ 来分别计算后缀的
+键值并对其进行排序, 所有3个桶将会在本轮中被完全排序, 算法也随即结束。
 
-In the second kind of experiment, each test is conducted on 5 DNA $/$ protein
-sequences with length increasing from 50 to 5000. As before, all the algorithms
-are independently run 5 times with 32 threads, and their average running times
-(as well as the standard deviation of the running times) and memory consumption
-are measured and shown in Table \ref{tab:times2} and Table \ref{tab:memory2},
-respectively.
+为了说明 \emph{dsufsort} 相比于 \emph{qsufsort} 的优势, 考察在第1轮中
+对 $B_{11}^{\;old}$ 的处理过程。 由于 $B_{11}^{\;old}$ 中所包含后缀的键
+值分别为: $key(S_0)=6$, $key(S_9)=6$, $key(S_8) = 11$, $S_8$ 将构成完全
+有序的桶 $B_{13}$, 而 $S_0$ 和 $S_9$ 将构成未排序的
+桶 $B_{11}^{\;new}$。 由于 $B_{11}^{\;new}$ 产生于 $B_{11}^{\;old}$, 且
+其锚桶为 $B_6^{\;new}$, 因此 $B_{11}^{\;new}$ 的深度为
+$D[11]^{\;new} = D[11]^{\;old} + D[6]^{\;new}$。 正如已经知道的,
+$B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
+3$, 所以 $D[11]^{\;new} = 1 + 3 = 4$。 因此 $B_{11}^{\;new}$ 的深度大
+于2 (在 \emph{qsufsort} 的第1轮中, 所有桶的"深度"都为2)。 这样, 在第2轮
+中, $B_{11}^{\;new}$ 中的后缀将至少基于其前 $4+2$ 个字
+符 (而非\emph{qsufsort}算法所基于的前 $2+2$ 个字符) 被排序。 其后缀的键
+值分别是: $key(S_0)=B[0+D[11] ^{\;new}]=
+8$ 和 $key(S_9)=B[9+D[11]^{\;new}]= 13$, 这说明 $B_{11}$ 可以在第2轮中
+被完全排序。 相比之下, 在 \emph{qsufsort} 算法中, $B_{11}^{\;old}$ 中后
+缀的键值为 $key(S_0) = B[0+2] = 1$ 及 $key(S_9) = B[9+2] = 1$, 这意味
+着 $B_{11}^{\;old}$ 无法在第2轮中被完全排序。 所以, \emph{dsufsort} 算法
+仅需要3轮便可对所有的后缀完成排序, 而 \emph{qsufsort} 算法则需要4轮。
 
-It can be seen from the experimental results that, the \emph{FAST\_LCS} cannot
-process DNA sequences longer than 400 or protein sequences longer than 500 due
-to the extremely long running time, while the \emph{Quick-DP} algorithm cannot
-process DNA sequences longer than 800 or protein sequences longer than 1000 due
-to out of memory. (Again, the performance of the algorithms for protein
-sequences is better than that for DNA sequences). Since as the length of the
-sequences increases, the number of levels in the graph will grow accordingly and
-the nodes in each level will grow exponentially, which makes the graph take up
-too much memory. Also, the running times of \emph{FAST\_LCS} and \emph{Quick-DP}
-grow rapidly as the length of sequences increases, the main reason is that as
-the nodes increase exponentially in each level, the \emph{Minima} operation for
-the levels is very time-consuming, moreover searching the longest paths in a
-graph with many levels is also time-consuming. Consequently, neither of the two
-algorithms are suitable for finding MLCS of long sequences.
-
-On the other hand, as shown in Table \ref{tab:memory2}, both
-\emph{Top\_MLCS} and \emph{Leveled-DAG} can handle DNA$/$ protein
-sequences with length up to 5000. Compared with \emph{Top\_MLCS}, the
-\emph{Leveled-DAG} approach can save about $43\% \sim 46\%$ $/$
-$41\% \sim 45\%$ of memory for DNA$/$protein sequences longer than
-1000, since the growth in memory requirement of \emph{Leveled-DAG}
-mainly depends on the max level of nodes, whose proportion in the
-total nodes will decrease as the sequence length increases. Further,
-as shown in Table \ref{tab:times2}, the running times of both
-algorithms grow much more slowly than that of \emph{FAST\_LCS} and
-\emph{Quick-DP}. Even for long sequences ($length \geq 1000$), both
-\emph{Top\_MLCS} and \emph{Leveled-DAG} can still find their
-MLCS. Particularly, note that in all cases, the proposed algorithm
-\emph{Leveled-DAG} is the fastest algorithm: it is at least two orders
-of magnitude faster than \emph{FAST\_LCS} and \emph{Quick-DP}, and
-faster than \emph{Top\_MLCS} about $20\%$ on datasets with longer
-sequences ($length \geq 2000$). The reason for the proposed algorithm
-\emph{Leveled-DAG} being faster than \emph{Top\_MLCS} on longer
-sequences is that with the increase of the length of sequences, the
-first topological sorting scheme used in \emph{Top\_MLCS} will take
-much more time, while the performance of \emph{Leveled-DAG} will not
-be affected much by the sequence length. Thus \emph{Leveled-DAG}
-algorithm is more suitable for finding MLCS of long sequences.
-
-In general, due to the much smaller scale of the \emph{Leveled-DAG}
-graph and the efficiency of the technique to gradually construct the
-MLCS, the \emph{Leveled-DAG} approach has better performance than the
-compared algorithms on all the testing datasets, especially on
-datasets with long sequences and many sequences.
+对于平均LCP较大的输入字符串, \emph{dsufsort}算法所具有的"深度叠加"的特
+性将充分发挥, 使其可以更快地确定具有较长公共前缀后缀的次序。
 
 
-\section{Discussion}
+\section{高效的实现}
 
-Next, we will discuss some factors that can affect the performance of
-the MLCS algorithms.The \emph{length} of the sequences is the key
-factor that affects the performance of the algorithms: for the same
-type of sequences, as the length of sequences increases, the number of
-levels in the corresponding DAG will increase accordingly. Since the
-number of nodes in the levels will grow (nearly) exponentially as the
-level increases, the total number of nodes in DAG will explode as the
-sequence length increases, therefore, the scale of DAG for long
-sequences is larger than that for short sequences. Consequently, both
-time and space overhead for finding MLCS of long sequences are higher
-than that for finding MLCS of short sequences. On the other hand, the
-\emph{number} of sequences can also have an impact on the algorithms'
-performance: as the number of sequences increases, the dimension of
-match point in each node will grow accordingly, and therefore each
-single node in DAG will take up more space, moreover, comparing two
-match point will require more time. In addition, the number and length
-of the sequences can also affect the result MLCS: obviously, the
-longer the sequences are, the longer the result MLCS are; conversely,
-the more the sequences there are, the shorter the result MLCS are.
+本节中, 将讨论一些用于提高算法效率的实现技巧。
 
-From the experimental results, we can also find that, the alphabet
-size can have a significant impact on the performance of the
-algorithms. For sequences with large alphabet (such as protein
-sequences), the performance of the algorithms is much better than that
-for sequences with small alphabet (such as DNA sequences). This is
-because that, for a fixed-length sequence, the larger the alphabet
-size is, the less each symbol appears in that sequence, which means
-for large alphabet sequences, the "distance" between one node and its
-successors is large, therefore the DAG for large alphabet sequences
-has less levels than that for small alphabet sequences. For instance,
-with the sequence length fixed to 100, the DAG for DNA sequences has
-about 30 levels, while the DAG for protein sequences has only about 10
-levels. Although a certain level in DAG for protein sequences has more
-nodes than the same level in DAG for DNA sequences (since one node in
-DAG for protein sequences can have up to 20 successors, however, for
-DNA sequences one node has at most 4 successors), the total number of
-graph nodes for protein sequences is smaller than that for DNA
-sequences. Therefore, the performance of algorithms for large alphabet
-sequences is much better than that for small alphabet sequences.
+\subsection{输入变换}
 
-By profiling the program, we find that the most time-consuming part of
-the Leveled-DAG approach is the procedure of deleting the outdated
-nodes (i.e, the $Remove\_Outdated(L\_DAG)$ routine in Algorithm 2,
-which takes about $50\% \sim 60\%$ of the total running time),
-particularly, the procedure of passing the partial LCSs of one node to
-its successors. This procedure needs a lot of memory allocation,
-resize, and free operations, which is not appropriate for
-parallelization and therefore very time-consuming. To reduce the time
-consumption, we are focusing on more efficient passing strategy and
-more carefully implementation. We are also searching for more
-efficient memory management routines to replace the ones we used
-(which are provided by the standard library).
+在第0轮中, 所有后缀都将基于其首字符被排序。 实际上, 通过预先对输入字符串
+进行变换, 可以使后缀根据前几个字符进行排序。 输入变换包括以下两个步骤:
 
+\subsubsection{字符集压缩}
 
-\section{Conclusion}
-\label{sec:conclusion}
+给定$\Sigma$上的字符串 $T = t_0t_1...t_{n-1}\$$, 令实际出现于$T$ 中的字
+符构成有序集 $C = \{c_0, c_1,\dots, c_{m-1}\}$, 其中 $c_i < c_j \iff i
+< j$。 注意, 末尾的终结字符 '\$', 一定是 $c_0$。 然后, 对$T$中的每一个字
+符 $t_i$, 将其替换为$t_i$ 在 $C$ 中的序数, 即: $t_i \mapsto j \iff t_i
+= c_j$。 通过使用这种映射,
+$T$ 中的每个字符将被映射为一个整数, 同时保持后缀之间的顺序不变。 通过字
+符集压缩, $\Sigma$ 将被转化为较小的整数集: $\{0,1,\dots,m-1\}$。
 
-In this paper, we propose a novel graph model called Leveled-DAG which
-is much smaller than the existing DAG model. Based on this model, the
-corresponding construction algorithm is also proposed. Once the
-Leveled-DAG is constructed, there is only one node left with all MLCS
-being immediately obtained without any further operation for searching
-the MLCS. The experimental results also show the proposed approach is
-both time and space efficient on all testing cases, especially for
-long and large-scale sequences.
+\subsubsection{字符累加}
 
-\section*{Conflict of Interest Statement}
-% All financial, commercial or other relationships that might be
-% perceived by the academic community as representing a potential
-% conflict of interest must be disclosed. If no such relationship
-% exists, authors will be asked to confirm the following statement:
+通过对 $T$ 使用字符压缩, 可以得到一个大小为 $m$ 的整数集:
+$\{0,1,\dots,m-1\}$。 令 $k$ 为最大的整数, 使得 $m^k-1$ 可以由一个典型的
+机器整数类型表示(比如 int型)。 然后, 对 $T$ 的每个后缀, 将其前 $k$个字符
+通过以下方式累加:
 
-The authors declare that the research was conducted in the absence of
-any commercial or financial relationships that could be construed as a
-potential conflict of interest.
+\begin{equation}\label{eq:ca1}
+  T[i] = \sum_{j=1}^k t_{i+j-1} \cdot m^{k-j}  ~~(0 \leq i \leq n),
+\end{equation}
 
-\section*{Author Contributions}
+\noindent 其中, 定义 $t_s = 0$, 对于所有 $s \geq n$。 在第0轮中, $T[i]$
+将作为 $S_i$ 的键值, 这样, 排序将不仅仅基于后缀的首字符, 而是其前 $k$
+个字符。 随后的排序过程将从深度为 $k$的桶开始, 而不是深度为1的桶, 因此,
+所需要的排序轮数也会减少。 公式 (\ref{eq:ca1}) 可以由以下线性时间算法替
+代:
 
-Zhan Peng designs and implements the proposed algorithm. Zhan Peng
-writes the initial manuscript, and Yuping Wang revises the manuscript.
+\begin{equation}\label{eq:ca2}
+ T[i]  = \left\{
+  \begin{array}{lll}
+    \sum_{j=1}^{k}(t_{j-1} \cdot m^{k-j})  &,  &  i = 0\\
+    (T[i-1]~ mod~m^{k-1}) \cdot m + t_{i-1+k} &,  & 0 < i \leq n \\
+    \end{array}\right.
+\end{equation}
 
-\section*{Funding}
+\par\noindent
+其中, 对于 $s \geq n$ 令 $t_s = 0$。 乘法和取模操作可由更快的"按位与"和
+移位操作实现。
 
-This work is supported by National Natural Science Foundation of China
-(No.61472297).
+注意, 由于在对 $T$ 进行字符累加后, 其字符集将变得不再连续, 所以需要再次
+对累加后的$T$使用字符集压缩技术。
 
+\subsection{初始桶排序}
 
-\begin{table*}[htp]
-  \footnotesize
-  \caption{The average running times (in seconds) of the test
-    algorithms on different numbers of DNA and protein sequences with
-    the length of sequences fixed to 100.(Using 32 threads). The
-    standard deviations of the running times are shown in the
-    parentheses.}
-  \label{tab:times1}
-\resizebox{7in}{!}{
-  \begin{tabular}{|r|r|r|r|r|r|r|r|r|r|}
-    \hline
-    Number &
-    \multicolumn{4}{c|}{DNA ($|\Sigma|=4$)} & \multicolumn{4}{c|}{Protein ($|\Sigma|=20$)}\\
-    \cline{2-9}
-      & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG \\
-    \hline
-    3  & 0.052 (0.003)    & 0.041 (0.001)  & 0.031 (0.002)  & 0.018 (0.001)  & 0.021 (0.001)    & 0.034 (0.002)  & 0.027 (0.001)  & 0.016 (0.001) \\
-    4  & 0.255 (0.01)     & 0.203 (0.02)   & 0.071 (0.004)  & 0.053 (0.003)  & 0.183 (0.02)     & 0.152 (0.03)   & 0.051 (0.003)  & 0.037 (0.002) \\
-    5  & 2.9 (0.1)        & 1.5 (0.09)     & 0.12 (0.008)   & 0.082 (0.004)  & 2.1 (0.1)        & 1.0 (0.08)     & 0.098 (0.008)  & 0.077 (0.006) \\
-    6  & 26.5 (1.7)       & 10.3 (0.8)     & 1.3 (0.09)     & 1.1 (0.1)      & 20.8 (1.2)       & 6.9 (0.6)      & 0.94 (0.03)    & 0.75 (0.02)  \\
-    7  & 151.8 (10.0)     & 32.8 (1.9)     & 3.6 (0.1)      & 2.7 (0.2)      & 116.5 (10.3)     & 21.8 (1.3)     & 2.8 (0.2)      & 1.9 (0.1) \\
-    8  & 834.9 (43.8)     & 147.6 (8.8)    & 8.5 (0.6)      & 6.9 (0.4)      & 746.5 (58.8)     & 107.0 (8.7)    & 6.3 (0.3)      & 4.7 (0.2) \\
-    9  & 4174.6 (408.7)   & 738.5 (51.5)   & 16.4 (0.9)     & 13.7 (0.6)     & 3059.2 (301.4)   & 585.6 (40.2)   & 12.5 (0.8)     & 9.9 (0.4) \\
-                                                                                                                                  
-    10 & 25671.4 (2433.8) & 3385.4 (326.4) & 30.0 (2.3)     & 25.3 (0.9)     & 22751.9 (1596.7) & 2645.3 (215.7) & 24.7 (1.5)     & 20.6 (1.1)  \\
-    20 & --               & --             & 64.8 (4.6)     & 51.2 (2.1)     &  --              &  --            & 57.7 (3.3)     & 45.3 (2.3)  \\
-    30 & --               & --             & 136.7 (6.7)    & 96.7 (3.7)     &  --              &  --            & 124.3 (8.9)    & 89.2 (4.7)  \\
-    40 & --               & --             & 250.3 (9.4)    & 191.4 (7.5)    &  --              &  --            & 223.4 (14.7)   & 180.8 (10.5) \\
-    50 & --               & --             & 463.2 (17.5)   & 380.1 (12.3)   &  --              &  --            & 432.7 (22.4)   & 366.4 (16.0) \\
-    60 & --               & --             & 665.4 (42.2)   & 530.3 (27.4)   &  --              &  --            & 590.6 (31.2)   & 509.5 (20.4) \\
-    70 & --               & --             & 1088.1 (76.7)  & 875.5 (39.4)   &  --              &  --            & 967.8 (76.4)   & 848.6 (39.6) \\
-    80 & --               & --             & 1684.6 (127.5) & 1233.2 (62.3)  &  --              &  --            & 1432.6 (105.2) & 1167.0 (66.8) \\
-    90 & --               & --             & 2217.9 (188.3) & 1764.6 (85.5)  &  --              &  --            & 2053.5 (127.1) & 1715.1 (84.1) \\
-                                                                                                                                  
-    100& --               & --             & 3041.5 (220.9) & 2417.8 (174.9) &  --              &  --            & 2320.2 (144.8) & 2056.2 (101.5)\\
-    200& --               & --             & 3398.3 (241.4) & 2778.2 (190.2) &  --              &  --            & 2492.6 (152.4) & 2118.5 (114.9) \\
-    300& --               & --             & 3665.0 (263.8) & 2962.5 (206.7) &  --              &  --            & 2614.2 (165.7) & 2214.3 (138.8) \\
-    400& --               & --             & 3981.6 (285.0) & 3191.2 (218.0) &  --              &  --            & 2745.3 (172.8) & 2375.4 (152.9) \\
-    500& --               & --             & 4237.2 (310.3) & 3384.0 (231.4) &  --              &  --            & 2862.4 (181.1) & 2435.1 (164.3) \\
-    600& --               & --             & 4555.9 (336.9) & 3547.2 (243.7) &  --              &  --            & 2947.9 (193.4) & 2479.2 (170.7)\\
-    700& --               & --             & 4880.3 (362.7) & 3854.7 (266.2) &  --              &  --            & 3174.8 (204.5) & 2511.9 (183.2)\\
-    \hline
-  \end{tabular}
-  }
-\end{table*}
+算法的第0轮 (初始化) 将独立于算法的其余部分, 它不需要使用和后续过程相同
+的排序方法。 由于这一轮将处理所有的后缀, 通过使用一个线性时间复杂度的桶
+排序算法来取代基于比较的$O(nlogn)$时间算法, 可以使算法性能得到很大提升。
 
-\begin{table*}[htp]
-  \footnotesize
-  \caption{The memory consumption (in MB) of the test algorithms on
-    different numbers of DNA and protein sequences with the length of
-    sequences fixed to 100.}
-  \label{tab:memory1}
- \begin{tabular}{|r|r|r|r|r|r|r|r|r|r|}
-   \hline
-   Number &
-   \multicolumn{4}{c|}{DNA ($|\Sigma|=4$)} & \multicolumn{4}{c|}{Protein ($|\Sigma|=20$)}\\
-   \cline{2-9}
-     & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG \\
-   \hline
-   3  & 28      & 31      &  8        & 5      & 25     & 28    & 7      & 4   \\
-   4  & 373     & 447     &  23       & 17     & 330    & 403   & 19     & 14  \\
-   5  & 1358    & 1485    &  93       & 85     & 1167   & 1304  & 77     & 62  \\
-   6  & 3315    & 3490    &  297      & 223    & 2718   & 2960  & 203    & 190 \\
-   7  & 5190    & 5862    &  534      & 489    & 4152   & 4706  & 469    & 418 \\
-   8  & 11057   & 12051   &  1211     & 1124   & 8513   & 9871  & 1017   & 943 \\
-   9  & 20634   & 21183   &  3058     & 2765   & 15138  & 16062 & 2538   & 2238\\
+一种十分有效的方式是结合桶排序算法和以上介绍的输入变换技术。 给定字符
+串 $T = t_0t_1 \dots t_{n-1}\$$, 假设对 $T$ 进行输入变换之后, 新的字符
+集为 $I = \{0,1,\dots,m-1\}$。 对 $I$ 中每一个整数 $i$, 它在$T$ 中的出现
+频率记录在一个长为 $m$ 的数组 $F$ 中。 具体地讲,如果整数 $i$ 在 $T$中出
+现了 $j$ 次, 则有 $F[i] = j$, 基于此, 一定有 $\sum_{i=0}^{m-1} F[i] =
+n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 
-   10 & 35769   & 36934   &  5813     & 5232   & 25637  & 26048 & 4766   & 4251  \\
-   20 & --      & --      &  32329    & 28126  &  --    &  --   & 24246  & 18045 \\
-   30 & --      & --      &  48765    & 39291  &  --    &  --   & 36824  & 26713  \\
-   40 & --      & --      &  67813    & 52607  &  --    &  --   & 49503  & 35182  \\
-   50 & --      & --      &  91128    & 68103  &  --    &  --   & 64292  & 46137  \\
-   60 & --      & --      &  121268   & 87359  &  --    &  --   & 81379  & 58174  \\
-   70 & --      & --      &  156470   & 118600 &  --    &  --   & 98541  & 61036  \\
-   80 & --      & --      &  197387   & 141859 &  --    &  --   & 117390 & 76283  \\
-   90 & --      & --      &  209145   & 146402 &  --    &  --   & 120833 & 81429  \\
+\begin{arabiclist}
+\item 初始化 $F$: $\forall i \in I$, 令 $F[i] = 0$。
+\item 正向扫描 $T$, 计算其中每个字符的出现频率: 对 $i =
+  0,\dots,n$, 将 $F[T[i]]$ 加1。
+\item 正向遍历 $F$, 相加相邻元素: 对 $i = 1, \dots, m-1$, 令 $F[i] =
+  F[i] + F[i-1]$。
+\item 反向扫描 $T$, 将其每个后缀放入适当的桶内: 对 $i = n, n-1,\dots,
+  0$, 将 $F[T[i]]$ 减1, 同时令 $SA[F[T[i]]] = i$。
+\end{arabiclist}
 
+第0轮过后, SA将被划分为$m$个桶 (完全有序的或未排序的), 且未排序的桶中所
+包含的后缀, 其前$k$个字符都相同。 实际上, "桶排序"中的"桶"的概念特指由定
+义5中所定义的深度为$k$的桶。
 
-   100& --      & --      &  229372   & 151386 &  --    &  --   & 124124 & 84069  \\
-   200& --      & --      &  252247   & 163948 &  --    &  --   & 131920 & 88132  \\
-   300& --      & --      &  261963   & 167085 &  --    &  --   & 138255 & 92025  \\
-   400& --      & --      &  268993   & 170811 &  --    &  --   & 144213 & 96044  \\
-   500& --      & --      &  276103   & 173945 &  --    &  --   & 151318 & 101250 \\
-   600& --      & --      &  290398   & 177140 &  --    &  --   & 157986 & 104986 \\
-   700& --      & --      &  299498   & 179846 &  --    &  --   & 162298 & 108107 \\
-   \hline
-  \end{tabular}
-\end{table*}
+\subsection{选择整数排序算法}
 
+前面提到过, \emph{qsufsort} 算法和 \emph{dsufsort} 算法都需要一个整数排
+序子程序来对键值进行排序, 因此, 该整数排序子程序对算法整体的性能具有重
+要影响。 本章中所使用的子程序被称为 \emph{split-end
+  partitioning}, 由Bentley和Mcllroy\cite{Bentley1993} 提出。 它是著名的
+快速排序算法\cite{Hoare1962}的一种变体, 使用了三元分割策略。
 
+经典的快速排序算法使用二元分割策略, 递归地将待排序数组分为两部分, 其中
+一部分的元素小于枢轴元素, 令一部分的元素大于枢轴。 接着, 这两部分将被递
+归地处理, 直到整个数组有序。 快速排序算法将相等于枢轴的元素放入其中一个
+数组部分或同时放入两个部分, 取决于具体实现。 然而, 使用三元分割
+的 \emph{split-end partitioning} 算法将数组划分为3个部分: 一部分元素小
+于枢轴, 一部分元素大于枢轴, 另一部分元素等于枢轴。 大于或小于枢轴元素的
+部分将被递归地排序, 而等于枢轴的部分则保持不变, 因为其中元素已经处于正
+确的位置。
 
+对 \emph{split-end partitioning} 算法的实现将直接基于Bentley和Mcllroy
+\cite{Bentley1993} 中的Program 7, 只有一点例外: 为了快速处理较小的桶,
+将使用一种非递归的选择排序方法来处理后缀数量小于7的桶。
 
+\section{实验结果}
 
-\begin{table*}[htp]
-  \footnotesize
-  \caption{The average running times of the test algorithms under
-    different lengths of DNA and protein sequences with the number of
-    sequences fixed to 5. (Using 32 threads). The standard deviations
-    of the running times are shown in the parentheses.}
-  \label{tab:times2}
-  \resizebox{7in}{!}{
-  \begin{tabular}{|r|r|r|r|r|r|r|r|r|r|}
-     \hline
-    Length &
-    \multicolumn{4}{c|}{DNA ($|\Sigma|=4$)} & \multicolumn{4}{c|}{Protein ($|\Sigma|=20$)}\\
-    \cline{2-9}
-     & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG \\
-    \hline
-    50   & 0.57 (0.03)   & 0.13 (0.01)     & 0.038 (0.002)   & 0.026 (0.001)    & 0.06 (0.001)   & 0.018 (0.001)    & 0.004 (0)     & 0.001 (0) \\
-    100  & 2.7 (0.2)     & 1.4 (0.08)      & 0.23 (0.03)     & 0.96 (0.04)      & 0.3 (0.02)     & 0.16 (0.01)      & 0.077 (0.003) & 0.058 (0.006)\\
-    200  & 244.1 (10.4)  & 10.6 (0.2)      & 8.5 (0.3)       & 6.8 (0.2)        & 28.5 (1.5)     & 1.2 (0.1)        & 0.96 (0.102)  & 0.77 (0.05) \\
-    300  & 4064.8 (312.6)& 95.3 (4.7)      & 38.7 (2.2)      & 32.6 (2.7)       & 467.1 (14.4)   & 11.4 (1.1)       & 4.4 (0.2)     & 3.1 (0.2) \\
-    400  & --            & 312.4 (11.5)    & 77.8 (4.9)      & 59.5 (3.8)       & 3659.2 (363.8) & 36.7 (1.8)       & 8.9 (0.8)     & 7.2 (0.6)  \\
-    500  & --            & 1566.9 (128.9)  & 132.6 (7.8)     & 112.2 (5.6)      & --             & 180 (6.2)        & 15.2 (1.1)    & 12.7 (0.9) \\
-    600  & --            & 4384.1 (297.4)  & 201.1 (11.7)    & 165.3 (8.3)      & --             & 533.8 (19.4)     & 23.1 (2.0)    & 18.9 (1.0) \\
-    700  & --            & 10347.5 (913.2) & 287.3 (12.1)    & 223.4 (10.1)     & --             & 1075.5 (32.7)    & 32.6 (2.5)    & 24.6 (1.03) \\
-    800  & --            & 27489.2 (2351.3)& 373.2 (14.5)    & 313.8 (13.3)     & --             & 2958.1 (61.5)    & 43.9 (3.8)    & 35.3 (1.1) \\
-    900  & --            & --              & 487.3 (21.6)    & 399.1 (15.5)     & --             & 6709.0 (221.2)   & 54.1 (4.2)    & 44.8 (1.2) \\
-                                                                                                 
-    1000 & --            & --              & 644.7 (29.3)    & 513.5 (19.8)     & --             & 11508.6 (1258.9) & 70.8 (5.7)    & 57.0 (1.8) \\
-    2000 & --            & --              & 4240.5 (251.2)  & 3017.6 (87.2)    & --             & --               & 469.3 (13.7)  & 355.4 (10.2)\\
-    3000 & --            & --              & 9915.1 (673.8)  & 7922.0 (297.3)   & --             & --               & 1168.5 (30.5) & 873.1 (22.4)\\
-    4000 & --            & --              & 16963.4 (1553.3)& 13762.3 (1433.4) & --             & --               & 1843.0 (41.3) & 1532.5 (32.4) \\
-    5000 & --            & --              & 24672.9 (2104.3)& 19074.7 (1658.1) & --             & --               & 2788.3 (55.6) & 2065.2 (46.3) \\
-    \hline
-  \end{tabular}
-  }
-\end{table*}
+本节将比较 \emph{dsufsort} 算法和其它三个比较知名的算法
+即 \emph{qsufsort} \cite{Larsson2007},
+\emph{DC32}\cite{Burkhardt2003} 算法, 和 \emph{KS} 算法\cite{Karkkainen2006}。 其中
+\emph{dsufsort} 算法是 \emph{qsufsort} 算法的改进。 \emph{DC32} 算法是
+将 difference-cover设置为模32的 \emph{difference-cover} 算法。
+\emph{KS} 是最快的具有线性时间复杂度的后缀排序算法之一。 通过使用现实世
+界中的数据和人工产生的(具有较大平均LCP的)数据来评估测试算法的性能。
 
-\begin{table*}[htp]
-  \footnotesize
-  \caption{The memory consumption (in MB) of the test algorithms under
-    different lengths of DNA and protein sequences with the number of
-    sequences fixed to 5.}
-  \label{tab:memory2}
-  \begin{tabular}{|r|r|r|r|r|r|r|r|r|r|}
-     \hline
-    Length &
-    \multicolumn{4}{c|}{DNA ($|\Sigma|=4$)} & \multicolumn{4}{c|}{Protein ($|\Sigma|=20$)}\\
-    \cline{2-9}
-     & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG & FAST\_LCS & Quick-DP & Top\_MLCS & Leveled-DAG \\
-    \hline
-    50   & 47     & 56      & 21      & 17      & 40      & 42       & 18     & 11     \\
-    100  & 1352   & 1481    & 99      & 82      & 1163    & 1296     & 81     & 56     \\
-    200  & 8331   & 8652    & 2353    & 1469    & 6249    & 7963     & 1894   & 988   \\
-    300  & 16874  & 16993   & 4050    & 3051    & 11047   & 12735    & 3251   & 1864  \\
-    400  & --     & 27355   & 5866    & 4787    & 113665  & 20586    & 4819   & 3012  \\
-    500  & --     & 41257   & 8297    & 6654    & --      & 32771    & 6770   & 4351   \\
-    600  & --     & 60912   & 12063   & 8598    & --      & 46009    & 9023   & 5806   \\
-    700  & --     & 85733   & 18550   & 10163   & --      & 65574    & 11652  & 7513   \\
-    800  & --     & 126483  & 26070   & 14250   & --      & 86684    & 14725  & 9426   \\
-    900  & --     & --      & 36341   & 20539   & --      & 111748   & 18380  & 11573  \\
+实验在一台笔记本电脑是进行, 软硬件配置如下: Intel Core i7-2630QM
+2.00GHz CPU, 8GB RAM, 500GB 磁盘。 操作系统为 Ubuntu 14.04-64bit。  所有
+算法由 C/C++ 实现, 由 \emph{gcc} 4.8.2 编译 (-O3)。 为了确保算法实现的正
+确性, 所有测试算法的排序结果都由Burkhardt \cite{Burkhardt2003} 提供的检测程
+序 \emph{suffix array checker} 检验。
 
-    1000 & --     & --      & 49442   & 27985   & --      & 140457   & 22507  & 13690  \\
-    2000 & --     & --      & 95784   & 55549   & --      & --       & 45633  & 27811  \\
-    3000 & --     & --      & 152178  & 86732   & --      & --       & 71058  & 42669  \\
-    4000 & --     & --      & 224135  & 125454  & --      & --       & 99564  & 58937 \\
-    5000 & --     & --      & 301375  & 165756  & --      & --       & 134568 & 77502 \\
-    \hline
-  \end{tabular}
-\end{table*}
+\begin{table}[th]
+\tbl{测试数据集特征。}
+{ \begin{tabular}{@{}ccrrrr@{}} \toprule
+  Files & Description & Size(bytes) & $\|\Sigma\|$ & Average LCP & Max LCP \\ \colrule
+ Proteins & Protein sequence & 66,804,271 & 24 & 33.46 & 6380\\
+ XML & XML files & 294,724,056 & 97 & 44.91 & 1084 \\
+ Pitches & MIDI pitch values & 55,832,855 & 133 & 262.00 & 25178\\
+ Sources & C/Java source code & 210,866,607 & 230 & 371.80 & 307871\\
+ DNA & DNA sequence & 403,927,746 & 16 & 2420.73 & 1378596\\
+ English & English text & 2,210,395,553 & 235  &6675.35 & 987770\\ \botrule
+  \end{tabular}}
+  \label{tab:data}
+\end{table}
+
+实验所使用的现实世界数据来源于 \emph{Pizza Chili Corpus}
+(http://pizzachil.dcc.uchile.cl) 语料库, 其中包含6中类型的数据: 源代
+码 (source code), 音符 (pitch values), 蛋白质序列 (protein sequence),
+DNA 序列(DNA sequence), 英文文本 (English text), 和 XML文本 (XML
+files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括数据集大
+小 (size), 每个文件(字符串)的平均/最大LCP。 字符串的平均/最大LCP指的是为
+该字符串所构建的后缀数组中, 任意相邻后缀的平均/最大LCP。 字符串的最
+大LCP等价于字符串中最长重复子串的长度。 这些特性参数能够较好的反映数据的
+重复程度。
+
+\begin{table}
+  \tbl{测试算法的平均排序时间(以秒位单位)。}
+  { \begin{tabular}{crrrrr} \toprule
+   Files & Size   & dsufsort  & qsufsort & DC32  & KS\\   \colrule
+    Proteins   & 100MB  & 25.34 &\textbf{24.11}    & 35.43 & 98.91\\
+    XML        & 100MB  & 27.59 &\textbf{26.75}    & 49.54 & 67.39 \\
+    Pitches    & 50MB   &\textbf{9.27 } & 10.52    & 12.42 & 32.83 \\
+    Sources    & 100MB  &\textbf{23.81} & 25.64    & 33.03 & 83.03 \\
+    DNA        & 100MB  &\textbf{26.02} & 28.90    & 38.15 & 85.44 \\
+    English    & 100MB  &\textbf{41.72} & 44.35    & 48.20 & 97.12 \\
+    \colrule
+    aaa\dots    & 100MB  &\textbf{9.14}  & 10.65 & 73.32 & 11.87\\
+    abab\dots   & 100MB  &\textbf{8.82}  & 11.55 & 30.23 & 9.56\\
+    rand-5-rep  & 100MB   &\textbf{10.36} & 16.32 & 35.60 & 12.77 \\
+    rand-10-rep & 100MB   &\textbf{16.73} & 24.28 & 33.57 & 17.53 \\
+    rand-20-rep & 100MB   & 23.11 & 39.03 & 35.92  & \textbf{22.85} \\
+    \botrule
+  \end{tabular}}
+  \label{tab:time}
+\end{table}
+
+表 \ref{tab:time} 显示了每个测试算法基于10次独立运行的平均运行时间, 其
+中最好的结果将加粗显示。 我们同样使用了人工产生的重复数据来测试算法的鲁
+棒性。 前两个人工产生的文件分别由单个字符 'a' 和 字符块 'ab' 组成, 随后
+的三个具有 \emph{rand-k-rep} 形式的文件, 是由长度为 $k$ 的随机字符串重
+复出现, 直到构成100MB的数据。
+
+从实验结果可得, 对于真实数据, \emph{dsufsort} 和 \emph{qsufsort} 算法表
+现地最好, 其中对于大多数真实数据, \emph{dsufsort} 要优
+于 \emph{qsufsort} 算法。 仅仅对于蛋白质和XML这两种平均LCP极低的数据,
+\emph{dsufsort} 稍逊于 \emph{qsufsort}。 主要原因
+是, 相比 \emph{qsufsort}, \emph{dsufsort} 算法在运行过程中需要实时更
+新 $D$ 数组, 这需要额外的时间开销。 而对于平均LCP极低的数据, 由深度累加
+技术所带来的时间上的收益, 将不足以抵消更新 $D$ 数组的开销。
+
+对于平均LCP相对较高的人工数据, \emph{dsufsort} 算法可以极大地节省运行时
+间。 表 \ref{tab:time} 中的结果显示, \emph{dsufsort} 对于大部分人工数据
+都优于其它算法, 除了在 \emph{rand-20-rep} 数据上稍逊于线性时间算
+法 \emph{KS}。 这是由于, 线性时间算法的性能较为稳定, 受测试数据特性的影
+响较小。 然而, \emph{KS} 算法对于普通真实数据并不十分高效, 这限制了其在
+实际环境中的应用。
+
+综上所述, 对于绝大多数测试数据, \emph{dsufsort} 算法的性能都是最优
+的。 仅仅对于平均LCP极低或极高的数据, \emph{dsufsort} 稍逊
+于 \emph{qsufsort} 和 \emph{KS} 算法。
+
+\section{本章小节}
+
+本章提出了一种基于\emph{qsufsort}算法的高效的后缀排序算
+法 \emph{dsufsort}。 不同于 \emph{qsufsort} 算法在每轮中都依据固定数量的
+前缀字符来对后缀进行排序, \emph{dsufsort} 会维持每个未排序桶的深度, 并
+基于桶深来对其中后缀进行排序, 其深度累加效应使得 \emph{dsufsort} 相比
+于 \emph{qsufsort} 算法更加高效, 尤其对于平均LCP较大的数据。
+
+未来将关注于两个问题: 首先, 在当前的实现中, 未排序的桶将按照从左到右的
+顺序依次处理, 然而, 对桶的处理顺序会对算法的性能造成一定影响, 所以我们
+将致力于寻求最优的桶处理顺序。 其次, 用来记录桶深的 $D$ 数组可能会非常稀
+疏, 这会增加空间开销, 所以研究稀疏数组压缩技术也非常重要。
 
 
+\begin{thebibliography}{99}
+
+% \bibitem{Manber} U. Manber and G. Myers, ``Suffix arrays: A new method
+% for on-line string searches,'' {\it SIAM J: Comput.}, {\bf 22}(1993)
+% 935--948.
+
+% \bibitem{Karp} Karp RM, Miller RE and Rosenberg AL, ``Rapid
+% identification of repeated patterns in strings, trees and arrays,''
+% {\it Proc. 4th Ann. Theory of Computing}. ACM Press, New York, 1972,
+% pp.~125--136.
+
+% \bibitem{survey1} S.J. Puglisi, W.F. Smyth and A.H. Turpin, ``A
+% Taxonomy of Suffix Array Construction Algorithms,'' {\it ACM Computing
+% Surveys.} {\bf 39}(2007) 1--31.
+
+% \bibitem{survey2} J. Dhaliwal, S.J. Puglisi and A. Turpin, ``Trends in
+% Suffix Sorting: A Survey of Low Memory Algorithms,'' {\it
+% Proc. 12nd. Australasian Computer Science Conference}, Darlinghurst,
+% Australia, 2012. pp. ~91--98.
+
+% \bibitem{Copy_Cache} J. Seward, ``On the performance of BWT sorting
+% algorithms,'' {\it In DCC: Data Compression Conference}, IEEE Computer
+% Society Press, Los Alamitos, CA, 2000.  pp.~173--182
+
+% \bibitem{deep_shallow} Giovanni Manzini and Palol Ferragina,
+% ``Engineering a lightweight suffix array construction
+% algorithm''. {\it Algorithmica}. {\bf 40}(2004) 33--50.
+
+% \bibitem{qsufsort} N. Larsson and K. Sadakane, ``Faster suffix
+% sorting,'' {\it Theor. Comput. Sci.} {\bf 387}(2007) 258--272.
+
+% \bibitem{bpr} K.-B. Schurmann and J. Stoye, ``An incomplex algorithm
+% for fast suffix array construction,'' {\it Softw. Pract. Exp.}  {\bf
+% 37}(2007) 309--329.
+
+% \bibitem{RadixSA} S. Rajasekaran and M. Nicolae, ``An elegant
+% algorithm for the construction of suffix arrays,'' {\it J.  Discrete
+% Algorithms}. {\bf 27} (2014) 21--28.
+
+% \bibitem{KA} P. Ko and S. Aluru, ``Space Efficient Linear Time
+% Construction of Suffix Arrays,'' {\it J. Discrete Algoritms.} {\bf
+% 3}(2005) 143--156.
+
+% \bibitem{KS} J. Karkkainen, P. Sanders and S. Burkhardt, ``Linear Work
+% Suffix Array Construction,'' {\it J. ACM.} {\bf 53}(2006) 918--936.
+
+% \bibitem{KSP} Kim, Sim, H. Park and K. Park, ``Consructing suffix
+% arrays in linear time,'' {\it J. Discrete Algorithms.} {\bf 3}(2005)
+% 126--142.
+
+% \bibitem{Farach} M. Farach. ``Optimal Suffix Tree Construction with
+% Large Alphabets,'' {\it Proc. 38th Ann. Symp. Foundations of Computer
+% Science}. Miami Beach, FL, Oct. 1997, pp.~137--143.
+
+% \bibitem{two_stages} H. Itoh and H. Tanaka, ``An Efficient Method for
+% In Memory Construction of Suffix Arrays,'' . {\it
+% Proc. 2nd. Ann. Symp. String Processing and Information Retrieval
+% Symposium \& International Workshop on Groupware} Cancun, Mexico,
+% September. 1999, pp.~34--42.
+
+% \bibitem{SA_IS_DS} Nong, G., Zhang,S. and Chan,W.H, ``Two efficient
+% algorithms for linear time suffix array construction,'' {\it IEEE
+% Trans. Comput.} {\bf 60}(2011) 1471--1484.
+
+% \bibitem{SACA_K} Nong, g., ``Practical Linear-Time O(1)-Workspace
+% Suffix Sorting for Constant Alphabets'' {\it ACM Trans. Information
+% System.} {\bf 31}(2013): 15:1--15:15.
+
+% \bibitem{em_1} J.Kaarkkainen and D.Kempa, ``Engineering a Lightweight
+% External Memory Suffix Array Construction Algorithm''{\it Proc. 2nd.
+% International Conference on Algorithms for Big Data,} Palermo, Italy,
+% April. 2014, pp.~7--9.
+
+% \bibitem{em_2} Nong.G, Chan.W.H, Zhang.S, and Guan.X.F., ``Suffix
+% Array Construction in External Memory Using D-Critical Substrings''
+% {\it ACM Trans. Information Systems.} {\bf 32}(2014) 1:1--1:15.
+
+% \bibitem{em_3} Nong.G, Chan.W.H, Hu.S.Q and Wu.Y., ``Induced Sorting
+% Suffixes in External Memory,'' {\it ACM Trans. Information Systems.}
+% {\bf 33}(2015) 12:1--12:15.
+
+% \bibitem{t_quciksort} Jon L.Bentley and M. Douglas Mcllroy,
+% ``Engineering a sort function,'' {\it Softw. Pract. Exp.} {\bf
+% 23}(1993) 1249--1265.
+
+% \bibitem{quicksort} C.A.R.Hoare. ``Quickfort,''{\it Computer
+% Journal}. {\bf 5} (1962) 10--15.
+
+% \bibitem{DC32} S.Burkhardt, J.KarKKainen, ``Fast lightweight suffix
+% array construction and checking,'' {\it Proc. 14th
+% Ann. Symp. Combinatorial Pattern Matching}, Morelia, Michoacan,
+% Mexico, June. 2003, pp.~55--69.
 
 
-% for Science, Engineering and Humanities and Social Sciences
-% articles, for Humanities and Social Sciences articles please include
-% page numbers in the in-text citations
-% \bibliographystyle{frontiersinHLTH&FPHY} % for Health, Physics and Mathematics articles
+% \bibitem{dataset} {\it http://pizzachil.dcc.uchile.cl/}
 
-%%% Make sure to upload the bib file along with the tex file and PDF
-%%% Please see the test.bib file for some examples of references
+% %1. 书
+% \bibitem{beeson} M. J. Beeson, {\it Foundations of Constructive
+% Mathematics}, Springer, Berlin, 1985.
 
-\bibliography{frontiers}
-\bibliographystyle{frontiersinSCNS_ENG_HUMS}
+% %2 书中的章节
+% \bibitem{clark} K. L. Clark, ``Negations as failure,''
+% {\it Logic and Data Bases}, eds.~H. Gallaire and\break
+% J. Winker, Plenum Press, NY, 1973, pp.~293--306.
+
+% %3 会议
+% \bibitem{dolve} D. Dolve, ``Unanimity in an unknown and unreliable
+% environment,'' {\it Proc. 22nd Ann. Symp. Foundations of
+% Computer Science}, Nashville, TN, Oct. 1981, pp.~159--168.
+
+% %4 博士论文
+% \bibitem{gewirtz} W. L. Gewirtz, ``Investigations in the theory of
+% descriptive complexity,'' Ph.~D. Thesis, New York University, 1974.
+
+% %5 期刊
+% \bibitem{joliat} M. Joliat, ``A simple technique for partial elimination of
+% unit productions from LR({\it k}) parsers,'' {\it IEEE Trans. Comput.} {\bf 27} (1976) 753--764.
+
+% %6 会议
+% \bibitem{tamassia} R. Tamassia, C. Batini and M. Talamo,
+% ``An algorithm for automatic layout of entity relationship diagrams,''
+% {\it Entity-Relationship Approach to Software Engineering,
+% Proc. 3rd Int. Conf. Entity-Relationship Approach}, eds.~C. G. Davis,
+% S. Jajodia, P. A. Ng and R. T. Yeh, North-Holland, Amsterdam, 1983,
+% pp.~421--439.
+
+\end{thebibliography}
 
 
 
-
-
-
-%%% If you don't add the figures in the LaTeX files, please upload them when submitting the article.
-
-%%% Frontiers will add the figures at the end of the provisional pdf automatically %%%
-
-%%% The use of LaTeX coding to draw Diagrams/Figures/Structures should be avoided. They should be external callouts including graphics.
-
-\end{document}
-
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: t
-%%% End:
-
-\message{ !name(ch_3.tex) !offset(-1021) }
+\message{ !name(3_SS.tex) !offset(-788) }
