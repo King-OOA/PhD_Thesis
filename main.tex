@@ -1,0 +1,62 @@
+
+\documentclass[refcompress,eversion,noinfo]{XDUthesis}
+\usepackage{times}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{diagbox}
+\usepackage{slashbox}
+\usepackage[american]{babel}
+\usepackage{microtype}
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{color}
+\usepackage{setspace}
+
+\usepackage{enumerate}
+
+\newcommand{\SWITCH}[1]{\STATE \textbf{switch} (#1)}
+\newcommand{\ENDPWITCH}{\STATE \textbf{end switch}}
+\newcommand{\CASE}[1]{\STATE \textbf{case} #1\textbf{:} \begin{ALC@g}}
+\newcommand{\ENDCASE}{\end{ALC@g}}
+\newcommand{\CASELINE}[1]{\STATE \textbf{case} #1\textbf{:} }
+\newcommand{\DEFAULT}{\STATE \textbf{default:} \begin{ALC@g}}
+\newcommand{\ENDDEFAULT}{\end{ALC@g}}
+\newcommand{\DEFAULTLINE}[1]{\STATE \textbf{default:} }
+\newtheorem{mydef}{Definition}
+\newtheorem{mylm}{Proposition}
+
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+
+\newenvironment{varalgorithm}[1]
+  {\algorithm\renewcommand{\thealgorithm}{#1}}
+  {\endalgorithm}
+
+
+
+\graphicspath{{figures/}}
+
+\begin{document}
+
+%\captionsetup[figure]{name={图.},labelsep=period} %改变图的caption：Figure->图
+\nocite{*}
+
+
+\XDUfrontmatter
+\include{chapters/abstract}
+\XDUmainmatter
+\include{chapters/2_MPM}
+\include{chapters/3_SS}
+\include{chapters/4_MLCS}
+\include{chapters/5_Conclusion}
+\XDUbackmatter{\bibliography{bib/All}\nocite{*}}
+\include{chapters/thanks}
+\include{chapters/resume}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
