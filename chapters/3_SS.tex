@@ -40,11 +40,11 @@
 
 为了克服 \emph{qsufsort} 的这种缺陷, 在本章中, 将提出一种基
 于 \emph{qsufsort} 算法的改进的后缀排序算法--\emph{dsufsort}。 其核心思
-想在于, 对后缀数组SA中每一个还未排序的部分(称作一个''桶''(bucket)),
+想在于, 对后缀数组SA中每一个还未排序的部分(称作一个“桶”(bucket)),
 \emph{dsufsort} 算法将记录该桶中所包含后缀(已知的)最大的\emph{LCP} (称
-为该桶的''深度''), 并且在运行过程中对其进行实时更新。 然后, 在每一轮中,
-每一个未排序桶中的后缀, 将基于该桶的深度进行排序。 通过这种方式, 许多后
-缀在第$k$轮中, 可以基于超过前$2^k$个字符进行排序。 这意味
+为该桶的“深度”), 并且在运行过程中对其进行实时更新。 然后, 在每一轮中,每
+一个未排序桶中的后缀, 将基于该桶的深度进行排序。 通过这种方式, 许多后缀
+在第$k$轮中, 可以基于超过前$2^k$个字符进行排序。 这意味
 着, 在第$k$轮中, 无法由\emph{qsufsort}算法确定顺序的那些前$2^{k}$字符相
 同的后缀, 有可能在$k$轮中被确定顺序。 由于在每轮中有更多的后缀能够被排
 序, 因此有更多的排序结果可以被后面的过程所利用, 这会减少总共所需要的轮
@@ -65,16 +65,16 @@
 从后缀树来构造后缀数组, 是构建后缀数组最简单的方法之一, 其主要缺陷在于
 过高的空间和和时间开销。 Manber 和 Myers \cite{Manber1993} 第一个提出了
 直接构建后缀数组的算法, 其时间复杂度为 $O(nlogn)$ (其中$n$是给定字符串
-的长度)。 该算法使用了一种被称为''前缀倍增''的技术(最早来源于Karp
+的长度)。 该算法使用了一种被称为“前缀倍增”的技术(最早来源于Karp
 \cite{Karp1972}): 首先, 后缀将按照其首字符进行排序, 接着在之后的每一轮
-中, 将按照加倍长度的前缀对后缀进行排序。
-Larsson和Sadakane\cite{Larsson2007} 提出了 \emph{qsufsort} 算法对Manber的
-算法进行改进。 与Manber算法在每一轮中都需要检查SA中所有的桶不同,
-\emph{qsufsort} 算法会标记那些之前已经被排过序的桶。 这样, 在每轮中它将
-跳过那些被标记的桶, 只对未排序的桶进行排序。 尽管在理论上,
+中, 将按照加倍长度的前缀对后缀进行排
+序。Larsson和Sadakane\cite{Larsson2007} 提出了 \emph{qsufsort} 算法
+对Manber的算法进行改进。 与Manber算法在每一轮中都需要检查SA中所有的桶不
+同, \emph{qsufsort} 算法会标记那些之前已经被排过序的桶。 这样, 在每轮中
+它将跳过那些被标记的桶, 只对未排序的桶进行排序。 尽管在理论上,
 \emph{qsufsort} 算法和Manber的算法具有相同的时间复杂度, 在实际当中,
-\emph{qsufsort}算法要高效得多。 Schurmann\cite{Schurmann2007} 提出了一种具
-有 $O(n^2)$ 时间复杂度的方法-- \emph{bpr}。 与Manber算法
+\emph{qsufsort}算法要高效得多。 Schurmann\cite{Schurmann2007} 提出了一
+种具有 $O(n^2)$ 时间复杂度的方法-- \emph{bpr}。 与Manber算法
 和 \emph{qsufsort} 算法在每一轮中使用广度优先策略来对每一个桶进行排序不
 同, \emph{bpr} 使用了深度优先的排序策略: 对于每一个未排序的桶, 它将递归
 地对其中的后缀进行排序, 直到所有后缀都完全有序。  Rajasekaran
@@ -82,8 +82,8 @@ Larsson和Sadakane\cite{Larsson2007} 提出了 \emph{qsufsort} 算法对Manber�
 有 $O(nlogn)$ 的时间复杂度。 与前面三个算法使用简单的从左到右的顺序来对
 桶进行排序不同, \emph{RadixSA} 使用了特殊的排序顺序: 假设第$i$个后
 缀 $S_i$ 处于桶$B_i$中, 那么算法将首先对桶 $B_n$ 进行排序, 然后依次对
-桶 $B_{n-1},\,\dots,\, B_1$ 进行排序。 这种顺序确保了在对桶 $B_i$ 排序之
-后, 后缀$S_i$ 已经处于其在SA中的最终位置。
+桶 $B_{n-1},\,\dots,\, B_1$ 进行排序。 这种顺序确保了在对桶 $B_i$ 排序
+之后, 后缀$S_i$ 已经处于其在SA中的最终位置。
 
 Seward \cite{Seward2000} 提出了另外两个后缀排序算法:
 \emph{Copy} 和 \emph{Cache}。 它们首先将基于后缀的前两个字符对其进行排
@@ -193,10 +193,10 @@ j$, 则 $S_i$ 当前处于桶 $B_j$ 中。 注意区别: $B_i$ 是编号为 $i$ 
 
 \section{ \emph{dsufsort} 算法}
 
-本节将介绍基于 \emph{qsufsort} 算法的改进的后缀排序算法--
-\emph{dsufsort}。 \emph{dsufsort} 通过在排序过程中实时地维护每个桶的深度
-来提高 \emph{qsufsort} 算法的效率。 当对某个桶进行处理时, 将根据桶的深度
-对其中的后缀进行排序。 通过这种方式, 相比 \emph{qsufsort} 算法,
+本节将介绍基于 \emph{qsufsort} 算法的改进的后缀排序算
+法---\emph{dsufsort}。 \emph{dsufsort} 通过在排序过程中实时地维护每个桶
+的深度来提高 \emph{qsufsort} 算法的效率。 当对某个桶进行处理时, 将根据
+桶的深度对其中的后缀进行排序。 通过这种方式, 相比 \emph{qsufsort} 算法,
 \emph{dsufsort} 算法在每一轮中可以确定更多后缀的顺序, 换言之, 对所有后
 缀进行排序, \emph{dsufsort} 算法将需要较少的轮数, 这能够减少算法的运行
 时间, 提高算法效率。 接下来, 先简要地介绍 \emph{qsufsort} 算法的核心思
@@ -205,9 +205,9 @@ j$, 则 $S_i$ 当前处于桶 $B_j$ 中。 注意区别: $B_i$ 是编号为 $i$ 
 \subsection{ \emph{qsufsort}算法简介}
 \label{sec:qsufsort}
 
-Larsson和Sadakane所提出的 \emph{qsufsort} 算法使用了被称为''前缀倍
-增''的技术来对后缀进行逐轮排序。 在第0轮中, 给定字符串的所有后缀将根据其
-首字符进行排序。 之后, 所有具有相同首字符的后缀都会被排列到一起形
+Larsson和Sadakane所提出的 \emph{qsufsort} 算法使用了被称为“前缀倍
+增”的技术来对后缀进行逐轮排序。 在第0轮中, 给定字符串的所有后缀将根据
+其首字符进行排序。 之后, 所有具有相同首字符的后缀都会被排列到一起形
 成$SA$上一个深度为1的桶, 而整个 $SA$ 将(在逻辑上)被划分为一系列的深度
 为1的桶: 第一个桶中所包含的后缀具有最小的首字符, 第二个桶中所包含的后缀
 具有次小的首字符, .... 依此类推。
@@ -576,17 +576,18 @@ n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 确性, 所有测试算法的排序结果都由Burkhardt \cite{Burkhardt2003} 提供的检测程
 序 \emph{suffix array checker} 检验。
 
-\begin{table}[th]
-\tbl{测试数据集特征。}
-{ \begin{tabular}{@{}ccrrrr@{}} \toprule
-  Files & Description & Size(bytes) & $\|\Sigma\|$ & Average LCP & Max LCP \\ \colrule
- Proteins & Protein sequence & 66,804,271 & 24 & 33.46 & 6380\\
- XML & XML files & 294,724,056 & 97 & 44.91 & 1084 \\
- Pitches & MIDI pitch values & 55,832,855 & 133 & 262.00 & 25178\\
- Sources & C/Java source code & 210,866,607 & 230 & 371.80 & 307871\\
- DNA & DNA sequence & 403,927,746 & 16 & 2420.73 & 1378596\\
- English & English text & 2,210,395,553 & 235  &6675.35 & 987770\\ \botrule
-  \end{tabular}}
+\begin{table}[!htbp]
+\caption{测试数据集特征}
+\begin{tabular}{|c|c|r|r|r|r|} \hline Files & Description &
+  Size(bytes) & $\|\Sigma\|$ & Average LCP & Max LCP \\ \hline
+  Proteins & Protein sequence & 66,804,271 & 24 & 33.46 & 6380\\
+  XML & XML files & 294,724,056 & 97 & 44.91 & 1084 \\
+  Pitches & MIDI pitch values & 55,832,855 & 133 & 262.00 & 25178\\
+  Sources & C/Java source code & 210,866,607 & 230 & 371.80 & 307871\\
+  DNA & DNA sequence & 403,927,746 & 16 & 2420.73 & 1378596\\
+  English & English text & 2,210,395,553 & 235 &6675.35 & 987770\\
+  \hline
+  \end{tabular}
   \label{tab:data}
 \end{table}
 
@@ -600,24 +601,28 @@ files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括�
 大LCP等价于字符串中最长重复子串的长度。 这些特性参数能够较好的反映数据的
 重复程度。
 
-\begin{table}
-  \tbl{测试算法的平均排序时间(以秒位单位)。}
-  { \begin{tabular}{crrrrr} \toprule
-   Files & Size   & dsufsort  & qsufsort & DC32  & KS\\   \colrule
+\begin{table}[!htbp]
+  \centering
+  \renewcommand{\arraystretch}{1.5}
+  \caption{测试算法的平均排序时间(以秒位单位)。}
+  \begin{tabular}{|c|r|r|r|r|r|}
+    \hline
+    Files & Size   & dsufsort  & qsufsort & DC32  & KS\\
+    \hline
     Proteins   & 100MB  & 25.34 &\textbf{24.11}    & 35.43 & 98.91\\
     XML        & 100MB  & 27.59 &\textbf{26.75}    & 49.54 & 67.39 \\
     Pitches    & 50MB   &\textbf{9.27 } & 10.52    & 12.42 & 32.83 \\
     Sources    & 100MB  &\textbf{23.81} & 25.64    & 33.03 & 83.03 \\
     DNA        & 100MB  &\textbf{26.02} & 28.90    & 38.15 & 85.44 \\
     English    & 100MB  &\textbf{41.72} & 44.35    & 48.20 & 97.12 \\
-    \colrule
+    \hline
     aaa\dots    & 100MB  &\textbf{9.14}  & 10.65 & 73.32 & 11.87\\
     abab\dots   & 100MB  &\textbf{8.82}  & 11.55 & 30.23 & 9.56\\
     rand-5-rep  & 100MB   &\textbf{10.36} & 16.32 & 35.60 & 12.77 \\
     rand-10-rep & 100MB   &\textbf{16.73} & 24.28 & 33.57 & 17.53 \\
     rand-20-rep & 100MB   & 23.11 & 39.03 & 35.92  & \textbf{22.85} \\
-    \botrule
-  \end{tabular}}
+    \hline
+  \end{tabular}
   \label{tab:time}
 \end{table}
 

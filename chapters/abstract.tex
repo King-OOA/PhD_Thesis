@@ -32,11 +32,11 @@
     这使得前$2^k$个字符都相同的后缀，无法在第$k$轮中被确定顺序。为了解
     决该问题，dsufsort算法将记录并维护后缀数组中未排序部分的深度，在每
     一轮排序中，将根据待排序部分的深度对其中的后缀进行排序, 这使得在
-    第$k$轮中，后缀可以基于超过前$2^k$个字符被排序，从而在第$k$轮中被确
-    定顺序, 因此， 每轮中有更多的排序结果可以被后面的过程利用， 相应
-    地，dsufsort算法仅需要较少的轮数就可以完成排序。 此外，由
-    于dsufsort算法具有“深度累加”的特性，因此，对于具有很长公共前缀的
-    后缀，dsufsort算法可以更加快速地完成排序。
+    第$k$轮中，后缀可以基于超过前$2^k$个字符被排序，从而那些前$2^k$个字
+    符相同的后缀便可在第$k$轮中被确定顺序, 因此，dsufsort算法仅需要较少
+    的轮数就可以完成排序。 此外，由于dsufsort算法具有“深度累加”的特性，
+    因此，对于具有很长公共前缀的后缀，dsufsort算法可以更加快速地完成排
+    序。
 
   \item 对于最长公共子序列问题， 为了改善现有算法在构建有向无环图时，需
     要消耗大量的存储空间和运行时的问题，提出了一种新的层次化图模
@@ -48,7 +48,7 @@
     生的未过时节点(即入度不为0的节点)，并且，随着构建过程的进行，图中的
     节点数将会逐渐减少，最终将只剩余一个节点，所有输入序列的最长公共子
     序列都保存在该节点中。 实验结果表明，得益于实时地构造最长公共子序列
-    及删除无用节点，Leveled-DAG相比现有算法在时间和空间效率上都有很大提
+    及删除无用节点，Leveled-DAG相比现有算法在时间和空间效率上都有较大提
     升。
 
   \end{enumerate}
@@ -153,13 +153,13 @@
 
 \begin{abbreviationlist}
 \item 缩略语\hspace{6em}英文全称\hspace{6em}中文对照
-\item ~PM \hspace{7em}Pattern Matching \hspace{7.5em} 模式匹配
-\item ~SPM \hspace{7em} Single Pattern Matching \hspace{7.5em} 单模式匹配
-\item ~MPM \hspace{7em} Multiple Pattern Matching \hspace{7.5em} 多模式匹配
-\item AMT \hspace{7em} Adaptive Matching Tree  \hspace{7.5em} 自适应匹配树
-\item lsp \hspace{7em} length of the shortest patterns  \hspace{7.5em} 最短模式串长
-\item DFA \hspace{7em} Deterministic Finite Automaton  \hspace{7.5em} 确定性有限状态自动机
-\item SA \hspace{7em} Suffix Array  \hspace{7.5em} 后缀数组
+\item ~PM Pattern Matching 模式匹配
+\item ~SPM Single Pattern Matching 单模式匹配
+\item ~MPM  Multiple Pattern Matching 多模式匹配
+\item ~AMT Adaptive Matching Tree 自适应匹配树
+\item ~lsp length of the shortest patterns  最短模式串长
+\item ~DFA Deterministic Finite Automaton  确定性有限状态自动机
+\item ~SA Suffix Array 后缀数组
 
 \item \ldots
 \end{abbreviationlist}
