@@ -130,6 +130,7 @@ $\bar{T} = \{T[i_1-1,\, i_2,\, ...,\, i_d],\, T[i_1,\, i_2-1,\, ...,\, i_d],\,
 \begin{figure}[!h]
   \centering
   \includegraphics[height=2in, width=4.5in]{figures/4_MLCS/DM}
+  \vspace{1em}
   \caption{(A) 两个DNA序列 ACTAGCTA 和 TCAGGTAT 的得分矩阵。 (B) 通过得分矩阵构建
     最长公共子序列，其中的阴影元素对应于支配点。}
 \label{fig:DM}
@@ -199,6 +200,7 @@ $q$ 或 $q$ 被 $p$ 强支配 (表示为 $p \prec q$)， 如果对每一个 $i$ 
 \begin{figure}[!h]
   \centering
   \includegraphics[height=3.8in, width=3.6in]{figures/4_MLCS/DAG}
+  \vspace{1.5em}
   \caption{基于支配点模型所构造的序列 $ACTAGCTA$ 和 $TCAGGTAT$ 的有向无环图，图中
     黑色和灰色的节点将被 $Minima$ 剪枝操作删除。}
   \label{fig:DAG}
@@ -365,11 +367,13 @@ Leveled-DAG模型的核心特性是，它采用了一种被称为“产生-删�
 
 \begin{figure}[!h]
   \centering
-  \includegraphics[height=4.5in, width=4.5in]{figures/4_MLCS/Level_DAG}
+  \includegraphics[height=4.5in,
+  width=4.5in]{figures/4_MLCS/Level_DAG}
+  \vspace{1.5em}
   \caption{序列 ACTAGCTA 和 TCAGGTAT 所对应的 Leveled-DAG。 匹配点及其
     对应字符在节点内部显示。 节点所对应的前缀序列，由其附近的红色字符串
     表示。 图中白色的节点是新产生的，且稍后将会被扩展。 绿色的节点已经
-    过时，即将被删除。 之前产生的带有入边的红色节点，应当予以保留。.}
+    过时，即将被删除。 之前产生的带有入边的红色节点，应当予以保留。}
   \label{fig:Leveled-DAG}
 \end{figure}
 
