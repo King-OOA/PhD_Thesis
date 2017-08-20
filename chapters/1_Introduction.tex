@@ -204,3 +204,15 @@ $S_3$次序待定，所以$S_4$与$S_2$次序待定。类似地，对于第3组�
   \caption{利用前缀倍增技术对$bananas$的后缀进行排序。(A) 第一轮。(B) 第二轮。(C) 第三轮。}
   \label{fig:Prefix_Doubling}
 \end{figure}
+
+
+\section{最长公共子序列}
+
+度量生物序列间的相似性是生物信息学中的一类基本问题，它们在癌症检
+测\cite{Aravanis2017,Chattopadhyay2016,Munday2017}，探寻物种的共同起
+源 \cite{Zvelebil2007,Perry2015,Donnell2015} 等许多方面具有广泛的应用。
+度量序列间相似性最重要手段之一是寻找序列间的最长公共子序列 (Longest
+Common Subsequence，简称为LCS), 这已被证实是一类NP难问
+题\cite{Maier1978}。根据目标序列的个数，该问题可以被分为两类：(1)寻找两
+个序列的最长公共子序列被称为最长公共子序列(LCS)问题；(2) 寻找超过两个序
+列的最长公共子序列被称为多最长公共子序列(MLCS)问题。
