@@ -397,9 +397,9 @@ $B_m$ 的锚桶同样产生于第 $k-1$ 轮, 则有 $D[m] > 2^{k-1}$。 由于�
 互叠加, $D[q]$ 可以远大于 $2^{k-1}$, 因此, 在第$k$轮中, 对$B_q$ 后缀排
 序所基于的字符数可以远大于 $2^k$。
 
-\begin{figure}[!h]
+\begin{figure}[H]
 \centering
-\includegraphics[width=9cm]{figures/3_SS/p1}
+\includegraphics[height=8.5cm ,width=12.5cm]{figures/3_SS/p1}
 \vspace*{8pt}
 \caption{使用 \emph{dsufsort} 算法对字符串 '\emph{tobeornottobe}' 的后
   缀进行排序。}
@@ -574,7 +574,7 @@ n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 序 \emph{suffix array checker} 检验。
 
 \begin{table}[!htbp]
-\caption{测试数据集特征}
+\topcaption{测试数据集特征}
 \begin{tabular}{|c|c|r|r|r|r|} \hline Files & Description &
   Size(bytes) & $\|\Sigma\|$ & Average LCP & Max LCP \\ \hline
   Proteins & Protein sequence & 66,804,271 & 24 & 33.46 & 6380\\
@@ -601,7 +601,7 @@ files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括�
 \begin{table}[!htbp]
   \centering
   \renewcommand{\arraystretch}{1.5}
-  \caption{测试算法的平均排序时间(以秒位单位)。}
+  \topcaption{测试算法的平均排序时间(以秒位单位)。}
   \begin{tabular}{|c|r|r|r|r|r|}
     \hline
     Files & Size   & dsufsort  & qsufsort & DC32  & KS\\
@@ -660,127 +660,3 @@ files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括�
 顺序依次处理, 然而, 对桶的处理顺序会对算法的性能造成一定影响, 所以我们
 将致力于寻求最优的桶处理顺序。 其次, 用来记录桶深的 $D$ 数组可能会非常稀
 疏, 这会增加空间开销, 所以研究稀疏数组压缩技术也非常重要。
-
-% \bibitem{Manber} U. Manber and G. Myers, ``Suffix arrays: A new method
-% for on-line string searches,'' {\it SIAM J: Comput.}, {\bf 22}(1993)
-% 935--948.
-
-% \bibitem{Karp} Karp RM, Miller RE and Rosenberg AL, ``Rapid
-% identification of repeated patterns in strings, trees and arrays,''
-% {\it Proc. 4th Ann. Theory of Computing}. ACM Press, New York, 1972,
-% pp.~125--136.
-
-% \bibitem{survey1} S.J. Puglisi, W.F. Smyth and A.H. Turpin, ``A
-% Taxonomy of Suffix Array Construction Algorithms,'' {\it ACM Computing
-% Surveys.} {\bf 39}(2007) 1--31.
-
-% \bibitem{survey2} J. Dhaliwal, S.J. Puglisi and A. Turpin, ``Trends in
-% Suffix Sorting: A Survey of Low Memory Algorithms,'' {\it
-% Proc. 12nd. Australasian Computer Science Conference}, Darlinghurst,
-% Australia, 2012. pp. ~91--98.
-
-% \bibitem{Copy_Cache} J. Seward, ``On the performance of BWT sorting
-% algorithms,'' {\it In DCC: Data Compression Conference}, IEEE Computer
-% Society Press, Los Alamitos, CA, 2000.  pp.~173--182
-
-% \bibitem{deep_shallow} Giovanni Manzini and Palol Ferragina,
-% ``Engineering a lightweight suffix array construction
-% algorithm''. {\it Algorithmica}. {\bf 40}(2004) 33--50.
-
-% \bibitem{qsufsort} N. Larsson and K. Sadakane, ``Faster suffix
-% sorting,'' {\it Theor. Comput. Sci.} {\bf 387}(2007) 258--272.
-
-% \bibitem{bpr} K.-B. Schurmann and J. Stoye, ``An incomplex algorithm
-% for fast suffix array construction,'' {\it Softw. Pract. Exp.}  {\bf
-% 37}(2007) 309--329.
-
-% \bibitem{RadixSA} S. Rajasekaran and M. Nicolae, ``An elegant
-% algorithm for the construction of suffix arrays,'' {\it J.  Discrete
-% Algorithms}. {\bf 27} (2014) 21--28.
-
-% \bibitem{KA} P. Ko and S. Aluru, ``Space Efficient Linear Time
-% Construction of Suffix Arrays,'' {\it J. Discrete Algoritms.} {\bf
-% 3}(2005) 143--156.
-
-% \bibitem{KS} J. Karkkainen, P. Sanders and S. Burkhardt, ``Linear Work
-% Suffix Array Construction,'' {\it J. ACM.} {\bf 53}(2006) 918--936.
-
-% \bibitem{KSP} Kim, Sim, H. Park and K. Park, ``Consructing suffix
-% arrays in linear time,'' {\it J. Discrete Algorithms.} {\bf 3}(2005)
-% 126--142.
-
-% \bibitem{Farach} M. Farach. ``Optimal Suffix Tree Construction with
-% Large Alphabets,'' {\it Proc. 38th Ann. Symp. Foundations of Computer
-% Science}. Miami Beach, FL, Oct. 1997, pp.~137--143.
-
-% \bibitem{two_stages} H. Itoh and H. Tanaka, ``An Efficient Method for
-% In Memory Construction of Suffix Arrays,'' . {\it
-% Proc. 2nd. Ann. Symp. String Processing and Information Retrieval
-% Symposium \& International Workshop on Groupware} Cancun, Mexico,
-% September. 1999, pp.~34--42.
-
-% \bibitem{SA_IS_DS} Nong, G., Zhang,S. and Chan,W.H, ``Two efficient
-% algorithms for linear time suffix array construction,'' {\it IEEE
-% Trans. Comput.} {\bf 60}(2011) 1471--1484.
-
-% \bibitem{SACA_K} Nong, g., ``Practical Linear-Time O(1)-Workspace
-% Suffix Sorting for Constant Alphabets'' {\it ACM Trans. Information
-% System.} {\bf 31}(2013): 15:1--15:15.
-
-% \bibitem{em_1} J.Kaarkkainen and D.Kempa, ``Engineering a Lightweight
-% External Memory Suffix Array Construction Algorithm''{\it Proc. 2nd.
-% International Conference on Algorithms for Big Data,} Palermo, Italy,
-% April. 2014, pp.~7--9.
-
-% \bibitem{em_2} Nong.G, Chan.W.H, Zhang.S, and Guan.X.F., ``Suffix
-% Array Construction in External Memory Using D-Critical Substrings''
-% {\it ACM Trans. Information Systems.} {\bf 32}(2014) 1:1--1:15.
-
-% \bibitem{em_3} Nong.G, Chan.W.H, Hu.S.Q and Wu.Y., ``Induced Sorting
-% Suffixes in External Memory,'' {\it ACM Trans. Information Systems.}
-% {\bf 33}(2015) 12:1--12:15.
-
-% \bibitem{t_quciksort} Jon L.Bentley and M. Douglas Mcllroy,
-% ``Engineering a sort function,'' {\it Softw. Pract. Exp.} {\bf
-% 23}(1993) 1249--1265.
-
-% \bibitem{quicksort} C.A.R.Hoare. ``Quickfort,''{\it Computer
-% Journal}. {\bf 5} (1962) 10--15.
-
-% \bibitem{DC32} S.Burkhardt, J.KarKKainen, ``Fast lightweight suffix
-% array construction and checking,'' {\it Proc. 14th
-% Ann. Symp. Combinatorial Pattern Matching}, Morelia, Michoacan,
-% Mexico, June. 2003, pp.~55--69.
-
-
-% \bibitem{dataset} {\it http://pizzachil.dcc.uchile.cl/}
-
-% %1. 书
-% \bibitem{beeson} M. J. Beeson, {\it Foundations of Constructive
-% Mathematics}, Springer, Berlin, 1985.
-
-% %2 书中的章节
-% \bibitem{clark} K. L. Clark, ``Negations as failure,''
-% {\it Logic and Data Bases}, eds.~H. Gallaire and\break
-% J. Winker, Plenum Press, NY, 1973, pp.~293--306.
-
-% %3 会议
-% \bibitem{dolve} D. Dolve, ``Unanimity in an unknown and unreliable
-% environment,'' {\it Proc. 22nd Ann. Symp. Foundations of
-% Computer Science}, Nashville, TN, Oct. 1981, pp.~159--168.
-
-% %4 博士论文
-% \bibitem{gewirtz} W. L. Gewirtz, ``Investigations in the theory of
-% descriptive complexity,'' Ph.~D. Thesis, New York University, 1974.
-
-% %5 期刊
-% \bibitem{joliat} M. Joliat, ``A simple technique for partial elimination of
-% unit productions from LR({\it k}) parsers,'' {\it IEEE Trans. Comput.} {\bf 27} (1976) 753--764.
-
-% %6 会议
-% \bibitem{tamassia} R. Tamassia, C. Batini and M. Talamo,
-% ``An algorithm for automatic layout of entity relationship diagrams,''
-% {\it Entity-Relationship Approach to Software Engineering,
-% Proc. 3rd Int. Conf. Entity-Relationship Approach}, eds.~C. G. Davis,
-% S. Jajodia, P. A. Ng and R. T. Yeh, North-Holland, Amsterdam, 1983,
-% pp.~421--439.

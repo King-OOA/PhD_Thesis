@@ -215,7 +215,7 @@ $1 \leq j \leq lsp-k+1$, 为第 $j$ 个查询位图的第 $i$ 个比
 串 $p_m$ 第 $j$ 个位置的长为 $k$ 的子串), $hash$ 是一个哈希函数, 能够将
 长为 $k$ 的字符块映射到范围在 $[0, N-1]$ 内的整数。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[height=2.5in, width=2.5in]{figures/2_MPM/filter.eps}
   \caption{为3个数字模式串所构造的过滤模块}
@@ -253,7 +253,7 @@ $MB = mb_1mb_2 \dots mb_{lsp-k+1}$ 来累加以前的查询结果, 并作为过�
 化地利用以前的查询结果, 在滑动窗口每次前进的长度方面是最优的 (即可以过
 滤掉尽可能多的位置)。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[height=3in, width=3in]{figures/2_MPM/filter_match}
   \caption{使用过滤模块过滤文本中的非匹配位置。}
@@ -304,7 +304,7 @@ AMT基于模式集构建, 总体来说, 构建过程包含以下5个主要步骤
   到不再产生新的子后缀集。
 \end{enumerate}
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{figures/2_MPM/AMT}
   \caption{从模式集构造AMT。 AMT中的每个箭头代表一个指向孩子节点的指针。}
@@ -488,7 +488,7 @@ NULL$), 核实过程将终止, 匹配引擎会前进到下一个位置 $i+1$。
 注意, 由于AMT中的节点有各自不同的内部结构, 在某个节点中搜索目标字符串
 时, 必须使用对应于该节点类型的搜索函数。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.75\textwidth]{figures/2_MPM/match}
   \caption{对文本串中潜在匹配位置 $i$ 的核实过程。}
@@ -543,9 +543,9 @@ $root \rightarrow node_1 \rightarrow node_5 \rightarrow node_{10}$, 由
 不同的前缀数 (即 $ndp$, $1 \leq ndp \leq 256$)，有四种不同容量的字符映
 射表可供选择。
 
-\begin{figure}[hp]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=3.5in, width=3.5in]{figures/2_MPM/Maps}
+  \includegraphics[height=5in, width=5in]{figures/2_MPM/Maps}
   \caption{四种不同容量的字符映射表。 三角形代表相应键的子节点。}
   \label{fig:character map}
 \end{figure}
@@ -655,7 +655,7 @@ $root \rightarrow node_1 \rightarrow node_5 \rightarrow node_{10}$, 由
 上。 图 \ref{fig:string array} 显示了包含了3个键: $aaa$, $bbb$ 和 $ccc$
 的字符串数组结构。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.45\textwidth]{figures/2_MPM/string_array}
   \caption{包含3个键 $aaa,\, bbb,\, ccc$ 的字符串数组结构。}
@@ -824,9 +824,9 @@ $SF$ 将会基于哈希值被分为若干个子后缀集: 对于每个后缀 $su
 并后的节点构成一种新的节点结构，有别于 \ref{subsec:nodes} 节介绍的几种
 节点类型。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=2in, width=2in]{figures/2_MPM/node_merge}
+  \includegraphics[height=3in, width=3in]{figures/2_MPM/node_merge}
   \caption{节点合并。}
   \label{fig:merge}
 \end{figure}
@@ -859,9 +859,9 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 认 ($node_1$ 上需要5次比较， $node_2$ 上需要4次比较)。 很明显, 通过对原
 先的节点进行分割，减少了15次比较操作。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=2.5in, width=2in]{figures/2_MPM/node_split}
+  \includegraphics[height=3in, width=3in]{figures/2_MPM/node_split}
   \caption{节点分割。}
   \label{fig:split}
 \end{figure}
@@ -905,9 +905,9 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 长 (LLP), 模式串的平均长度 (ALP), 模式串长的标准差 (SD), 模式串总
 长 (TLP) 和模式串的数量 (Count)。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=2in, width=2.5in]{figures/2_MPM/lsp}
+  \includegraphics[height=3in, width=3.2in]{figures/2_MPM/lsp}
   \caption{测试算法在具有不同lsp模式集下的匹配时间。}
   \label{fig:lsp}
 \end{figure}
@@ -915,10 +915,9 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 
 \begin{table}
   \centering
-  \caption{测试模式集的特性。}
-  \scriptsize
+  \topcaption{测试模式集的特性。}
   \label{tab:lsps}
-  \begin{tabular}{p{20pt}p{10pt}p{10pt}p{10pt}p{10pt}p{30pt}p{20pt}}
+  \begin{tabular}{|c|c|c|c|c|c|c|}
     \hline
     Pattern Set & LSP  & LLP  & ALP & SD & TLP & Count\\
     \hline
@@ -959,16 +958,16 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 有较小 $lsp$ 的模式集能被更好的压缩, 使得算法在匹配阶段的效率更高。
 
 从图 \ref{fig:lsp} 可以看出, 我们所提出的 \textsf{FEMPM} 匹配引擎，对于
-任何 $lsp$ 都拥有最佳的性能。 相比 \textsf{AC}, 对所有 $lsp$，匹配时间平
-均减少了 $85\%$; 与更加高效的\textsf{Pre-filter+AC} 算法相比, 对于中等
-长度的 $lsp$ ($lsp \geq 4$) 匹配时间减少了 $10\% \sim 20\%$， 对于较小
-的 $lsp$ ($lsp < 4$), 匹配时间减少了 $70\%$。 尽管 \textsf{FEMPM} 的过滤
-模块(和\textsf{Pre-filter+AC}类似), 同样不适用于较小的 $lsp$, 然而其核
-实模块(即AMT), 相比 \textsf{Pre-filter+AC}的要更加高效。 这主要是由
+任何 $lsp$ 都拥有最佳的性能。 相比 \textsf{AC}, 对所有 $lsp$，匹配时间
+平均减少了 $85\%$; 与更加高效的\textsf{Pre-filter+AC} 算法相比, 对于中
+等长度的 $lsp$ ($lsp \geq 4$) 匹配时间减少了 $10\% \sim 20\%$， 对于较
+小的 $lsp$ ($lsp < 4$), 匹配时间减少了 $70\%$。 尽管 \textsf{FEMPM} 的
+过滤模块(和\textsf{Pre-filter+AC}类似), 同样不适用于较小的 $lsp$, 然而
+其核实模块(即AMT), 相比 \textsf{Pre-filter+AC}的要更加高效。 这主要是由
 于AMT节点的自适应性, 使得对于任何 $lsp$，所构造的AMT都能根据模式集的特
 性自适应地调整到最优结构。得益于此, \textsf{FEMPM} 对于所有的测试模式集
 都有最好的鲁棒性。 表 \ref{tab:node types} 中列出了不同模式集对应AMT中
-节点类型的统计信息。 其中 Map 1 和 Single String Array 结构分别是 Map
+节点类型的统计信息。 其中 Map 1 和 String Array 1结构分别是 Map
 4 和String Array结构只包含一个元素的特殊情形。 由此可以看出, 随着模式
 集 $lsp$ 的变化, 对应AMT中的节点类型也会发生很大变化，这反映了AMT的自适
 应性。
@@ -984,10 +983,10 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 
 \begin{table}[!h]
   \centering
-  \caption{不同lsp模式集所对应AMT的节点类型统计}
-  \scriptsize
+  \footnotesize
+  \topcaption{不同lsp模式集所对应AMT的节点类型统计。}
   \label{tab:node types}
-  \begin{tabular}{p{10pt}p{15pt}p{15pt}p{15pt}p{15pt}p{15pt}p{25pt}p{25pt}p{20pt}p{25pt}}
+  \begin{tabular}{cccccccccc}
  \hline
  Lsp &
  Map 1 &
@@ -995,7 +994,7 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
  Map 16 &
  Map 48 &
  Map 256 &
- Single String Array &
+ String Array 1&
  String Array   &
  Hash Table &
  Total\\
@@ -1023,9 +1022,9 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 50$。
 
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=2in, width=2.5in]{figures/2_MPM/small_group}
+  \includegraphics[height=3in, width=3.2in]{figures/2_MPM/small_group}
   \caption{测试算法对于较小一组模式集的平均运行时间。}
   \label{fig:small_group}
 \end{figure}
@@ -1052,10 +1051,10 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 
 \begin{table}[!htp]
   \centering
-  \scriptsize
-  \caption{较小一组模式集所对应AMT的节点类型统计}
+  \footnotesize
+  \topcaption{较小一组模式集所对应AMT的节点类型统计。}
   \label{tab:small}
-  \begin{tabular}{p{25pt}p{25pt}p{25pt}p{25pt}p{15pt}p{15pt}p{25pt}p{25pt}p{20pt}p{25pt}}
+  \begin{tabular}{cccccccccc}
  \hline
  Size &
  Map 1 &
@@ -1063,7 +1062,7 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
  Map 16 &
  Map 48 &
  Map 256 &
- Single String Array &
+ String Array 1&
  String Array   &
  Hash Table &
  Total\\
@@ -1092,9 +1091,9 @@ $9 \times 10^5$ & 28,356 & 23,924 & 3,441 & 513 & 9 & 504,779 & 238,632 &  42 & 
 表 \ref{tab:small} 所示。 可以看到，每增加 $10^5$ 个模式串，相应的AMT中
 会多产生 $9 \times 10^4$ 个树节点。
 
-\begin{figure}[!h]
+\begin{figure}[H]
   \centering
-  \includegraphics[height=2in, width=2.5in]{figures/2_MPM/large_group}
+  \includegraphics[height=3in, width=3.2in]{figures/2_MPM/large_group}
   \caption{测试算法对于较大一组模式集的平均运行时间。}
   \label{fig:large_group}
 \end{figure}
@@ -1118,10 +1117,10 @@ $8.8s$(\textsf{Split}), $3.5s$ (\textsf{FEMPM})。 由此可见,
 
 \begin{table}[!htp]
   \centering
-  \caption{较大一组模式集所对应AMT的节点类型统计}
-  \scriptsize
+  \footnotesize
+  \topcaption{较大一组模式集所对应AMT的节点类型统计。}
   \label{tab:large_group}
-  \begin{tabular}{p{25pt}p{25pt}p{25pt}p{25pt}p{20pt}p{10pt}p{30pt}p{30pt}p{20pt}p{25pt}}
+  \begin{tabular}{cccccccccc}
  \hline
  Size &
  Map 1 &
@@ -1129,7 +1128,7 @@ $8.8s$(\textsf{Split}), $3.5s$ (\textsf{FEMPM})。 由此可见,
  Map 16 &
  Map 48 &
  Map 256 &
- Single String Array &
+ String Array 1&
  String Array   &
  Hash Table &
  Total\\
