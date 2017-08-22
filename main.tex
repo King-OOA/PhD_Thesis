@@ -5,16 +5,15 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{diagbox}
+\usepackage{xeCJK}
 \usepackage{slashbox}
-\usepackage[american]{babel}
-\usepackage{microtype}
-\usepackage{float}
+
+%自加包
+
+\usepackage{float} %图浮动
 \usepackage{algorithm}
 \usepackage{algorithmic}
-\usepackage{color}
-\usepackage{setspace}
 
-\usepackage{enumerate}
 
 \newcommand{\SWITCH}[1]{\STATE \textbf{switch} (#1)}
 \newcommand{\ENDPWITCH}{\STATE \textbf{end switch}}
@@ -30,10 +29,11 @@
 \renewcommand{\algorithmicrequire}{\textbf{输入:}}
 \renewcommand{\algorithmicensure}{\textbf{输出:}}
 
+% 表格标题与表格内容相距10pt
 \newcommand{\topcaption}{
 \setlength{\abovecaptionskip}{0pt}
 \setlength{\belowcaptionskip}{10pt}
-\caption} 
+\caption}                       
 
 
 \newenvironment{varalgorithm}[1]
@@ -41,17 +41,12 @@
   {\endalgorithm}
 
 
-
 \graphicspath{{figures/}}
 
 \begin{document}
 
-%\captionsetup[figure]{name={图.},labelsep=period} %改变图的caption：Figure->图
-\nocite{*}
-
-
- % \XDUfrontmatter
- % \include{chapters/abstract}
+\XDUfrontmatter
+\include{chapters/abstract}
 \XDUmainmatter
 \include{chapters/1_Introduction}
 \include{chapters/2_MPM}
@@ -59,9 +54,9 @@
 \include{chapters/4_MLCS}
 \include{chapters/5_WM}
 \include{chapters/6_Conclusion}
-% \XDUbackmatter{\bibliography{bib/phd}\nocite{*}}
- % \include{chapters/thanks}
- % \include{chapters/resume}
+ \XDUbackmatter{\bibliography{bib/phd}\nocite{*}}
+ \include{chapters/thanks}
+ \include{chapters/resume}
 \end{document}
 
 %%% Local Variables:

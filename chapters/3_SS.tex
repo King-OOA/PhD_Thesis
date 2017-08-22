@@ -22,7 +22,7 @@
 
 \chapter{一种高效的后缀排序算法}
 \section{引言}
-\label{sec:introduction}
+\label{sec:3_introduction}
 
 如何将给定字符串的所有后缀按照字典序进行排序, 是构建后缀数组的主要问
 题。 目前, \emph{qsufsort}\cite{Larsson2007} 算法是解决该问题广泛使用的
@@ -48,12 +48,15 @@ Longest Common Prefix)的后缀, \emph{qsufsort} 需要许多轮才能确定它�
 数。 因此, \emph{dsufsort} 比 \emph{qsufsort} 更加高效, 尤其对于拥有较
 大 \emph{LCP} 的后缀。
 
-本章内容组织如下: 第2节介绍相关工作。 第3节将给出所用的符号和术语。
-\emph{qsufsort} 和改进的 \emph{dsufsort} 算法将在第4节中进行详细介
-绍。 第5节将讨论一些高效的实现技术。 第6节进行实验对比。 第7节是对本章进行
-总结。
+本章内容组织如下: \ref{sec:3_RW} 节介绍相关工作。 \ref{sec:3_RC} 节将给
+出所用的符号和术语。\emph{qsufsort} 和改进的 \emph{dsufsort} 算法将
+在\ref{sec:3_Algorithm}节中进行详细介绍。 \ref{sec:3_Implementation}节
+将讨论一些高效的实现技术。 \ref{sec:3_Experiment} 节进行对比实
+验。 \ref{sec:3_Conclusion}节是对本章进行总结。
 
 \section{相关工作}
+\label{sec:3_RW}
+
 
 在过去的二十年中, 大量的具有不同时间和空间复杂度的后缀数组构建算法(即后
 缀排序算法) 被提出。 接下来, 将对其中的一些算法进行简要地回顾, 对其更详
@@ -119,7 +122,7 @@ Manzini \cite{Manzini2004} 提出了被称为 \emph{deep-shallow} 的算法。 �
 组 \cite{Schmidt2016,Metwally2016,Flick2015,Deo2013}.
 
 \section{相关概念}
-\label{sec:stucture}
+\label{sec:3_RC}
 
 令 $\Sigma$ 表示有限个字符组成的\emph{字符集} (本章只关注于ASCII字符
 集, 即 $|\Sigma| = 256$ 且每个字符占用一个字节的存储空间)。 给定字符
@@ -188,7 +191,8 @@ j$, 则 $S_i$ 当前处于桶 $B_j$ 中。 注意区别: $B_i$ 是编号为 $i$ 
 字符串的平均$LCP$, 可以粗略地估计对该字符串后缀进行排序所需的计算量: 如
 果平均$LCP$较大, 原则上我们将需要比较更多的字符来确定两个后缀的顺序。
 
-\section{ \emph{dsufsort} 算法}
+\section{dsufsort算法}
+\label{sec:3_Algorithm}
 
 本节将介绍基于 \emph{qsufsort} 算法的改进的后缀排序算
 法---\emph{dsufsort}。 \emph{dsufsort} 通过在排序过程中实时地维护每个桶
@@ -199,7 +203,7 @@ j$, 则 $S_i$ 当前处于桶 $B_j$ 中。 注意区别: $B_i$ 是编号为 $i$ 
 时间, 提高算法效率。 接下来, 先简要地介绍 \emph{qsufsort} 算法的核心思
 想, 然后详细地讨论对其的改进算法 \emph{dsufsort}。
 
-\subsection{ \emph{qsufsort}算法简介}
+\subsection{qsufsort算法简介}
 \label{sec:qsufsort}
 
 Larsson和Sadakane所提出的 \emph{qsufsort} 算法使用了被称为“前缀倍
@@ -239,10 +243,10 @@ B[i+2^{k-1}] \leq B[j+2^{k-1}]$。  这种等价关系说明了如何在第 $k$ 
 将 $B_p$ 中的后缀，依据其键值的整数序进行重新排序，之后，$B_p$ 中的后缀
 将处于 $2^k$-有序。
 
-一旦某个未被排序的桶被处理过, 将会根据以下两种情况产生新的桶： 1) 如果
+一旦某个未被排序的桶被处理过, 将会根据以下两种情况产生新的桶： (1) 如果
 某个后缀具有唯一的键值, 那么它将处于SA的最终位置，并独自形成一个完全有
-序的(包含单个后缀的)桶。 2) 如果某些后缀具有相同的键值, 那么它们将被排列
-在一起形成一个新的未排序的桶，并将在后续过程中进一步对其排序。 另
+序的(包含单个后缀的)桶。 (2) 如果某些后缀具有相同的键值, 那么它们将被排
+列在一起形成一个新的未排序的桶，并将在后续过程中进一步对其排序。 另
 外，$B$ 数组也需要根据新产生的桶做出相应的更新。
 
 \emph{qsufsort} 算法逐轮地对未排序的桶进行排序，直到所有后缀都被完全有
@@ -459,6 +463,7 @@ $B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
 
 
 \section{高效的实现}
+\label{3_Implementation}
 
 本节中, 将讨论一些用于提高算法效率的实现技巧。
 
@@ -467,7 +472,7 @@ $B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
 在第0轮中, 所有后缀都将基于其首字符被排序。 实际上, 通过预先对输入字符串
 进行变换, 可以使后缀根据前几个字符进行排序。 输入变换包括以下两个步骤:
 
-\subsubsection{字符集压缩}
+1. 字符集压缩
 
 给定$\Sigma$上的字符串 $T = t_0t_1...t_{n-1}\$$, 令实际出现于$T$ 中的字
 符构成有序集 $C = \{c_0, c_1,\dots, c_{m-1}\}$, 其中 $c_i < c_j \iff i
@@ -477,7 +482,7 @@ $B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
 $T$ 中的每个字符将被映射为一个整数, 同时保持后缀之间的顺序不变。 通过字
 符集压缩, $\Sigma$ 将被转化为较小的整数集: $\{0,1,\dots,m-1\}$。
 
-\subsubsection{字符累加}
+2. 字符累加
 
 通过对 $T$ 使用字符压缩, 可以得到一个大小为 $m$ 的整数集:
 $\{0,1,\dots,m-1\}$。 令 $k$ 为最大的整数, 使得 $m^k-1$ 可以由一个典型的
@@ -488,11 +493,11 @@ $\{0,1,\dots,m-1\}$。 令 $k$ 为最大的整数, 使得 $m^k-1$ 可以由一�
   T[i] = \sum_{j=1}^k t_{i+j-1} \cdot m^{k-j}  ~~(0 \leq i \leq n),
 \end{equation}
 
-\noindent 其中, 定义 $t_s = 0$, 对于所有 $s \geq n$。 在第0轮中, $T[i]$
-将作为 $S_i$ 的键值, 这样, 排序将不仅仅基于后缀的首字符, 而是其前 $k$
-个字符。 随后的排序过程将从深度为 $k$的桶开始, 而不是深度为1的桶, 因此,
-所需要的排序轮数也会减少。 公式 (\ref{eq:ca1}) 可以由以下线性时间算法替
-代:
+\noindent 其中, 定义 $t_s = 0$, 对于所有 $s \geq n$。 在第0轮中,
+$T[i]$将作为 $S_i$ 的键值, 这样, 排序将不仅仅基于后缀的首字符, 而是其
+前 $k$个字符。 随后的排序过程将从深度为 $k$的桶开始, 而不是深度
+为1的桶, 因此,所需要的排序轮数也会减少。 公式 (\ref{eq:ca1}) 可以由以下
+线性时间算法替代:
 
 \begin{equation}\label{eq:ca2}
  T[i]  = \left\{
@@ -502,7 +507,7 @@ $\{0,1,\dots,m-1\}$。 令 $k$ 为最大的整数, 使得 $m^k-1$ 可以由一�
     \end{array}\right.
 \end{equation}
 
-\par\noindent
+\noindent
 其中, 对于 $s \geq n$ 令 $t_s = 0$。 乘法和取模操作可由更快的"按位与"和
 移位操作实现。
 
@@ -558,6 +563,7 @@ n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 将使用一种非递归的选择排序方法来处理后缀数量小于7的桶。
 
 \section{实验结果}
+\label{sec:3_Experiment}
 
 本节将比较 \emph{dsufsort} 算法和其它三个比较知名的算法
 即 \emph{qsufsort} \cite{Larsson2007},
@@ -575,13 +581,13 @@ n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 
 \begin{table}[!htbp]
 \topcaption{测试数据集特征}
-\begin{tabular}{|c|c|r|r|r|r|} \hline Files & Description &
-  Size(bytes) & $\|\Sigma\|$ & Average LCP & Max LCP \\ \hline
-  Proteins & Protein sequence & 66,804,271 & 24 & 33.46 & 6380\\
+\begin{tabular}{ccrrrr} \hline Files & Description & Size(bytes) &
+  $|\Sigma|$ & Average LCP & Max LCP \\ \hline
+  Proteins & Protein sequence & 66,804,271 & 20 & 33.46 & 6380\\
   XML & XML files & 294,724,056 & 97 & 44.91 & 1084 \\
   Pitches & MIDI pitch values & 55,832,855 & 133 & 262.00 & 25178\\
   Sources & C/Java source code & 210,866,607 & 230 & 371.80 & 307871\\
-  DNA & DNA sequence & 403,927,746 & 16 & 2420.73 & 1378596\\
+  DNA & DNA sequence & 403,927,746 & 4 & 2420.73 & 1378596\\
   English & English text & 2,210,395,553 & 235 &6675.35 & 987770\\
   \hline
   \end{tabular}
@@ -602,7 +608,7 @@ files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括�
   \centering
   \renewcommand{\arraystretch}{1.5}
   \topcaption{测试算法的平均排序时间(以秒位单位)。}
-  \begin{tabular}{|c|r|r|r|r|r|}
+  \begin{tabular}{crrrrr}
     \hline
     Files & Size   & dsufsort  & qsufsort & DC32  & KS\\
     \hline
@@ -649,6 +655,7 @@ files)。 数据集的各种属性信息在表 \ref{tab:data}中显示, 包括�
 于 \emph{qsufsort} 和 \emph{KS} 算法。
 
 \section{本章小节}
+\label{sec:3_Conclusion}
 
 本章提出了一种基于\emph{qsufsort}算法的高效的后缀排序算
 法 \emph{dsufsort}。 不同于 \emph{qsufsort} 算法在每轮中都依据固定数量的

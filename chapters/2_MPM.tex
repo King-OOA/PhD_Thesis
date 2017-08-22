@@ -28,7 +28,7 @@
 \chapter{一种快速的多模式(字符串)匹配的引擎}
 
 \section{引言}
-\label{sec:introduction}
+\label{sec:2_introduction}
 
 
 多模式匹配(MPM)算法算法需要寻找一个给定模式集中每一个模式串在一个给定文
@@ -70,14 +70,14 @@
 部结构。 这种自适应性使得每个节点在匹配速度和空间效率方面保持了良好的平
 衡， 也使得最终的AMT在匹配阶段非常高效。
 
-本章组织如下: \ref{sec:related works} 节回顾了MPM领域的相关工
-作。 节 \ref{sec:notations} 介绍了用到的一些符号和术
-语。 节 \ref{sec:filter} 介绍了过滤模块。 节 \ref{sec:verification} 介绍
-了核实模块。 节 \ref{sec:experiments} 进行了对比实验。
-\ref{sec:conclusion} 节做了本章小节。
+本章组织如下: \ref{sec:2_RW} 节回顾了MPM领域的相关工
+作。  \ref{sec:2_notations}节介绍了用到的一些符号和术
+语。 \ref{sec:filter}节 介绍了过滤模块。 \ref{sec:verification}节 介绍
+了核实模块。 \ref{sec:2_experiments}节 进行了对比实
+验。\ref{sec:2_conclusion} 节对本章进行总结。
 
 \section{相关工作}
-\label{sec:related works}
+\label{sec:2_RW}
 
 由于模式匹配问题的重要性, 在过去几十年里, 学者们提出了很多有效的算
 法。 比较知名的算法包括: Knuth-Morris-Pratt (\textsf{KMP})
@@ -166,7 +166,7 @@ program)来表示。  Khancome \cite{Khancome2013} 介绍了动态 MPM 问题并
 提出了一种能够在小空间内, 对二维MPM问题进行处理的算法。
 
 \section{相关概念}
-\label{sec:notations}
+\label{sec:2_notations}
 
 令 $\Sigma$ 表示有限个字符组成的字符集 (本章只关注于ASCII字符
 集, 即 $|\Sigma| = 256$ 且每个字符占用一个字节的存储空间。)  给定字符
@@ -787,10 +787,9 @@ $SF$ 将会基于哈希值被分为若干个子后缀集: 对于每个后缀 $su
 \label{sec:further improments}
 
 以上介绍的核实模块已经相当高效, 但是仍然有一些技术可以进一步提升其时间
-和空间效率。
+和空间效率。\\
 
-\subsubsection{分解AMT}
-\label{sec:divide amt}
+1. 分解AMT
 
 以上介绍的核实模块基于由整个模式集所构建的AMT。 事实上, 可以将大的AMT分
 解为多个小AMT， 同时让每一次核实操作只关联其中一个小AMT, 这样可以进一步
@@ -807,22 +806,21 @@ $SF$ 将会基于哈希值被分为若干个子后缀集: 对于每个后缀 $su
 
 在过滤阶段, 一旦 $T$ 中的一个潜在匹配位置 $i$ 被找到, 将计算哈希
 值 $Hash[T[i+lss-k,k]]$ 并将其用作索引表的索引来找到对应的AMT。 由于
-该AMT的规模相比之前减小了，核实所用的时间也会相应地减少。
+该AMT的规模相比之前减小了，核实所用的时间也会相应地减少。\\
 
-\subsubsection{节点合并}
-\label{sec:node merge}
+2. 节点合并
 
 类似于Trie树结构中广泛使用的路径压缩技术，在AMT中的一条路径上，所有只包
 含一个键的节点可以合并为一个节点。 该技术可以从时间和空间两方面提
-高AMT的效率。 为了说明该技术的优势,
-考虑模式集$P=\{p_1=e^6u^5sscc,\; p_2=e^6u^5,\; p_3=e^6\}$ 和其所对应
-的AMT。 如图 \ref{fig:merge} 所示, 所构建的AMT包含3个节点, 每个节点都只
-有一个键。 在 amd_64 体系结构中, 这种实现方法大致需要55字节的存储空
-间:存储3个键需要15字节, 2个孩子指针需要16字节， 3个指向各自匹配函数的函
-数指针需要24字节。 然而, 如果将3个键连接成1个字符串, 这3个节点便可合并
-为1个, 这样不仅不再需要孩子指针，指向匹配函数的指针也从3个减少为1个。合
-并后的节点构成一种新的节点结构，有别于 \ref{subsec:nodes} 节介绍的几种
-节点类型。
+高AMT的效率。
+为了说明该技术的优势,考虑模式集$P=\{p_1=e^6u^5sscc,\; p_2=e^6u^5,\;
+p_3=e^6\}$ 和其所对应的AMT。 如图 \ref{fig:merge} 所示, 所构建
+的AMT包含3个节点, 每个节点都只有一个键。 在 $x86\_64$ 体系结构中, 这种实现
+方法大致需要55字节的存储空间:存储3个键需要15字节, 2个孩子指针需要16字
+节， 3个指向各自匹配函数的函数指针需要24字节。 然而, 如果将3个键连接
+成1个字符串, 这3个节点便可合并为1个, 这样不仅不再需要孩子指针，指向匹配
+函数的指针也从3个减少为1个。合并后的节点构成一种新的节点结构，有别
+于 \ref{subsec:nodes} 节介绍的几种节点类型。
 
 \begin{figure}[H]
   \centering
@@ -840,11 +838,9 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 间 (15个字节用来存储键, 3个字节用来存储长度数组, 8个字节用来存储指向匹
 配函数的指针), 这样, 相比原先的AMT，合并节点后的AMT可以节省29个字节的存
 储空间。 另外, 只需要一次随机访问内存便可以取出需要的节点， 相比原先需
-要三次访问内存来取得需要的节点, 减少了内存访问量，提高了匹配速度。
+要三次访问内存来取得需要的节点, 减少了内存访问量，提高了匹配速度。\\
 
-
-\subsubsection{节点分割}
-\label{sec:node split}
+3.节点分割
 
 为了进一步提高节点的匹配效率， 一旦某个节点所包含的键具有公共前缀, 该前
 缀便可以从节点中分离出来形成一个(包含单个键的)新节点。 (由于被分离出的
@@ -867,7 +863,7 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
 \end{figure}
 
 \section{实验结果}
-\label{sec:experiments}
+\label{sec:2_experiments}
 
 在本节中, 我们将所提出的匹配引擎(Fast Engine for MPM, 简称
 为\textsf{FEMPM}) 与其他5个算法进行比较，来评估匹配引擎的性能。 参与比
@@ -917,7 +913,7 @@ $unsigned char$ 类型)。 通过每个键的长度，便可以识别出每个�
   \centering
   \topcaption{测试模式集的特性。}
   \label{tab:lsps}
-  \begin{tabular}{|c|c|c|c|c|c|c|}
+  \begin{tabular}{ccccccc}
     \hline
     Pattern Set & LSP  & LLP  & ALP & SD & TLP & Count\\
     \hline
@@ -1155,7 +1151,7 @@ $1 \times 10^7$ & 558,241 &  591,455  & 115,012 &  11,922   &   79 &  3,986,683 
 加大约 $8 \times 10^5$个节点。
 
 \section{本章小结}
-\label{sec:conclusion}
+\label{sec:2_conclusion}
 
 本章中，我们提出了一种快速的多模式匹配引擎 \textsf{FEMPM}。 引擎由过滤模
 块与核实模块组成。 过滤模块主要用于过滤掉文本串中的非匹配位置, 而核实模

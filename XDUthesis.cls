@@ -58,6 +58,8 @@
 
 \RequirePackage{caption2}
 
+\RequirePackage{ifxetex}
+
 %% natbib
 \ifXDU@Option@ref@sort
   \ifXDU@Option@ref@compress
@@ -71,8 +73,8 @@
 \ifpdf
   \RequirePackage[pdftex]{hyperref}
 \else
-  \ifXDU@Option@dvipdfm
-    \RequirePackage[dvipdfm]{hyperref}
+  \ifxetex %XDU@Option@dvipdfm
+    \RequirePackage[xetex]{hyperref}
   \else
     \RequirePackage[dvips]{hyperref}
   \fi

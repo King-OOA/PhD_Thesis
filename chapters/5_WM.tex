@@ -183,7 +183,7 @@ $\overline{p_5}=ent$。用这样的特征串构造出的Hash表如
     \STATE 将$tag$数组清零。
     \FOR{$p_i$中每一个长为$B$的字符块 $block_{ij}$, $j=1 \sim |p_i|-B+1$}
     \IF{$tab[block_{ij}]\neq0$}
-    \STATE $freq[block_{ij}]$ \leftarrow $freq[block_{ij}]+1$
+    \STATE $freq[block_{ij}] \leftarrow freq[block_{ij}]+1$
     \STATE $tab[block_{ij}]=1$
     \ENDIF
     \ENDFOR
@@ -275,7 +275,7 @@ DWM的可行性，其增加的额外的预处理开销微乎其微，因此完�
 
 \begin{algorithm}
   \caption{为较长的哈希链表构建索引表}
-  \label{alg:choose_signature}
+  \label{alg:build_index}
   \begin{algorithmic}[1]
     \REQUIRE ~~\\
     Hash表。 \\
