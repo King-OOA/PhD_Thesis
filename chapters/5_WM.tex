@@ -90,7 +90,7 @@ WM \cite{Wu1994} 算法是Sun-Wu和Udi-Manber提出的一种快速多模式匹�
 的思想与WM算法相结合，提出了Tuned WM算法，增加了WM算法的平均跳转距离。
 
 
-\section{改进的WM算法}
+\section{基于WM的改进算法}
 \label{sec:5_DWM+}
 
 本节主要从调整Hash表中哈希链的长度分布和加速对哈希链的搜索两方面，
@@ -169,7 +169,7 @@ $\overline{p_5}=ent$。用这样的特征串构造出的Hash表如
 特征串的。下面是具体算法：
 
 \begin{algorithm}
-  \caption{步骤 1: 计算字符块的出现频率}
+  \caption{计算字符块的出现频率(步骤 1)}
   \label{alg:block_freq}
   \begin{algorithmic}[1]
     \REQUIRE ~~\\
@@ -206,7 +206,7 @@ $\overline{p_5}=ent$。用这样的特征串构造出的Hash表如
 为：$O(模式串长之和)$.
 
 \begin{algorithm}
-  \caption{步骤 2: 选择特征串}
+  \caption{选择特征串(步骤 2)}
   \label{alg:choose_signature}
   \begin{algorithmic}[1]
     \REQUIRE ~~\\

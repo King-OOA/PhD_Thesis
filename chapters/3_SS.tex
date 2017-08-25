@@ -257,7 +257,7 @@ B[i+2^{k-1}] \leq B[j+2^{k-1}]$。  这种等价关系说明了如何在第 $k$ 
 轮后倍增，所以，对长为$n$的字符串，其任意两个后缀的次序都可以在最
 多 $logn$ 轮后被确定。
 
-\subsection{dsufsort 算法: 记录并维护每一个未排序桶的深度}
+\subsection{dsufsort 算法}
 \label{sec:dsufsort}
 
 如前所述, 在第 $k$ 轮中, \emph{qsufsort} 算法将依据每个后缀前 $2^k$个字
@@ -465,7 +465,7 @@ $B_6^{\;new}$ 同样也产生于第1轮, 且其深度为 $D[6]^{\;new} =
 性将充分发挥, 使其可以更快地确定具有较长公共前缀后缀的次序。
 
 
-\section{高效的实现}
+\section{高效地实现}
 \label{sec:3_Implementation}
 
 本节中, 将讨论一些用于提高算法效率的实现技巧。
@@ -583,7 +583,7 @@ n + 1$。 综上, \emph{dsufsort} 算法的第0轮包括以下4个步骤:
 序 \emph{suffix array checker} 检验。
 
 \begin{table}[!htbp]
-\topcaption{测试数据集特征}
+\topcaption{测试数据集特征。}
 \begin{tabular}{ccrrrr} \hline Files & Description & Size(bytes) &
   $|\Sigma|$ & Average LCP & Max LCP \\ \hline
   Proteins & Protein sequence & 66,804,271 & 20 & 33.46 & 6380\\

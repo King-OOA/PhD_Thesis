@@ -121,7 +121,7 @@ $q$ 或 $q$ 被 $p$ 强支配 (表示为 $p \prec q$)， 如果对每一个 $i$ 
 
 基于支配点模型的方法的动机在于减少动态规划方法的时空复杂度。 其核心思想
 基于这样的事实，即只有支配点才能够影响MLCS的构建（如
-图\ref{fig:score_table} (B) 所示， 阴影元素对应于支配点)。由于支配点的
+图\ref{fig:DM} (B) 所示， 阴影元素对应于支配点)。由于支配点的
 数量远小于矩阵 $T$ 中的所有元素的数量，而基于支配点模型的方法将只需计算
 支配点而非整个矩阵的元素，因此相比动态规划方法极大地降低了时空复杂度。
 
@@ -220,7 +220,7 @@ Li \cite{Li2016_ICDE} 和 Li \cite{Li2016_SIGKDD} 分别提出了两种基于支
 内存开销不超过预先设定的值。
 
 
-\section{一种新的图模型: Leveled-DAG 及其构建算法}
+\section{一种新的图模型---Leveled-DAG 及其构建算法}
 \label{sec:Algorithm}
 
 本节中将介绍Leveled-DAG图模型及其相应的构建算法，在描述细节之前，首先介绍一些将要
@@ -229,8 +229,7 @@ Li \cite{Li2016_ICDE} 和 Li \cite{Li2016_SIGKDD} 分别提出了两种基于支
 \subsection{核心数据结构}
 \label{sec:data structures}
 
-I. 后继表
-\label{sec:successor table}
+1. 后继表
 
 高效地产生每一个节点的后继，是构建Leveled-DAG的关键步骤。为此，需要为每一个输入序
 列构造一个后继表 \cite{Chen2006}。 通过查询这些后继表，能够在常量时间内产生一个节
@@ -264,7 +263,7 @@ $$ST[i,j]=min\{m\;|\;c_m=\sigma_i,\; m > j,\; 1 \leq i \leq
   $G$ 和$T$， 其中 $(6, -)$ 意味着 $(2, 2)$ 没有对应字符 $C$ 的后
   继。 事实上, 一个节点可以没有任何后继。\\
 
-\noindent II. 节点结构
+2. 节点结构
 \label{sec:Node}
 
 Leveled-DAG中的每个节点，比如 $t$, 包含了以下信息：
@@ -280,7 +279,7 @@ Leveled-DAG中的每个节点，比如 $t$, 包含了以下信息：
 时，其所包含的前缀序列会由其后继节点继承并加以延长。 当Leveled-DAG构造完毕时，其
 中仅剩的终止节点所包含的前缀序列就是要寻找的输入序列的最长公共子序列。\\
 
-\noindent III. 全局数据结构
+3. 全局数据结构
 \label{sec:auxiliary}
 
 \begin{itemize}
@@ -298,7 +297,7 @@ $L\_DAG$ 是一个映射表结构用于保存图中的节点， 一个节点可�
 继)。
 
 
-\subsection{一种新的图模型: Leveled-DAG}
+\subsection{Leveled-DAG模型}
 \label{sec:leveled DAG}
 
 Leveled-DAG模型的核心特性是，它采用了一种被称为“产生-删除”的策略来控制图的规
@@ -380,9 +379,9 @@ $G$ 和 $T$, 如图\ref{fig:Leveled-DAG} (A) 中对应节点上方的红色字�
 \subsection{Leveled-DAG 模型的构建算法 }
 \label{sec:PMA}
 
-本节将给出Leveled-DAG模型构建算法的形式化描述。
+本节将给出Leveled-DAG模型构建算法的形式化描述。\\
 
-\textbf{算法 2. 构建 Leveled-DAG}
+\textbf{算法 1.} 构建 Leveled-DAG
 \begin{itemize}
 \item \textbf{步骤 0.} 预处理。 对每一个输入序列，构造其后继表。
 \item \textbf{步骤 1.} 构建Leveled-DAG的第一层。通过查询后继表产生源节点的所有后
@@ -410,19 +409,20 @@ $G$ 和 $T$, 如图\ref{fig:Leveled-DAG} (A) 中对应节点上方的红色字�
 \item \textbf{步骤 4.} 输出终止节点所保存的前缀序列，即输入序列的最长公共子序列。
 \end{itemize}
 
-如算法 2 中所示, 在预处理 (步骤 0) 之后, Leveled-DAG最初只包含源节点(步骤 1), 然
-后它采用 ”产生-删除“ 策略来产生下一层节点 (步骤 2.1) 和删除过时节
-点 (步骤 2.2), 一旦Leveled-DAG中所有的节点都被扩展, 即不再有新节点产生, 算法开始
-重复地删除过时节点 (步骤 3), 直到剩余终止节点。 最后, 输出终止节点所保存的前缀序
-列，即输入序列的最长公共子序列(步骤 4)。
+如算法 1中所示, 在预处理 (步骤 0) 之后, Leveled-DAG最初只包含源节点(步
+骤 1), 然后它采用 ”产生-删除“ 策略来产生下一层节点 (步骤 2.1) 和删除
+过时节点 (步骤 2.2), 一旦Leveled-DAG中所有的节点都被扩展, 即不再有新节
+点产生, 算法开始重复地删除过时节点 (步骤 3), 直到剩余终止节点。 最后,
+输出终止节点所保存的前缀序列，即输入序列的最长公共子序列(步骤 4)。
 
-如下是算法2的伪代码描述， 其中所用到的数据结构在 \ref{sec:data structures} 节已经
-介绍, 构造后继表的过程已经省略, 后继表被直接作为输入数据。 算法2中的步骤1和步
-骤2被合并为一个 \emph{while} 循环 (7 $\sim$ 22行), 步骤3对应于随后
-的 \emph{while} 循环 (24 $\sim$ 26行)。 移除过时节点的操作被单独封装为一个函
-数 $Remove\_Outdated$, 对应于 30 $\sim$ 49 行。
+如下是算法1的伪代码描述， 其中所用到的数据结构在 \ref{sec:data
+  structures} 节已经介绍, 构造后继表的过程已经省略, 后继表被直接作为输
+入数据。 算法1中的步骤1和步骤2被合并为一个 \emph{while} 循环 (7 $\sim$
+22行), 步骤3对应于随后的 \emph{while} 循环 (24 $\sim$ 26行)。 移除过时
+节点的操作被单独封装为一个函数 $Remove\_Outdated$, 对应于 30 $\sim$ 49
+行。
 
-\begin{varalgorithm}{2:}
+\begin{algorithm}
   \caption{伪代码}
   \footnotesize
   \label{alg:PMA}
@@ -481,26 +481,27 @@ $G$ 和 $T$, 如图\ref{fig:Leveled-DAG} (A) 中对应节点上方的红色字�
     \ENDFOR
     \ENDFOR
   \end{algorithmic}
-\end{varalgorithm}
+\end{algorithm}
 
 \subsection{时间/空间复杂度分析}
 \label{sec:complexity}
 
 接下来将给出Leveled-DAG方法粗略的时间/空间复杂度分析。如上所述,
 Leveled-DAG方法包含两个阶段: 1. 为每一个输入序列构造后继表; 2.基于后继
-表构造Leveled-DAG图。 第一个阶段, 如 \ref{sec:successor table} 节所示,
-对长为$n$ 的序列，构造其后继表将花费 $O(|\Sigma|n)$ 时间, 因此，为 $d$
-个长为 $n$ 的序列构造后继表将花费 $O(d|\Sigma|n)$ 时间。 对于第二个阶
-段， 从宏观角度来看, 构造Leveled-DAG 图的过程仅仅是产生出所有图节点然后
-再将其全部删除 (除了终止节点)。 尽管产生节点和删除节点在构建过程中交织
-在一起, 图中任意节点仅被产生并删除一次, 并且整个构建过程不含任何递归调
-用 (见算法2的伪代码描述)。 因此, 构建图的时间复杂度为$O(2|Nodes|)$, 其
-中 $|Nodes|$ 为产生的节点数量, 产生节点和删除节点的过程都需
-要$O(|Nodes|)$ 时间。 结合这两个阶段, Leveled-DAG方法的时间复杂度
-为 $O(d|\Sigma|n + 2|Nodes|)$。 由于总是有 $O(d|\Sigma|n) \ll
-O(2|Nodes|)$ (由实验证实),
-所以$O(d|\Sigma|n + 2|Nodes|) = O(2|Nodes|) = O(|Nodes|)$, 这意味
-着Leveled-DAG方法的时间复杂度与图中节点的数量呈线性关系。
+表构造Leveled-DAG图。 第一个阶段, 如 \ref{sec:data structures} 节所
+示,对长为$n$ 的序列，构造其后继表将花费 $O(|\Sigma|n)$ 时间, 因此，
+为 $d$个长为 $n$ 的序列构造后继表将花费 $O(d|\Sigma|n)$ 时间。 对于第二
+个阶段， 从宏观角度来看, 构造Leveled-DAG 图的过程仅仅是产生出所有图节点
+然后再将其全部删除 (除了终止节点)。 尽管产生节点和删除节点在构建过程中
+交织在一起, 图中任意节点仅被产生并删除一次, 并且整个构建过程不含任何递
+归调用 (见算法1的伪代码描述)。 因此, 构建图的时间复杂度
+为$O(2|Nodes|)$, 其中 $|Nodes|$ 为产生的节点数量, 产生节点和删除节点的
+过程都需要$O(|Nodes|)$ 时间。 结合这两个阶段, Leveled-DAG方法的时间复杂
+度为 $O(d|\Sigma|n + 2|Nodes|)$。 由于总是有 $O(d|\Sigma|n) \ll
+O(2|Nodes|)$
+(由实验证实),所以$O(d|\Sigma|n + 2|Nodes|) = O(2|Nodes|) =
+O(|Nodes|)$, 这意味着Leveled-DAG方法的时间复杂度与图中节点的数量呈线性
+关系。
 
 对于空间复杂度, 一方面, Leveled-DAG 方法需要存储所有的后继表，这需
 要 $O(d|\Sigma|(n+1))$ 的存储空间。 另一方面, 如前所述, Leveled-DAG 图主要需要保
@@ -630,7 +631,7 @@ $20\%$。 这是因为 \emph{Top\_MLCS} 算法在支配点图构造好之后，�
 术， \emph{Leveled-DAG} 算法在所有测试集上都有更好的表现，尤其对于包含多个序列或
 长序列的序列集。
 
-\subsection{分析}
+\subsection{进一步分析}
 
 下面将分析影响MLCS算法性能的一些重要因素。序列长度是影响算法性能的关键
 因素之一: 对同一类型的序列，随着序列长度增加，算法所构建图中所包含的层

@@ -35,14 +35,12 @@
 \setlength{\belowcaptionskip}{10pt}
 \caption}                       
 
-
-\newenvironment{varalgorithm}[1]
-  {\algorithm\renewcommand{\thealgorithm}{#1}}
-  {\endalgorithm}
-
 %\renewcommand{\algorithmcfname}{算法}
 \floatname{algorithm}{算法}
 \graphicspath{{figures/}}
+
+ %让算法编号在每章从新计数
+\newcounter{algorithm}[chapter]
 
 \begin{document}
 
