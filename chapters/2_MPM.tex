@@ -564,14 +564,14 @@ $root \rightarrow node_1 \rightarrow node_5 \rightarrow node_{10}$, 由
   射表最多能存储4个键。 它使用4个元素的数组来存储键，用另一个同样长度的
   数组来存储孩子指针。 键及其所对应的孩子指针存储在各自数组的相同位置，
   键按照其ASCII码值顺序存储。 一旦目标字符在键数组中被找到, 其所对于的孩
-  子指针可在另一个数组的同样位置找到。  图 \ref{fig:character map} (A)
+  子指针可在另一个数组的同样位置找到。  图 \ref{fig:character map} (a)
   显示了包含了3键：$f$, $n$ 和 $p$ 的 Map 4 结构，其中包含了键的三角形
   表示对应的孩子节点。
 
 \item \textbf{Map 16} (当 $5 \leq ndp \leq 16$ 时采用): 这种字符映射表
   可以存储5到16个键。 它与Map 4映射表有类似的结构, 但两个数组都扩大到
   了16个元素。 目标字符可由键数组上的二分查找进行快速检
-  索。 图 \ref{fig:character map} (B) 显示了具有14个键的 Map 16 映射
+  索。 图 \ref{fig:character map} (b) 显示了具有14个键的 Map 16 映射
   表。
 
 
@@ -581,7 +581,7 @@ $root \rightarrow node_1 \rightarrow node_5 \rightarrow node_{10}$, 由
   数组，该数组可由目标字符的ASCII码值作为下标直接访问其元素。 索引数组
   存储的是另外一个具有48个元素的孩子指针数组的索引（下标)(在$[0,47]$范
   围内的整数)。 相比直接存储孩子指针，这种方式更加节省空间, 因为每个数
-  组下标只占用一个字节的空间。 图 \ref{fig:character map} (C) 显示了一
+  组下标只占用一个字节的空间。 图 \ref{fig:character map} (c) 显示了一
   个Map 48映射表, 其中字符 $a$, $b$, $c$ 的ASCII码值分别为 97, 98, 99。
 
 \item \textbf{Map 256} (当 $49 \leq ndp \leq 256$ 时采用): 最大的字符映
@@ -590,7 +590,7 @@ $root \rightarrow node_1 \rightarrow node_5 \rightarrow node_{10}$, 由
   点。 对于Map 256映射表, 相应的孩子节点可直接通过目标字符的ASCII码值找
   到。 与其他类型的映射表不同, Map 256只包含一个数组， 因此无需进行数组
   的二次访问， 而且，如果所包含数组大部分元素非空, 该结构同样非常紧
-  凑。 图 \ref{fig:character map} (D) 显示了一个Map 256映射表, 其中只有
+  凑。 图 \ref{fig:character map} (d) 显示了一个Map 256映射表, 其中只有
   一个指针数组。
 \end{itemize}
 
